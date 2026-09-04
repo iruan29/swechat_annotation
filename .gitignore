@@ -1,0 +1,8 @@
+.env
+data/swe-chat/*
+!data/swe-chat/.gitkeep
+outputs/
+*.pyc
+__pycache__/
+.pytest_cache/
+
