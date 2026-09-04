@@ -169,6 +169,38 @@ python scripts/run_study2_pipeline.py \
 
 同一命令默认启用 resume；数据已经存在时不会重复下载，已完成的当前 rubric 标注也不会重复请求。
 
+### 全量运行 Study 2（默认 200 并发）
+
+运行所有符合 Study 2 条件的多轮 session：
+
+```bash
+./scripts/run_study2_full_parallel.sh
+```
+
+该脚本等价于使用以下关键参数：
+
+- `--sample-size 0`：不采样，使用全部符合条件的 session。
+- `--min-prompts 2`：保留至少有两个真实 user prompts 的多轮交互。
+- `--max-prompts 0`：取消 prompts 数量上限；超长会话仍受 evidence packet 字符预算控制。
+- `--workers 200`：最多同时发出 200 个 judge 请求。
+- `--resume`：中断后运行同一脚本，只重试未成功的 session，不覆盖已经完成的当前 rubric 标注。
+
+默认输出到 `outputs/study2_full/`。可以通过环境变量调整输出目录或降低并发：
+
+```bash
+STUDY2_OUTPUT_DIR=outputs/study2_full_v8 STUDY2_WORKERS=100 \
+  ./scripts/run_study2_full_parallel.sh
+```
+
+额外 CLI 参数会继续传给统一入口，例如只使用已经下载的数据：
+
+```bash
+./scripts/run_study2_full_parallel.sh --skip-download
+```
+
+200 并发要求 LLM 服务端具有相应的并发配额、rate limit 和连接容量。若出现 HTTP 429、连接重置
+或超时，可设置较小的 `STUDY2_WORKERS` 后重新运行；resume 会继续补齐失败记录。
+
 ## 2. 配置 LLM
 
 在 `.env` 填入任意 OpenAI chat-completions 兼容服务：
