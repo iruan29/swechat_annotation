@@ -954,7 +954,8 @@ def _timestamp_seconds(turn_timestamps: dict[str, Any], start: int, end: int) ->
     try:
         a = datetime.fromisoformat(str(turn_timestamps[str(start)]).replace("Z", "+00:00"))
         b = datetime.fromisoformat(str(turn_timestamps[str(end)]).replace("Z", "+00:00"))
-        return max(0.0, (b - a).total_seconds())
+        elapsed = (b - a).total_seconds()
+        return elapsed if elapsed >= 0 else None
     except (KeyError, TypeError, ValueError):
         return None
 

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+import hashlib
 import json
 import os
 import re
@@ -13,11 +14,11 @@ from typing import Any
 from .env import load_dotenv
 from .io import (
     parse_json_list, read_commit_summaries, read_conversations, read_jsonl,
-    sample_sessions, write_jsonl,
+    read_user_prompt_counts, sample_sessions, write_jsonl,
 )
 from .llm import OpenAICompatibleClient
 from .metrics import aggregate, save_summary
-from .packet import behavior_episode_prefixes, build_packet, packet_as_text
+from .packet import compact_event, iter_behavior_episode_prefixes, build_packet, packet_as_text
 from .rubric import (
     RUBRIC_VERSION, SYSTEM_PROMPT, derive_behavior_modes,
     drop_invalid_evidence_turns, normalize_null_boolean_fields, user_prompt,
@@ -66,16 +67,23 @@ def _check_data(data_dir: Path) -> tuple[Path, Path]:
 
 
 def prepare(args: argparse.Namespace) -> Path:
+    if args.sample_size < 0 or args.min_prompts < 1:
+        raise ValueError("Require sample-size >= 0 and min-prompts >= 1")
+    if args.max_prompts is not None and args.max_prompts < args.min_prompts:
+        raise ValueError("max-prompts must be 0 (unlimited) or >= min-prompts")
+    if args.max_packet_chars < 1000:
+        raise ValueError("max-packet-chars must be at least 1000")
     data_dir, output_dir = Path(args.data_dir), Path(args.output_dir)
     sessions_path, conversations_path = _check_data(data_dir)
+    prompt_counts = read_user_prompt_counts(conversations_path)
     sessions = sample_sessions(
         sessions_path, args.sample_size, args.seed, args.min_prompts, args.max_prompts,
-        set(args.agent) if args.agent else None,
+        set(args.agent) if args.agent else None, prompt_counts,
     )
     if not sessions:
         raise RuntimeError("No sessions match the sampling filters")
     session_ids = [str(row["session_id"]) for row in sessions]
-    conversations = read_conversations(conversations_path, session_ids)
+    conversations = read_conversations(conversations_path, session_ids, compact_event)
 
     checkpoints = {
         checkpoint
@@ -93,7 +101,7 @@ def prepare(args: argparse.Namespace) -> Path:
     packets = []
     for session in sessions:
         session_id = str(session["session_id"])
-        events = conversations.get(session_id, [])
+        events = conversations.pop(session_id, [])
         if not any(event.get("turn_type") == "user_prompt" for event in events):
             continue
         packets.append(build_packet(session, events, commit_map, args.max_packet_chars))
@@ -107,6 +115,11 @@ def prepare(args: argparse.Namespace) -> Path:
         "max_prompts": args.max_prompts,
         "agents": args.agent,
         "commits_included": not args.no_commits and (data_dir / "commits.parquet").exists(),
+        "sampling_policy": "metadata_prompt_bounds_and_observed_noncontinuation_minimum_v2",
+        "max_packet_chars": args.max_packet_chars,
+        "expected_behavior_episode_count": sum(len(_packet_user_turns(packet)) for packet in packets),
+        "truncated_packet_count": sum(packet["packet_truncated"] for packet in packets),
+        "reindexed_packet_count": sum(packet["packet_diagnostics"]["turn_numbers_reindexed"] for packet in packets),
     }
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "prepare_meta.json").write_text(
@@ -247,6 +260,8 @@ def _resume_rows(
     rejudge_sessions: set[str],
     resume: bool,
     rubric_version: str | None = None,
+    fingerprints: dict[str, str] | None = None,
+    model: str | None = None,
 ) -> list[dict[str, Any]]:
     if not resume:
         return []
@@ -255,10 +270,17 @@ def _resume_rows(
         if key_fn(row) in valid_keys
         and str(row.get("session_id")) not in rejudge_sessions
         and (rubric_version is None or row.get("rubric_version") == rubric_version)
+        and (fingerprints is None or row.get("input_fingerprint") == fingerprints.get(str(row.get("session_id"))))
+        and (model is None or row.get("model") == model)
     ]
+    rows = list({key_fn(row): row for row in rows}.values())
     if path.exists():
         write_jsonl(path, rows)
     return rows
+
+
+def _packet_fingerprint(packet: dict[str, Any]) -> str:
+    return hashlib.sha256(json.dumps(packet, sort_keys=True, ensure_ascii=False, default=str).encode()).hexdigest()
 
 
 class AnnotationValidationFailure(ValueError):
@@ -348,7 +370,7 @@ def _complete_validated_json(
 
 
 def _run_concurrent_jobs(
-    jobs: list[Any], worker: Any, workers: int, delay: float = 0,
+    jobs: Any, worker: Any, workers: int, delay: float = 0,
 ) -> Any:
     """Run independent judge jobs while yielding all writes back to the main thread."""
     if workers < 1:
@@ -370,14 +392,35 @@ def _run_concurrent_jobs(
         return
 
     with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="judge") as executor:
-        futures = {executor.submit(run_one, job): job for job in jobs}
-        for future in as_completed(futures):
-            result, error = future.result()
-            yield futures[future], result, error
+        pending_jobs = iter(jobs)
+        futures = {}
+        while True:
+            while len(futures) < workers:
+                try:
+                    job = next(pending_jobs)
+                except StopIteration:
+                    break
+                futures[executor.submit(run_one, job)] = job
+            if not futures:
+                break
+            completed, _ = wait(futures, return_when=FIRST_COMPLETED)
+            for future in completed:
+                result, error = future.result()
+                yield futures.pop(future), result, error
+
+
+def _check_study1_output_version(output_dir: Path, resume: bool) -> None:
+    if not resume:
+        return
+    for filename, version in (("requirement_annotations.jsonl", STUDY1_REQUIREMENTS_RUBRIC_VERSION),
+                              ("behavior_annotations.jsonl", STUDY1_RUBRIC_VERSION)):
+        if any(row.get("rubric_version") != version for row in read_jsonl(output_dir / filename)):
+            raise RuntimeError("Study 1 rubric changed; preserve the pilot and use a NEW output directory (e.g. outputs/study1_100_seed42_v6). Old annotations cannot supply the new evidence fields.")
 
 
 def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
     output_dir = Path(args.output_dir)
+    _check_study1_output_version(output_dir, args.resume)
     packet_path = Path(args.packet_file) if args.packet_file else output_dir / "packets.jsonl"
     packets = read_jsonl(packet_path)
     if not packets:
@@ -391,9 +434,10 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
         raise ValueError(f"rejudge sessions absent from packet file: {sorted(unknown)}")
 
     requirement_path = output_dir / "requirement_annotations.jsonl"
+    fingerprints = {str(packet["session"]["session_id"]): _packet_fingerprint(packet) for packet in packets}
     requirement_rows = _resume_rows(
         requirement_path, packet_ids, lambda row: str(row.get("session_id")),
-        rejudge, args.resume, STUDY1_REQUIREMENTS_RUBRIC_VERSION,
+        rejudge, args.resume, STUDY1_REQUIREMENTS_RUBRIC_VERSION, fingerprints, model,
     )
     requirement_done = {str(row["session_id"]) for row in requirement_rows}
     requirement_mode = "a" if args.resume else "w"
@@ -439,6 +483,7 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
                     "usage": usage,
                     "model": model,
                     "rubric_version": STUDY1_REQUIREMENTS_RUBRIC_VERSION,
+                    "input_fingerprint": fingerprints[session_id],
                 }
                 results.write(json.dumps(row, ensure_ascii=False) + "\n")
                 results.flush()
@@ -451,15 +496,15 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
                 errors.flush()
                 print(f"[requirements {index}/{len(packets)}] ERROR {session_id}: {error}", file=sys.stderr)
 
-    episode_views = [
+    episode_views = (
         (packet, instruction_turn, prefix_text, valid_turns)
         for packet in packets
-        for instruction_turn, prefix_text, valid_turns in behavior_episode_prefixes(packet)
-    ]
+        for instruction_turn, prefix_text, valid_turns in iter_behavior_episode_prefixes(packet)
+    )
     behavior_path = output_dir / "behavior_annotations.jsonl"
     behavior_keys = {
         f"{packet['session']['session_id']}:T{instruction_turn}"
-        for packet, instruction_turn, _, _ in episode_views
+        for packet in packets for instruction_turn in _packet_user_turns(packet)
     }
     behavior_rows = _resume_rows(
         behavior_path,
@@ -468,6 +513,8 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
         rejudge,
         args.resume,
         STUDY1_RUBRIC_VERSION,
+        fingerprints,
+        model,
     )
     behavior_done = {
         f"{row['session_id']}:T{row['instruction_turn']}" for row in behavior_rows
@@ -482,12 +529,12 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
     with behavior_path.open(behavior_mode, encoding="utf-8") as results, behavior_errors_path.open(
         behavior_mode, encoding="utf-8"
     ) as errors:
-        behavior_jobs = [
+        behavior_jobs = (
             (index, packet, instruction_turn, prefix_text, valid_turns)
             for index, (packet, instruction_turn, prefix_text, valid_turns)
             in enumerate(episode_views, 1)
             if f"{packet['session']['session_id']}:T{instruction_turn}" not in behavior_done
-        ]
+        )
 
         def judge_behavior(
             job: tuple[int, dict[str, Any], int, str, set[int]],
@@ -520,32 +567,90 @@ def judge_study1(args: argparse.Namespace) -> tuple[Path, Path]:
                     "usage": usage,
                     "model": model,
                     "rubric_version": STUDY1_RUBRIC_VERSION,
+                    "input_fingerprint": fingerprints[session_id],
                 }
                 results.write(json.dumps(row, ensure_ascii=False) + "\n")
                 results.flush()
-                print(f"[behavior {index}/{len(episode_views)}] judged {key}")
+                print(f"[behavior {index}/{len(behavior_keys)}] judged {key}")
             else:
                 errors.write(json.dumps(_failure_record(
                     error, session_id=session_id, instruction_turn=instruction_turn, model=model,
                     phase="behavior", rubric_version=STUDY1_RUBRIC_VERSION,
                 ), ensure_ascii=False) + "\n")
                 errors.flush()
-                print(f"[behavior {index}/{len(episode_views)}] ERROR {key}: {error}", file=sys.stderr)
+                print(f"[behavior {index}/{len(behavior_keys)}] ERROR {key}: {error}", file=sys.stderr)
     return requirement_path, behavior_path
+
+
+def _summary_rows(
+    output_dir: Path, filename: str, version: str, packets: list[dict[str, Any]],
+    episode: bool = False,
+) -> list[dict[str, Any]]:
+    fingerprints = {str(packet["session"]["session_id"]): _packet_fingerprint(packet) for packet in packets}
+    valid_episodes = {
+        (str(packet["session"]["session_id"]), turn)
+        for packet in packets for turn in _packet_user_turns(packet)
+    } if episode else set()
+    selected = {}
+    for row in read_jsonl(output_dir / filename):
+        session_id = str(row.get("session_id"))
+        key = (session_id, row.get("instruction_turn")) if episode else session_id
+        if row.get("rubric_version") != version:
+            continue
+        if fingerprints and (session_id not in fingerprints or row.get("input_fingerprint") != fingerprints[session_id]):
+            continue
+        if episode and packets and key not in valid_episodes:
+            continue
+        selected[key] = row
+    return list(selected.values())
+
+
+def _study_run_meta(output_dir: Path, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    path = output_dir / "prepare_meta.json"
+    return {
+        "prepare": json.loads(path.read_text(encoding="utf-8")) if path.exists() else {},
+        "models": sorted({str(row.get("model", "unknown")) for row in rows}),
+        "generated_at_unix": int(time.time()),
+    }
 
 
 def summarize_study1(args: argparse.Namespace) -> None:
     output_dir = Path(args.output_dir)
-    requirement_rows = read_jsonl(output_dir / "requirement_annotations.jsonl")
-    behavior_rows = read_jsonl(output_dir / "behavior_annotations.jsonl")
-    if not requirement_rows:
-        raise RuntimeError("No requirement annotations found")
-    if not behavior_rows:
-        raise RuntimeError("No behavior annotations found")
+    _check_study1_output_version(output_dir, True)
+    packets = read_jsonl(output_dir / "packets.jsonl")
+    requirement_rows = _summary_rows(output_dir, "requirement_annotations.jsonl", STUDY1_REQUIREMENTS_RUBRIC_VERSION, packets)
+    behavior_rows = _summary_rows(output_dir, "behavior_annotations.jsonl", STUDY1_RUBRIC_VERSION, packets, episode=True)
+    if not packets and not requirement_rows:
+        raise RuntimeError("No packets or requirement annotations found")
+    expected = len(packets) if packets else len(requirement_rows)
+    expected_episodes = sum(len(_packet_user_turns(packet)) for packet in packets) if packets else len(behavior_rows)
+    completed_episodes = {(str(row["session_id"]), row["instruction_turn"]) for row in behavior_rows}
+    requirement_ids = {str(row["session_id"]) for row in requirement_rows}
+    complete_sessions = sum(
+        str(packet["session"]["session_id"]) in requirement_ids and all(
+            (str(packet["session"]["session_id"]), turn) in completed_episodes
+            for turn in _packet_user_turns(packet)
+        ) for packet in packets
+    ) if packets else len(requirement_rows)
     summary = aggregate_study1(requirement_rows, behavior_rows)
+    summary["run_meta"] = _study_run_meta(output_dir, requirement_rows + behavior_rows)
+    summary["run_completeness"] = {
+        "requirements_rubric_version": STUDY1_REQUIREMENTS_RUBRIC_VERSION,
+        "behavior_rubric_version": STUDY1_RUBRIC_VERSION,
+        "packet_session_count": expected,
+        "annotated_session_count": complete_sessions,
+        "requirement_annotated_session_count": len(requirement_rows),
+        "pending_or_failed_session_count": expected - complete_sessions,
+        "expected_behavior_episode_count": expected_episodes,
+        "annotated_behavior_episode_count": len(behavior_rows),
+        "pending_or_failed_behavior_episode_count": expected_episodes - len(behavior_rows),
+        "completion_rate": complete_sessions / expected if expected else None,
+    }
     (output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    if complete_sessions < expected:
+        print(f"WARNING: Study 1 is incomplete ({complete_sessions}/{expected}); rerun with --resume", file=sys.stderr)
     print(f"Wrote {output_dir / 'summary.json'}")
 
 
@@ -563,9 +668,10 @@ def judge_study2(args: argparse.Namespace) -> Path:
     if unknown:
         raise ValueError(f"rejudge sessions absent from packet file: {sorted(unknown)}")
     results_path = output_dir / "intent_annotations.jsonl"
+    fingerprints = {str(packet["session"]["session_id"]): _packet_fingerprint(packet) for packet in packets}
     existing = _resume_rows(
         results_path, packet_ids, lambda row: str(row.get("session_id")),
-        rejudge, args.resume, STUDY2_RUBRIC_VERSION,
+        rejudge, args.resume, STUDY2_RUBRIC_VERSION, fingerprints, model,
     )
     done = {str(row["session_id"]) for row in existing}
     mode = "a" if args.resume else "w"
@@ -611,6 +717,7 @@ def judge_study2(args: argparse.Namespace) -> Path:
                     "usage": usage,
                     "model": model,
                     "rubric_version": STUDY2_RUBRIC_VERSION,
+                    "input_fingerprint": fingerprints[session_id],
                 }
                 results.write(json.dumps(row, ensure_ascii=False) + "\n")
                 results.flush()
@@ -632,17 +739,14 @@ def summarize_study2(args: argparse.Namespace) -> None:
         str(packet.get("session", {}).get("session_id")) for packet in packets
         if packet.get("session", {}).get("session_id") is not None
     }
-    rows = [
-        row for row in read_jsonl(output_dir / "intent_annotations.jsonl")
-        if row.get("rubric_version") == STUDY2_RUBRIC_VERSION
-        and (not packet_ids or str(row.get("session_id")) in packet_ids)
-    ]
-    if not rows:
-        raise RuntimeError("No intent annotations found")
+    rows = _summary_rows(output_dir, "intent_annotations.jsonl", STUDY2_RUBRIC_VERSION, packets)
+    if not rows and not packets:
+        raise RuntimeError("No packets or intent annotations found")
     annotated_ids = {str(row.get("session_id")) for row in rows}
     expected = len(packet_ids) if packet_ids else len(annotated_ids)
     completed = len(annotated_ids & packet_ids) if packet_ids else len(annotated_ids)
     summary = {
+        "run_meta": _study_run_meta(output_dir, rows),
         "run_completeness": {
             "rubric_version": STUDY2_RUBRIC_VERSION,
             "packet_session_count": expected,
@@ -804,6 +908,7 @@ def main() -> None:
             judge(args)
             summarize(args)
         elif args.command == "run-study1":
+            _check_study1_output_version(Path(args.output_dir), args.resume)
             prepare(args)
             judge_study1(args)
             summarize_study1(args)

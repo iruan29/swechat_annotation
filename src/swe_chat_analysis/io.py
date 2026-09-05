@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import random
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -25,7 +25,7 @@ CONVERSATION_COLUMNS = [
     "turn_type", "content", "tool_name", "file_path", "command",
     "category", "prompt_intent", "prompt_pushback", "timestamp",
     "input_tokens", "output_tokens", "cache_creation_input_tokens",
-    "cache_read_input_tokens",
+    "cache_read_input_tokens", "is_continuation",
 ]
 
 
@@ -45,6 +45,7 @@ def sample_sessions(
     min_prompts: int = 2,
     max_prompts: int | None = 50,
     agents: set[str] | None = None,
+    prompt_counts: dict[str, int] | None = None,
 ) -> list[dict[str, Any]]:
     columns = _available_columns(sessions_path, SESSION_COLUMNS)
     rows = _python_rows(pq.read_table(sessions_path, columns=columns))
@@ -53,6 +54,7 @@ def sample_sessions(
         if int(row.get("prompt_count") or 0) >= min_prompts
         and (max_prompts is None or int(row.get("prompt_count") or 0) <= max_prompts)
         and (not agents or row.get("agent") in agents)
+        and (prompt_counts is None or prompt_counts.get(str(row["session_id"]), 0) >= min_prompts)
     ]
     # Stable seed and ordering make sample membership reproducible.
     eligible.sort(key=lambda row: str(row["session_id"]))
@@ -63,19 +65,34 @@ def sample_sessions(
     return rng.sample(eligible, sample_size)
 
 
+def read_user_prompt_counts(conversations_path: Path) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    columns = _available_columns(conversations_path, ["session_id", "turn_type", "is_continuation"])
+    for batch in pq.ParquetFile(conversations_path).iter_batches(columns=columns):
+        prompts = batch.filter(pc.equal(batch.column("turn_type"), "user_prompt"))
+        for row in prompts.to_pylist():
+            if not row.get("is_continuation"):
+                counts[str(row["session_id"])] += 1
+    return dict(counts)
+
+
 def read_conversations(
-    conversations_path: Path, session_ids: Iterable[str]
+    conversations_path: Path, session_ids: Iterable[str], event_transform: Any = None,
 ) -> dict[str, list[dict[str, Any]]]:
     selected = set(session_ids)
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     columns = _available_columns(conversations_path, CONVERSATION_COLUMNS)
     parquet = pq.ParquetFile(conversations_path)
     selected_array = pa.array(sorted(selected), type=pa.string())
-    for batch in parquet.iter_batches(batch_size=65_536, columns=columns):
+    for batch in parquet.iter_batches(batch_size=8192, columns=columns):
         if "session_id" not in batch.schema.names:
             raise ValueError("conversations.parquet lacks session_id")
         mask = pc.is_in(batch.column("session_id"), value_set=selected_array)
         for row in pa.Table.from_batches([batch]).filter(mask).to_pylist():
+            if event_transform is not None:
+                row = event_transform(row)
+                if row is None:
+                    continue
             grouped[str(row["session_id"])].append(row)
     for events in grouped.values():
         events.sort(key=lambda row: int(row.get("turn_number") or 0))

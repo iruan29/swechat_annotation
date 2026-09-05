@@ -60,15 +60,16 @@ class OpenAICompatibleClient:
             try:
                 session = requests.Session()
                 session.trust_env = self.trust_env_proxy
-                response = session.post(
-                    self.endpoint,
-                    headers={
-                        "Authorization": f"Bearer {self.api_key}",
-                        "Content-Type": "application/json",
-                    },
-                    json=payload,
-                    timeout=(20, self.timeout_seconds),
-                )
+                with session:
+                    response = session.post(
+                        self.endpoint,
+                        headers={
+                            "Authorization": f"Bearer {self.api_key}",
+                            "Content-Type": "application/json",
+                        },
+                        json=payload,
+                        timeout=(20, self.timeout_seconds),
+                    )
                 if response.status_code >= 400:
                     body = response.text[:1000]
                     last_error = RuntimeError(f"HTTP {response.status_code}: {body}")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from typing import Any
 
 from .io import parse_json_list
@@ -21,9 +22,27 @@ def _event_line(event: dict[str, Any]) -> tuple[str, int]:
     elif kind == "tool_result":
         text = f"tool={event.get('tool_name') or '?'} result={_clip(event.get('content'), 600)}"
     else:
-        cap = 2400 if kind == "user_prompt" else 1200
+        cap = 2400 if kind in {"user_prompt", "continuation_context"} else 1200
         text = _clip(event.get("content"), cap)
     return f"T{number} {kind}: {text}", number
+
+
+def compact_event(event: dict[str, Any]) -> dict[str, Any] | None:
+    kind = event.get("turn_type")
+    if kind not in {"user_prompt", "continuation_context", "assistant_response", "tool_use", "tool_result"}:
+        return None
+    event = dict(event)
+    if kind == "user_prompt" and event.get("is_continuation"):
+        event["turn_type"] = "continuation_context"
+    cap = 2400 if kind in {"user_prompt", "continuation_context"} else 600 if kind == "tool_result" else 500 if kind == "tool_use" else 1200
+    clipped = bool(event.get("text_clipped"))
+    for field in ("content", "command", "file_path"):
+        if event.get(field) is not None:
+            original = " ".join(str(event[field]).split())
+            event[field] = _clip(original, cap)
+            clipped |= len(original) > cap
+    event["text_clipped"] = clipped
+    return event
 
 
 def build_packet(
@@ -33,6 +52,13 @@ def build_packet(
     max_chars: int = 45_000,
 ) -> dict[str, Any]:
     commit_map = commit_map or {}
+    events = [event for source in events if (event := compact_event(source)) is not None]
+    duplicate_turns = len({event.get("turn_number") for event in events}) != len(events)
+    source_turn_numbers = {
+        str(index): event.get("turn_number") for index, event in enumerate(events)
+    } if duplicate_turns else {}
+    if duplicate_turns:
+        events = [{**event, "turn_number": index} for index, event in enumerate(events)]
     user_lines: list[str] = []
     other_entries: list[tuple[int, str, str]] = []
     user_turns: list[int] = []
@@ -51,7 +77,7 @@ def build_packet(
             label = event.get("prompt_pushback")
             if label:
                 dataset_pushback[str(label)] = dataset_pushback.get(str(label), 0) + 1
-        elif event.get("turn_type") in {"assistant_response", "tool_use", "tool_result"}:
+        elif event.get("turn_type") in {"assistant_response", "tool_use", "tool_result", "continuation_context"}:
             other_entries.append((
                 int(event.get("turn_number") or 0), line, str(event.get("turn_type")),
             ))
@@ -60,6 +86,10 @@ def build_packet(
     if not checkpoints and session.get("canonical_checkpoint_pk"):
         checkpoints = [str(session["canonical_checkpoint_pk"])]
     commits = [commit for checkpoint in checkpoints for commit in commit_map.get(checkpoint, [])]
+    commits = list({
+        str(commit.get("commit_sha") or f"missing-{index}"): commit
+        for index, commit in enumerate(commits)
+    }.values())
     commit_lines = [
         "commit " + _clip(commit.get("commit_sha"), 10)
         + f": {_clip(commit.get('commit_message'), 300)}; "
@@ -74,6 +104,7 @@ def build_packet(
     # effective. With the default max_prompts=50 this retains useful text from
     # every turn instead of silently dropping late requirements.
     user_budget = int(max_chars * 0.35)
+    prompts_reclipped = len("\n".join(user_lines)) > user_budget
     if len("\n".join(user_lines)) > user_budget and user_lines:
         per_prompt = max(100, user_budget // len(user_lines))
         user_lines = [_clip(line, per_prompt) for line in user_lines]
@@ -199,8 +230,19 @@ def build_packet(
         "session": header,
         "transcript": "\n".join(transcript_lines),
         "commits": commit_lines,
-        "packet_truncated": len(chosen) < len(other_entries),
-        "packet_selection_strategy": "episode_aware_v1",
+        "packet_truncated": len(chosen) < len(other_entries) or prompts_reclipped or len(commits) > 8 or any(event.get("text_clipped") for event in events),
+        "packet_selection_strategy": "episode_aware_v2",
+        "packet_diagnostics": {
+            "source_event_count": len(events),
+            "retained_event_count": len(transcript_lines),
+            "text_clipped_event_count": sum(bool(event.get("text_clipped")) for event in events),
+            "user_prompts_reclipped": prompts_reclipped,
+            "actual_user_prompt_count": len(user_turns),
+            "turn_numbers_reindexed": duplicate_turns,
+            "source_turn_numbers": source_turn_numbers,
+            "transcript_chars": len("\n".join(transcript_lines)),
+            "max_packet_chars": max_chars,
+        },
         "turn_timestamps": turn_timestamps,
     }
 
@@ -210,10 +252,7 @@ def packet_as_text(packet: dict[str, Any]) -> str:
     # blind our judge to them to avoid circular annotation.
     blinded_session = {
         key: value for key, value in packet["session"].items()
-        if key not in {
-            "dataset_prompt_pushback_counts", "session_success_dataset_label",
-            "user_persona_dataset_label", "observed_costs",
-        }
+        if key in {"session_id", "repo_id", "agent", "strategy"}
     }
     return (
         "SESSION METADATA\n"
@@ -226,7 +265,7 @@ def packet_as_text(packet: dict[str, Any]) -> str:
     )
 
 
-def behavior_episode_prefixes(packet: dict[str, Any]) -> list[tuple[int, str, set[int]]]:
+def iter_behavior_episode_prefixes(packet: dict[str, Any]) -> Iterator[tuple[int, str, set[int]]]:
     """Build one no-future-information view for every user instruction turn."""
     lines = packet.get("transcript", "").splitlines()
     numbered: list[tuple[int, str]] = []
@@ -247,7 +286,6 @@ def behavior_episode_prefixes(packet: dict[str, Any]) -> list[tuple[int, str, se
         key: packet.get("session", {}).get(key)
         for key in ("session_id", "repo_id", "agent", "strategy")
     }
-    views: list[tuple[int, str, set[int]]] = []
     for index, instruction_turn in enumerate(user_turns):
         next_turn = user_turns[index + 1] if index + 1 < len(user_turns) else float("inf")
         prefix_lines = [line for turn, line in numbered if turn < next_turn]
@@ -259,5 +297,8 @@ def behavior_episode_prefixes(packet: dict[str, Any]) -> list[tuple[int, str, se
             + "\n".join(prefix_lines)
             + f"\n\nSOURCE_PACKET_TRUNCATED={packet.get('packet_truncated', False)}"
         )
-        views.append((instruction_turn, text, valid_turns))
-    return views
+        yield instruction_turn, text, valid_turns
+
+
+def behavior_episode_prefixes(packet: dict[str, Any]) -> list[tuple[int, str, set[int]]]:
+    return list(iter_behavior_episode_prefixes(packet))

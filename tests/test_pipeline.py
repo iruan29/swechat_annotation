@@ -203,6 +203,9 @@ class PipelineTests(unittest.TestCase):
                 "requirement_events": [{
                     "turn": 2,
                     "first_explicit_turn": 2,
+                    "first_user_requirement_turn": 2,
+                    "proactive_question_turn": None,
+                    "requirement_change": "new_requirement",
                     "requirement_id": "R2",
                     "requirement": "must stream",
                     "event_type": "environment_constraint_discovery",
@@ -237,6 +240,8 @@ class PipelineTests(unittest.TestCase):
                 ],
                 "literal_initial_completion_satisfies_final_requirements": False,
                 "evidence_sufficient": True,
+                "evolution_evidence_sufficient": True,
+                "implementation_evidence_sufficient": True,
                 "rationale": "memory failure",
             }],
             "confidence": 0.9,
@@ -257,6 +262,8 @@ class PipelineTests(unittest.TestCase):
             "material_plan_scope_strategy_or_acceptance_affected": False,
             "proactive_before_explicit_correction": False,
             "rationale": "checked existing exporter",
+            "requirement_novelty": "not_applicable",
+            "novel_requirement": "", "material_change": "", "novelty_evidence_turns": [],
             "evidence": [{"turn": 1, "speaker_or_source": "assistant", "quote_or_paraphrase": "checked"}],
         }
         validate_behavior_annotation(behavior, 0, {0, 1})
@@ -363,6 +370,9 @@ class PipelineTests(unittest.TestCase):
             "project_evidence_used": True,
             "unstated_material_requirement_or_downstream_impact_identified": True,
             "material_plan_scope_strategy_or_acceptance_affected": True,
+            "requirement_novelty": "new_material_requirement",
+            "novel_requirement": "bounded memory", "material_change": "stream instead of buffering",
+            "novelty_evidence_turns": [1],
         }
         derive_behavior_mode(value)
         self.assertEqual(value["behavior_mode"], "project_level_requirement_discovery")

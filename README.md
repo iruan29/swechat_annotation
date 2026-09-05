@@ -1,282 +1,202 @@
-# SWE-Chat：instruction 不是 objective
+# SWE-Chat：全量标注与指标说明
 
-这个项目检验以下观点在真实 coding-agent 会话中是否得到数据支持：
+## 1. 下载数据与启动全量标注
 
-> Agents should optimize for project outcomes under partial observability, treating instructions and execution observations as evidence about the project rather than treating each instruction as the objective itself.
-
-Pipeline 对每个会话保留完整的 user prompt 序列，并加入 assistant/tool 轨迹与关联 commit 摘要。LLM judge 不直接判断观点“对不对”，而是按中性 rubric 标注可观察现象，再由确定性代码聚合指标。
-
-新机器上的完整 Study 2 部署与一键运行说明见 [`DEPLOY.md`](DEPLOY.md)。
-
-SWE-Chat 自带的 `prompt_pushback`、`user_persona`、`session_success` 标签会保留在本地 packet 用于外部校验，但在调用新 judge 时会被隐藏，避免循环论证。
-
-## 两个独立研究 pipeline
-
-### Study 1：要求在交互中形成
-
-这个 pipeline 将 session 划分为 task threads，并为每个 final material requirement 分配稳定
-ID，标注从“初始是否明确”到“何时可发现、何时被识别、何时正确实现”的 lifecycle：
-
-- `initial_instruction_requirement_coverage`：初始指令明确包含的最终要求比例，并报告 0–4
-  specificity score。
-- `post_initial_material_update_basis.project_grounded_rate`：初始指令之后、由用户表达且会改变
-  可接受成果的更新中，project-grounded requirement 的比例；同时保留 preference/mixed/unclear。
-- `terminal_requirement_discovery`：晚出现的 project-grounded requirements 的最早可发现时间、
-  discovery status 和 evidence-path source 分布，以及其中本可更早发现的比例。
-- `cost_of_delayed_project_understanding`：比较存在/不存在 delayed project understanding 的
-  session 在 human rewrite/removal、linked-commit deletion、committed-agent-code-share proxy、turns、tool/API calls、
-  tokens、duration 和跨 requirement regression 上的描述性差异；另算 evidence-to-correct-
-  implementation 的 turn/time latency。
-- `agent_response_to_evolving_project_evidence`：区分提前发现并完成、主动询问后完成、新证据后
-  正确更新、只补表面症状、忽略证据、满足新要求但破坏旧要求，以及证据不足/未解决。
-- 保留旧版 `material_requirement_emergence_rate`、literal sufficiency 和
-  `behavior_level_distribution`，便于与既有结果对照。
-
-前两个指标使用完整会话。行为指标单独调用 judge；每次只发送截至该 episode 结束时可见的历史，不发送后续消息、commit 或全局 outcome metadata，避免 hindsight leakage。提示词及确定性分类规则在 `src/swe_chat_analysis/study1.py`。
-
-Requirement rubric 将“要求由谁表达”与“什么触发用户提出该要求”分开。Trigger
-包括 execution error、test/CI、observed output、repository/dependency constraint、agent
-explanation、review、spontaneous revision 和 unclear；只有具有 explicit/strong 因果联系的
-前六类才计入 `observation_or_feedback_triggered_event_rate`。非用户表达的 event 会被确定性归一为
-`not_user_articulated`；非 material event 不要求存在 `first_explicit_turn`。
-
-成本比较是描述性 association，不是因果估计。数据没有完整的逐行历史快照，因此
-`human_rework_lines = human_modified + human_removed`；linked commits 可能对应多个 session；
-`committed_agent_code_share` 只是 authorship-based code-survival proxy，不能解释为严格的
-longitudinal line survival。
-
-运行 20 个 session：
+在项目根目录执行，使用 Python >= 3.10。首次安装依赖：
 
 ```bash
-PYTHONPATH=src python -m swe_chat_analysis.cli run-study1 \
-  --data-dir data/swe-chat \
-  --output-dir outputs/study1_20_seed42 \
-  --sample-size 20 \
-  --seed 42 \
-  --workers 4
+python -m pip install -e .
 ```
 
-Study 1 会生成 `requirement_annotations.jsonl`、`behavior_annotations.jsonl` 和聚合后的
-`summary.json`。由于行为标注以 episode 为单位，LLM 请求数会高于 session 数。
-
-### Study 2：用户 belief、表面 instruction 与实际情况
-
-这个 pipeline 从用户的表面 instruction 中标注其背后可由会话证据支持的 `user_belief`，
-再将该 instruction 与 repository、测试、错误、运行输出、review 或用户确认所支持的
-`actual_project_situation` 比较。Mental-state 字段是有证据强度的推断，不被表述为直接读取用户内心：
-
-- `material_instruction_reality_mismatch_rate`：表面 instruction 与可识别的实际项目情况存在
-  material mismatch 的 task-thread 比例。Mismatch 包括字面执行会直接冲突、解决错误问题、采用
-  无法实现底层目标的手段，或遗漏后来由用户纠正/拒绝所确认的 scope、source-of-truth、验收、
-  兼容性、安全或功能条件，从而造成拒绝或非平凡返工；不包括无害实现选择、Agent 自身执行错误，
-  或能由合理默认值解决的一般性 underspecification。对同一底层目标的后续纠正保留在原 task
-  thread 中，不会通过拆分 thread 隐藏初始 mismatch。
-- `gap_driver`：belief 形成来源，包括个人偏好/价值、既往经历或类比、领域/技术知识背景、
-  当前项目知识、本次会话中的 observation/feedback、外部信息或建议、无明确来源的假设、mixed
-  和 unclear；同时报告 explicit/strong/weak/insufficient evidence strength、belief 是否可识别，
-  以及 belief 的信息基础是 `partial_observation`、`broadly_grounded`、`non_observational` 还是
-  `unclear`。`partial_observation_belief_rate` 直接衡量 mismatch 是否源于对局部症状、单次输出、
-  局部代码或过时状态的片面观察。
-- `mismatch_discoverability_and_route`：mismatch 是否从初始项目状态即可发现、是否早于用户解释
-  已有证据、evidence path 来源分布，以及 agent 使用 targeted question、repository inspection、
-  test/CI、execution、observed output、prior context、alternative comparison 或 causal reasoning
-  等方法发现问题的分布。
-- `literal_compliance_but_reality_failure_rate`：字面 instruction 可以完成，但未解决实际情况，
-  且失败由 instruction–reality mismatch 而非 agent 能力不足造成的比例。
-- `agent_gap_detection_and_response`：在全部 material mismatch threads 中，衡量 agent 是否主动
-  consider 用户的 latent goal/preference/assumption/knowledge，并将 response 确定性分为：直接遵守
-  `follows_surface_instruction`、针对 material uncertainty 做 targeted clarification、识别 instruction
-  与实际情况的冲突并有依据地挑战/偏离 instruction，以及 mixed/unclear；另报告 earliest evidence
-  到 mental-state consideration、gap detection 和 actual-situation resolution 的 turn/time latency。
-  Mental-state consideration 必须显式连接表面要求与用户潜在目标/假设；普通代码检查、测试或实现
-  选择问题不计。互斥 response pattern 由事件先后派生：`surface_action_commitment_turn` 记录首次
-  真正提交执行表面方案的时点；为验证前提而进行的代码阅读、repository inspection、文档研究、
-  diagnostic test 和方案比较不算执行。如果 agent 在 commitment 前发现 gap 并停下或改道，归为
-  `detects_reality_gap_and_resists`；在 commitment 前询问 material uncertainty，归为 clarification；
-  先 commitment、后发现或修复才归为 `follows_surface_instruction`。
-- `observed_resolution_by_agent_response`：分别计算三类 agent response 最终 resolved/partial/
-  unresolved/unknown 的分布和 resolved rate。
-- `cost_of_faithful_execution_under_mismatch`：在 session 层面对比“先忠实执行了存在 mismatch 的
-  instruction”与“未先执行、而是早期澄清或有证据地挑战”的 human rework、commit deletion、
-  committed-agent-code-share proxy、turns、tool/API calls、tokens 和 duration。该比较是描述性关联，
-  不解释为因果效应。
-
-提示词和证据门槛在 `src/swe_chat_analysis/study2.py`。运行同一随机种子的 20 个 session：
-
-```bash
-PYTHONPATH=src python -m swe_chat_analysis.cli run-study2 \
-  --data-dir data/swe-chat \
-  --output-dir outputs/study2_20_seed42 \
-  --sample-size 20 \
-  --seed 42 \
-  --workers 4
-```
-
-Study 2 会生成 `intent_annotations.jsonl` 和 `summary.json`。两个命令使用相同采样参数，
-因此可分析同一组 session。
-
-Study 1 和 Study 2 的 judge 命令均支持 `--workers N`（别名 `--concurrency N`）并发调用。
-默认值为 1；同一 worker 内的 validation repair 顺序执行，因此任一时刻的 HTTP 请求数不会
-超过该上限。输出仍由主线程逐行写入，`--resume` 和错误隔离语义不变。并发数应根据服务端
-rate limit 调整；遇到 HTTP 429 时降低 workers 或增加 `--delay`。
-
-## 指标
-
-| 指标 | 操作化定义 | 对应问题 |
-|---|---|---|
-| Initial requirement coverage | 初始指令明确表达的 final material requirements / 全部 final material requirements | 初始指令是否足以界定验收 |
-| Project-grounded update share | 用户后续 material updates 中由项目证据/功能约束决定的比例 | 更新是项目需求还是个人偏好 |
-| Earlier-discoverable rate | 晚出现的 project-grounded requirements 中，证据在明确表达前已经可用的比例 | agent 本可提前发现什么 |
-| Delayed-understanding cost contrast | 有/无延迟理解 session 的 rework/survival proxy、交互成本、latency 与 regression 描述性差异 | 理解延迟对应什么成本 |
-| User-belief gap driver | preference、experience、knowledge、observation、external advice 或 unsupported assumption 等来源及证据强度 | 用户为何会形成支撑表面 instruction 的 belief |
-| Mismatch discoverability/route | 初始可发现率、早于用户解释的可发现率、证据路径与 agent detection method | gap 在何时、通过什么证据可以被发现 |
-| Literal compliance/reality failure | 字面指令可以完成但实际项目情况仍未解决 | 只遵守表面 instruction 是否足够 |
-| Agent gap response | 在 mismatch 中直接遵守、澄清歧义、或识别现实冲突后挑战/偏离 instruction | agent 是否考虑用户 mental state 并发现 instruction–reality gap |
-| Detection/resolution latency | earliest mismatch evidence 到 mental-state consideration、gap detection、实际问题被处理的 turns/time | agent 发现和修正分歧有多慢 |
-| Resolution by response | 各 response pattern 的 resolved/partial/unresolved/unknown 与 resolved rate | 澄清或挑战是否对应更好的目标完成情况 |
-| Faithful-execution cost contrast | 先执行 mismatch instruction 与早期澄清/挑战 session 的 rework、interaction 和 code-survival proxy 对比 | 忠实执行片面 instruction 对应什么成本 |
-
-H3 以 instruction episode 为单位，三个 mode 互斥，并同时报告全部 episodes 与 project-reasoning opportunity 条件下的比例。Episode CI 使用按 session 聚类的 bootstrap；普通读文件、例行测试、请求许可和用户报错后修复都不算 project-outcome reasoning。
-
-## 1. 下载数据
-
-SWE-Chat 是 gated dataset。先登录并在[官方数据页](https://huggingface.co/datasets/SALT-NLP/SWE-chat)接受条款，然后：
-
-```bash
-# 编辑当前目录已经创建的 .env，填入 HF_TOKEN
-python scripts/download_data.py
-```
-
-默认下载分析所需的所有 parquet（约 2.4GB）到 `data/swe-chat/`。如需完整 5,851 份原始 transcript：
-
-```bash
-python scripts/download_data.py --include-transcripts
-```
-
-脚本默认尝试 `https://hf-mirror.com`；由于 gated 文件有时会被镜像重定向，失败时自动回退官方 endpoint。也可显式指定：
-
-```bash
-python scripts/download_data.py --endpoint https://huggingface.co
-```
-
-也可以直接用统一入口完成下载、处理、Study 2 标注和汇总：
-
-```bash
-python scripts/run_study2_pipeline.py \
-  --output-dir outputs/study2_200_seed42 \
-  --sample-size 200 --seed 42 --min-prompts 2 --workers 4
-```
-
-同一命令默认启用 resume；数据已经存在时不会重复下载，已完成的当前 rubric 标注也不会重复请求。
-
-### 全量运行 Study 2（默认 200 并发）
-
-运行所有符合 Study 2 条件的多轮 session：
-
-```bash
-./scripts/run_study2_full_parallel.sh
-```
-
-该脚本等价于使用以下关键参数：
-
-- `--sample-size 0`：不采样，使用全部符合条件的 session。
-- `--min-prompts 2`：保留至少有两个真实 user prompts 的多轮交互。
-- `--max-prompts 0`：取消 prompts 数量上限；超长会话仍受 evidence packet 字符预算控制。
-- `--workers 200`：最多同时发出 200 个 judge 请求。
-- `--resume`：中断后运行同一脚本，只重试未成功的 session，不覆盖已经完成的当前 rubric 标注。
-
-默认输出到 `outputs/study2_full/`。可以通过环境变量调整输出目录或降低并发：
-
-```bash
-STUDY2_OUTPUT_DIR=outputs/study2_full_v8 STUDY2_WORKERS=100 \
-  ./scripts/run_study2_full_parallel.sh
-```
-
-额外 CLI 参数会继续传给统一入口，例如只使用已经下载的数据：
-
-```bash
-./scripts/run_study2_full_parallel.sh --skip-download
-```
-
-200 并发要求 LLM 服务端具有相应的并发配额、rate limit 和连接容量。若出现 HTTP 429、连接重置
-或超时，可设置较小的 `STUDY2_WORKERS` 后重新运行；resume 会继续补齐失败记录。
-
-## 2. 配置 LLM
-
-在 `.env` 填入任意 OpenAI chat-completions 兼容服务：
+在 `.env` 中配置以下内容；`HF_TOKEN` 对应账号须先取得 [SWE-Chat 数据集](https://huggingface.co/datasets/SALT-NLP/SWE-chat)的访问权限：
 
 ```dotenv
+HF_TOKEN=hf_...
 OPENAI_BASE_URL=https://your-service.example/v1
 OPENAI_API_KEY=...
 OPENAI_MODEL=your-model
 OPENAI_TRUST_ENV_PROXY=false
 ```
 
-API 请求使用 `POST {OPENAI_BASE_URL}/chat/completions`、`response_format=json_object`，温度为 0。结果逐条落盘，可恢复运行。
-默认不继承 shell 的 `HTTP(S)_PROXY`；若服务必须通过代理访问，可设置 `OPENAI_TRUST_ENV_PROXY=true` 或传入 `--trust-env-proxy`。
-
-## 3. 运行
-
-无需安装包：
+### 一键下载数据
 
 ```bash
-PYTHONPATH=src python -m swe_chat_analysis.cli run \
-  --data-dir data/swe-chat \
-  --output-dir outputs/main \
-  --sample-size 200 \
-  --seed 42
+python scripts/download_data.py --endpoint https://huggingface.co
 ```
 
-也可拆开运行，便于先审查发送给 LLM 的数据：
+数据保存到 `data/swe-chat/`。标注使用 parquet 表，无需额外下载原始 transcripts。
+
+### Study 1：全量标注，200 并行
 
 ```bash
-PYTHONPATH=src python -m swe_chat_analysis.cli prepare --sample-size 200
-PYTHONPATH=src python -m swe_chat_analysis.cli judge --resume
-PYTHONPATH=src python -m swe_chat_analysis.cli summarize
+python scripts/run_study1_pipeline.py --endpoint https://huggingface.co --output-dir outputs/study1_full_v6 --sample-size 0 --seed 42 --min-prompts 2 --max-prompts 0 --workers 200
 ```
 
-`--sample-size 0` 表示使用全部符合条件的会话；默认分析 `2 <= prompt_count <= 50` 的多轮会话，避免极端长 session 超过 judge context，并在报告元数据中记录该条件总体。主要参数：
+当前版本为 requirements **v6**、behavior **v4**。
 
-- `--min-prompts 2`：要求至少两个真实 user prompt。
-- `--max-prompts 0`：取消 50 prompts 上限，适合单独做极端长会话 sensitivity analysis。
-- `--agent "Claude Code"`：可重复使用，限制 agent strata。
-- `--no-commits`：不扫描 commit 表，速度更快，但 outcome 证据更弱。
-- `--max-packet-chars 45000`：控制每个会话发给 judge 的最大文本量。
-- `judge --no-resume`：覆盖 annotations；默认跳过已经成功的 session。
-
-输出目录包括：
-
-- `packets.jsonl`：发送给 LLM 的可审计 evidence packet。
-- `annotations.jsonl`：结构化逐会话判断和 evidence。
-- `errors.jsonl`：失败请求，不混入分母。Study 1/2 的 validation failure 会保存实际非法值、
-  allowed values、首次 JSON 和 repair 后 JSON；resume 时只保留当前 sample 与 rubric version 的错误。
-- `summary.json`：机器可读指标、分布与运行元数据。
-- `report.md`：中文结果报告。
-
-生成三级行为可视化：
+### Study 2：全量标注，200 并行
 
 ```bash
-python scripts/visualize_results.py \
-  --summary outputs/main/summary.json \
-  --output outputs/main/behavior_modes.png
+python scripts/run_study2_pipeline.py --endpoint https://huggingface.co --output-dir outputs/study2_full_clean_v2 --sample-size 0 --seed 42 --min-prompts 2 --max-prompts 0 --workers 200
 ```
 
-默认展示有 project-reasoning opportunity 的 episodes；传入 `--scope overall` 可展示全部有效 episodes。输出路径也可以使用 `.svg` 获得矢量图。
+当前版本为 **v8**。
 
-## 快速 smoke test
+两个命令各自自动完成：**缺失数据下载 → 筛选与处理 → 标注 → 指标汇总 → 完整性检查**，互不依赖。
+默认支持续跑，中断或部分失败后重新执行同一命令即可；不要同时运行两个进程写同一输出目录。
+200 是每个命令的并发上限，两个同时运行会合计最多 400；服务限流时降低 `--workers`。
 
-fixture 仅用于验证代码，不能用于研究结论：
+`--sample-size 0` 表示全部合格 session；`--max-prompts 0` 取消提示数上限。
+合格 session 必须满足元数据至少 2 个 prompts，且事件表至少 2 条非续接摘要的 user prompts。
+本地快照共 **4,384 个合格 session**：Study 1 为 **62,066 个名义标注任务**（4,384 要求任务 + 57,682 行为 episode），Study 2 为 **4,384 个任务**，重试与 repair 另计。
 
-```bash
-python scripts/make_fixture.py
-PYTHONPATH=src python -m swe_chat_analysis.cli prepare \
-  --data-dir data/fixture --output-dir outputs/fixture --sample-size 1
-```
+最终指标分别位于：
 
-## 研究设计注意事项
+- `outputs/study1_full_v6/summary.json`
+- `outputs/study2_full_clean_v2/summary.json`
 
-1. 这是描述性证据，不是“adaptive agent 优于 literal agent”的因果实验。
-2. SWE-Chat 来自主动公开 checkpoint 的开源项目用户，存在选择偏差。
-3. session 与 checkpoint 是多对多关系；commit 是 outcome proxy，不保证某一变更只归属于该 session。
-4. LLM judge 有测量误差。正式报告应人工复核随机样本，并对至少 10% 样本做第二模型/第二 prompt 复标，报告一致率。
-5. 默认不向 API 发送完整 patch，只发送 commit message、文件与 diff 统计，降低成本与代码泄露风险。
+同目录的 `packets.jsonl` 是处理后的证据；`*_annotations.jsonl` 保存逐条标注，`*_errors.jsonl` 保存失败历史。
+
+## 2. 指标的共同约定
+
+- **Session**：一次会话，也是 sample 单位；**task thread**：会话内同一项目目标；**instruction episode**：一条用户指令及下一条用户指令前的响应。
+- **Material requirement**：会改变可接受成果的重要要求。普通措辞调整、授权、流程提醒不自动算 material 更新。
+- `estimate = numerator / denominator`；分母为零时返回 `null`，不是 0%。
+- `distribution` 是计数；多标签类型或证据路径来源的合计可能超过 thread 数。
+- `mean` / `median` / `n` 为有效数值的均值、中位数和样本数；缺失不补零。
+- 当前结果是描述性统计，没有显著性检验或因果效应。所有结论还受 LLM 标注误差、证据截断及样本选择影响。
+
+## 3. Study 1：要求演化与 agent 响应
+
+### 证据充分性
+
+三个字段独立判断，不能把“缺少成功测试结果”直接等同于“无法识别要求”：
+
+| 字段 | 含义 |
+|---|---|
+| `evidence_sufficient` | 是否足以识别最终要求及初始指令的表达内容；决定要求覆盖率的纳入范围 |
+| `evolution_evidence_sufficient` | 是否足以识别要求更新历史；决定演化指标的纳入范围 |
+| `implementation_evidence_sufficient` | 是否有足够证据验证实现情况，不作为要求覆盖率的成功筛选门槛 |
+| `annotation_coverage` | 各类有效 session、thread、episode 及 scope 外 episode 的数量，用于核对排除情况 |
+
+### 主要指标
+
+| 指标 | 含义与分母 |
+|---|---|
+| `initial_instruction_requirement_coverage` | 初始明确表达的最终 material 要求 / 全部最终 material 要求；仅用要求可识别 threads，按要求计数，不是 session 等权平均 |
+| `specificity_score`（上项内部） | 初始表达完整度：0 不兼容或最终要求不可识别，1 大部分验收要求缺失，2 核心目标明确但缺重要要求，3 仅缺次要验收细节，4 所有重要要求明确 |
+| `material_requirement_emergence_rate` | 至少发生一次新增/变化 material 要求的 thread / 更新历史可识别 threads；独立新任务、旧要求修复不算演化 |
+| `post_initial_material_update_basis.project_grounded_rate` | 用户后续表达的 project-grounded 新增/变化要求事件 / 用户后续新增/变化 material 要求事件 |
+| `post_initial_material_update_basis.distribution` | 上述用户更新按 project-grounded、user-preference、mixed、unclear 分类的计数；偏好和 mixed 不能自动算作客观项目约束 |
+| `observation_or_feedback_triggered_event_rate`（emergence 指标内部） | 有 explicit/strong 因果联系的观察或反馈触发用户更新 / 全部用户 material 更新事件；仅时间先后不算触发证据 |
+| `terminal_requirement_discovery.earlier_discoverable_rate` | 最早可发现时间早于首次明确表达的晚期 grounded 更新 / 全部晚期 grounded 更新；包括非用户来源的新要求事件 |
+| `terminal_requirement_discovery` 的 distributions | 晚期 grounded 更新的可发现状态及证据路径来源计数 |
+| `literal_initial_instruction_satisfies_final_requirements_rate` | competent literal completion 可满足最终要求的 thread / 要求及该反事实可识别 threads；未知反事实另计，不当作 false |
+| `agent_response_to_evolving_project_evidence` | 全部新增/变化 material 更新、晚期 grounded 更新的 agent 响应计数；另报既有要求修复数和无法判定更新类型的数量 |
+| `cross_requirement_regression_rate`（上项内部） | 满足新要求但破坏既有要求的更新事件 / 全部新增/变化 material 更新事件 |
+| `behavior_level_distribution` | scope 内、有项目推理机会且可分类的 episode 中，三类行为各自的比例；无机会和不可分类数量另报，不代表全部 episode 的无条件分布 |
+| `cost_of_delayed_project_understanding` | 可判定延迟理解与非延迟理解 session 的成本对比；分组依据发现/识别/询问时间，而不是最终实现是否成功 |
+| `evidence_to_correct_implementation_latency`（上项内部） | 延迟事件最早可发现证据 → 正确实现的 T 编号差和秒数；未解决/不可观察另计，负时间戳差记为缺失 |
+
+**新增与修复的区别：** `requirement_change=new_requirement` 或 `changed_requirement` 进入演化统计；
+`existing_requirement_correction` 是既有要求修复，独立计数；`unclear` 单独报告。
+初始已明确的要求以及同一要求的重复发现，不再进入新要求发现指标。
+
+### 行为三级分类
+
+| 类别 | 含义 |
+|---|---|
+| `reactive_instruction_following` | 直接遵循/响应指令，没有解决重要不确定性或发现未述项目要求 |
+| `instruction_scoped_sensemaking` | 在既定目标、scope 或验收范围内，诊断原因、消解重要歧义或比较方案 |
+| `project_level_requirement_discovery` | 用项目证据发现未述的重要要求或下游影响，并实质改变计划、scope、策略或验收 |
+
+第三级必须有 `requirement_novelty=new_material_requirement`，说明 `novel_requirement`、`material_change`，
+并提供当前 episode 内的非用户来源证据。验证用户已提供的诊断、例行测试或修复自身实现错误，不自动算第三级。
+无法判断新颖性时归为不可分类。
+
+### 提前识别、提前完成与延迟理解
+
+`first_explicit_turn` 是任何来源首次明确要求的时点；`first_user_requirement_turn` 是用户首次明确要求的时点，用户始终未提出时为 null。
+
+| 响应类别 | 含义 |
+|---|---|
+| `anticipated_and_satisfied` | 识别和正确实现均严格早于用户首次明确表达 |
+| `anticipated_then_satisfied_after_instruction` | 识别更早，但正确实现发生在用户表达当时或之后 |
+| `autonomously_discovered_and_satisfied` | 用户始终未明确表达，agent 自主发现并满足 |
+| `proactive_question_then_satisfied` | 有证据的针对性问题早于用户表达，随后满足要求 |
+| `correctly_updated_after_new_evidence` | 新证据出现后正确更新实现 |
+| `surface_symptom_patch` / `ignored_new_evidence` | 只修表面症状 / 忽略新证据 |
+| `satisfied_new_but_regressed_existing` | 满足新要求但破坏已建立的要求 |
+| `unclear_or_unresolved` / `not_applicable` | 不明确或未解决 / 不适用 |
+
+延迟理解组要求晚期 grounded 新/变化要求存在更早证据，且识别未早于首次用户表达；没有用户表达时使用首次明确证据作为比较时点。
+早期针对性询问可避免归为延迟。缺少足够 exposure 信息或更新历史不完整的 session 不混入已知非延迟组；已观察到延迟的 session 仍可进入延迟组。
+`excluded_unknown_exposure_session_count` 报告无法分组的数量。
+
+## 4. Study 2：表面指令与实际项目情况的错位
+
+**Material mismatch** 指 competent agent 按初始表面指令和合理默认值执行，仍会与有证据支持的目标、约束或验收条件产生重要偏差。
+普通实现错误、无害选择或用户后来真正改变目标，不自动算初始 mismatch；用户 belief 是证据支持的推断，不是直接读取心理状态。
+
+| 指标 | 含义与分母 |
+|---|---|
+| `material_instruction_reality_mismatch_rate` | 存在 material mismatch 的 threads / actual situation 可识别 threads；不可识别数量另报，不当作无 mismatch |
+| `mismatch_type_distribution`（上项内部） | 错误诊断、手段与目标冲突、遗漏重要要求、不可行/不兼容、抽象层级错误及其他错位的计数，可多标签 |
+| `gap_driver.distribution` | mismatch 中用户 belief 的来源：偏好、经历、技术知识、项目知识、当前观察、外部建议、无说明依据的假设、mixed 或 unclear |
+| `gap_driver.evidence_strength_distribution` | 来源证据为 explicit、strong inference、weak inference、insufficient 的计数；弱推断不应当作事实 |
+| `belief_basis_scope_distribution`（gap_driver 内部） | belief 基于片面观察、较完整证据、非观察性偏好或无法判断的分布 |
+| `partial_observation_belief_rate`（gap_driver 内部） | 片面观察型 belief / 信息基础可分类的 mismatch；分母含 partial、broadly-grounded、non-observational，排除 unclear 并另报 |
+| `user_belief_identifiable_rate`（gap_driver 内部） | 用户 belief 可识别的 mismatch / 全部 mismatch |
+| `mismatch_discoverability_and_route.initially_discoverable_rate` | 从初始项目状态可发现的 mismatch / 初始可发现性可判定的 mismatch；排除 unclear |
+| `discoverable_before_user_explanation_rate`（上项内部） | 最早证据早于用户明确解释的 mismatch / 有用户明确解释的 mismatch |
+| `mismatch_discoverability_and_route` 的 distributions | 初始可发现性、证据路径来源与 agent 发现方法的计数；来源和方法可能多选 |
+| `literal_compliance_but_reality_failure_rate` | 字面要求可完成、但因 mismatch 无法解决实际情况的 threads / actual situation 可识别 threads；不是实际失败率，也不只以 mismatch 为分母 |
+| `agent_gap_detection_and_response.user_mental_state_consideration_rate` | agent 明确考虑用户潜在目标/belief 的 mismatch / 全部 mismatch；普通代码检查不自动算 consideration |
+| `proactive_consideration_or_detection_rate`（上项内部） | agent 在表面方案 commitment 及用户纠正/解释前已考虑或发现问题的 mismatch / 全部 mismatch |
+| `proactive_reality_gap_detection_rate`（上项内部） | 满足主动条件且明确识别 gap 的 mismatch / 全部 mismatch |
+| `response_pattern_rates`（上项内部） | 直接执行、早期澄清、早期发现并挑战各自 / 全部 mismatch；另有 mixed、unclear，因此三类不一定合计 100% |
+| 三类 `evidence_to_*_latency`（上项内部） | 最早 mismatch 证据 → consideration、gap detection、实际问题被处理的 T 编号差/秒数；只汇总可观察且终点不早于起点者，其他另计 |
+| `observed_resolution_by_agent_response` | 每类响应的 resolved/partial/unresolved/unknown 分布；resolved rate 的分母只含前三种，不含 unknown |
+| `cost_of_faithful_execution_under_mismatch` | 存在先执行错位指令的 session，与没有这种先执行且至少一次早期澄清/挑战的 session 的成本对比；混合/不可分类另报 |
+
+响应三类为 `follows_surface_instruction`、`clarifies_instruction_uncertainty`、`detects_reality_gap_and_resists`。
+`surface_action_commitment_turn` 指实质采纳/执行表面方案，不包括用于验证前提的阅读、诊断测试或方案比较。
+先执行再修复仍算先执行；澄清/挑战必须严格早于 commitment 才算早期处理。早期澄清和早期抵抗同时成立时，当前分类优先归为抵抗。
+
+## 5. 成本、敏感性与运行完整性
+
+### 成本字段
+
+| 字段 | 含义 |
+|---|---|
+| `human_rework_lines` | `human_modified + human_removed`，人类修改/删除行数代理，不是严格因果返工量 |
+| `linked_commit_deletions` | 关联 commit 的删除行数；session 内按 SHA 去重，但跨 session 可能共享 commit，不能当作独立工作量全局相加 |
+| `committed_agent_code_share` | `agent_percentage / 100`，提交代码的 agent 归属比例，不是逐行纵向存活率 |
+| `turn_count` / `tool_call_count` / `api_call_count` | 原始 coding session 的交互、工具调用和模型调用数量，不是此次标注调用量 |
+| `total_tokens` | 数据集 input、output、cache creation、cache read 字段之和，不直接等于统一口径的账单费用 |
+| `duration_seconds` | 原始 session 持续时间；标注模型 usage 保存在各 annotation 行的 `usage` 中 |
+
+Study 1 的组间差值为“延迟组 − 非延迟组”；Study 2 为“先执行组 − 早期澄清/挑战组”。
+应同时看两组 `n`、均值和中位数，不能将复杂任务带来的成本差异解释为因果效应。
+
+### Study 1 额外敏感性统计
+
+| 字段 | 含义 |
+|---|---|
+| `max` | 最大观测值 |
+| `largest_value_share_of_total` | 最大值 / 全组总量，检查是否由单个 session 主导；仅在非负且总量为正时计算 |
+| `mean_without_one_max` | 去掉一个最大值后的均值；仅作为诊断，原始数据不删除，少于两个观测时为 null |
+| `trimmed_mean_10_percent` | 两端各去掉 floor(n/10) 个值后的均值；n<10 时为 null |
+| `median_difference_delayed_minus_not_delayed` | 两组中位数之差 |
+| `leave_one_session_out_mean_difference` | 每次从任一组去掉一个 session 后的均值差范围；`sign_changes` 表示范围同时包含正值和负值，提示结论方向敏感 |
+
+这些是敏感性诊断，不是置信区间，也不替代保留全部数据的主统计。
+
+### 运行完整性
+
+`run_completeness` 给出 packet 总数、完成 session 数、待补 session 数和完成率。
+Study 1 只有要求标注和全部行为 episodes 均完成，才算一个 session 完成；另报行为 episode 的缺口。
+`run_meta` 保存模型、采样和处理参数；`prepare_meta.json` 还记录截断情况。
+
+错误文件保留历史尝试，因此当前缺口以 `run_completeness` 为准，不以错误文件行数为准。
+**完成率 100% 只表示结构有效的标注已齐备，不代表证据充分、标注正确或研究假设已得到支持。**
