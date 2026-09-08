@@ -1,3 +1,11 @@
+> **人工标注入口：100 条，三人 30 / 30 / 40**
+>
+> 已冻结至少 8 个用户 prompt 的样本，用户消息全部展示，Agent 按轮折叠。只需 Python 3.10+，不需要安装依赖或 API key。
+> 进入 `annotation_release/`，分别运行 `python annotate.py serve --rater rater_a`（30 条）、`rater_b`（30 条）或 `rater_c`（40 条）。
+> 每人导出一个 JSON，负责人使用 merge 命令校验并汇总。完整操作见 [三人标注指南](annotation_release/README.md)。
+>
+> 下文是原有自动研究流水线，人工标注请使用上述入口。
+
 # SWE-Chat：全量标注与指标说明
 
 ## 1. 下载数据与启动全量标注

@@ -1,0 +1,42 @@
+:root { color-scheme: light; font: 14px/1.6 system-ui, -apple-system, "Microsoft YaHei", sans-serif; color: #243247; background: #f3f6fa; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { padding: 18px 24px; background: #132b45; color: white; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+header strong { font-size: 20px; } .muted { display: block; opacity: .75; font-size: 12px; }
+.account, .filters, .pagination, .actions, nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+input, select, textarea, button { font: inherit; border: 1px solid #bbc8d8; border-radius: 6px; padding: 7px 10px; }
+input, select, textarea { background: white; color: #182b42; max-width: 100%; }
+button { background: #fff; color: #233d58; cursor: pointer; } button:hover { background: #e7f1fc; } button:disabled { opacity: .5; cursor: default; }
+button.primary, button.active { background: #1569ad; color: white; border-color: #1569ad; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid #68a8e7; outline-offset: 2px; }
+#message { padding: 10px 24px; background: #e6eff8; white-space: pre-wrap; overflow-wrap: anywhere; } #message.error { background: #ffe4df; color: #a12513; }
+main { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: 90vh; }
+aside { padding: 20px 14px; background: #fff; border-right: 1px solid #dae2ec; } h1 { font-size: 18px; overflow-wrap: anywhere; } h2 { font-size: 17px; margin: 4px 0 12px; }
+#queue { max-height: 73vh; overflow-y: auto; margin-top: 16px; } .queue-item { display: block; width: 100%; text-align: left; margin-bottom: 7px; font-size: 12px; overflow-wrap: anywhere; }
+#welcome, #workspace { padding: 20px; min-width: 0; } [hidden] { display: none !important; }
+.columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr); gap: 18px; align-items: start; }
+.evidence-panel, .form-panel { background: #fff; border: 1px solid #dce4ee; border-radius: 10px; padding: 18px; min-width: 0; }
+.evidence-panel { position: sticky; top: 12px; max-height: 92vh; overflow-y: auto; }
+.notice { background: #fff2ce; border-left: 4px solid #dfac30; padding: 10px 14px; }
+p { color: #53647a; } pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.65 ui-monospace, monospace; }
+.event { border-left: 3px solid #9aaabc; padding: 12px; margin: 10px 0; background: #f7f9fc; border-radius: 4px; }
+.event.user_prompt { border-left-color: #2274b9; background: #edf5fc; } .event.target { outline: 2px solid #daa929; }
+.event pre { margin: 8px 0 0; } .event-head { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.field { margin: 13px 0; } .field > label { display: block; font-weight: 600; margin-bottom: 5px; }
+.field > input, .field > select, .field > textarea { width: 100%; } .field > small { display: block; color: #78869a; font-size: 11px; overflow-wrap: anywhere; }
+textarea { resize: vertical; min-height: 62px; width: 100%; }
+details { margin: 12px 0; padding: 10px; background: #f7f9fc; border: 1px solid #dde5ee; border-radius: 7px; min-width: 0; }
+summary { cursor: pointer; font-weight: 600; } .array-item { padding: 10px; border: 1px solid #d7e1eb; margin: 8px 0; background: white; border-radius: 6px; }
+.remove { font-size: 12px; color: #a13c3c; } .actions { position: sticky; bottom: 0; padding: 14px 0; background: white; border-top: 1px solid #dde4ee; }
+#save-state { font-size: 12px; color: #5d7087; } .pagination { margin: 12px 0; justify-content: space-between; }
+dialog { width: min(1100px, 94vw); max-height: 88vh; overflow: auto; border: 1px solid #c4d3e3; border-radius: 10px; }
+dialog::backdrop { background: #10233c88; } table { border-collapse: collapse; width: 100%; font-size: 12px; }
+td, th { text-align: left; border-bottom: 1px solid #dce4ee; padding: 8px; overflow-wrap: anywhere; } td:first-child { width: 70%; }
+@media (max-width: 1050px) { main { grid-template-columns: 170px minmax(0, 1fr); } .columns { grid-template-columns: 1fr; } .evidence-panel { position: static; max-height: 55vh; } }
+@media (max-width: 620px) { main { display: block; } #queue { max-height: 160px; } header { padding: 12px; } #workspace { padding: 10px; } }
+.check-option { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+fieldset { border: 1px solid #dce4ee; border-radius: 7px; margin: 12px 0; }
+legend { font-weight: 600; }
+.round { border-bottom: 1px solid #dae2ec; padding-bottom: 14px; }
+.round h3 { color: #1569ad; margin-bottom: 4px; }
+.agent-fold > summary { color: #53647a; }
