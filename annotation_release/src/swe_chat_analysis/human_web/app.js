@@ -4,12 +4,16 @@ let stageNames = {behavior: "① 行为前缀", requirements: "② 要求演化"
 let stageOrder = Object.keys(stageNames);
 const state = {annotator: "", tasks: [], view: null, annotation: null, dirty: false, page: 0, saving: false, assigned: null};
 const element = id => document.getElementById(id);
+const tabStorage = {
+  getItem(key) { try {return sessionStorage.getItem(key);} catch {return null;} },
+  setItem(key, value) { try {sessionStorage.setItem(key, value);} catch {} }
+};
 const fragment = new URLSearchParams(location.hash.slice(1));
 if (fragment.get("token")) {
-  sessionStorage.setItem("human-token", fragment.get("token"));
+  tabStorage.setItem("human-token", fragment.get("token"));
   history.replaceState(null, "", location.pathname);
 }
-element("annotator").value = sessionStorage.getItem("human-annotator") || "";
+element("annotator").value = tabStorage.getItem("human-annotator") || "";
 
 function message(text, error = false) {
   element("message").textContent = text;
@@ -17,8 +21,9 @@ function message(text, error = false) {
 }
 
 async function api(path, payload) {
+  if (window.offlineAPI) return window.offlineAPI(path, payload);
   const response = await fetch(path, {method: payload ? "POST" : "GET", headers: {
-    "Authorization": "Bearer " + (sessionStorage.getItem("human-token") || ""),
+    "Authorization": "Bearer " + (tabStorage.getItem("human-token") || ""),
     "Content-Type": "application/json"
   }, body: payload ? JSON.stringify(payload) : undefined});
   const result = await response.json();
@@ -43,6 +48,18 @@ function button(text, action, className) {
 function dirty() {
   state.dirty = true;
   element("save-state").textContent = "未保存更改";
+  if (window.offlineAutoSave && state.view) {
+    try {
+      const durable = window.offlineAutoSave(state);
+      state.dirty = !durable;
+      element("save-state").textContent = durable ? "草稿已自动保存在本浏览器" : "仅保存在本页内存，请备份进度";
+      element("next-stage").hidden = true;
+      const task = state.tasks.find(item => item.case_id === state.view.case_id);
+      if (task) task.statuses.review = "draft";
+      renderQueue();
+      element("progress").textContent = `${state.tasks.length} 条 · ${state.tasks.filter(item => item.statuses.review === "complete").length} 条已提交`;
+    } catch(error) { message("自动保存失败：" + error.message, true); }
+  }
 }
 
 function defaultValue(spec) {
@@ -264,7 +281,7 @@ async function openCase(caseId, stage) {
       return control;
     }));
     element("submit").textContent = view.simple ? "提交标注" : "校验并提交（锁定本阶段）";
-    element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? "已恢复服务器草稿" : "尚未保存";
+    element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? (window.offlineAPI ? "已恢复浏览器草稿" : "已恢复服务器草稿") : "尚未保存";
     renderEvents(); renderForm(); renderQueue();
     message("已载入 " + stageNames[stage] + " · " + view.rubric_version);
   } catch (error) {message(error.message, true);}
@@ -277,9 +294,10 @@ async function save(complete) {
   try {
     const result = await api("/api/save", {annotator: state.annotator, case_id: state.view.case_id,
       stage: state.view.stage, revision: state.view.revision, annotation: state.annotation, complete});
-    state.view.revision = result.revision; state.view.status = result.status; state.dirty = false;
+    state.view.revision = result.revision; state.view.status = result.status; state.dirty = Boolean(result.volatile);
     element("save-state").textContent = complete ? (state.view.simple ? "已提交，可修订" : "已提交并锁定") : "草稿已保存 " + new Date().toLocaleTimeString();
-    message(complete ? "提交成功。统计仅纳入已提交记录；可继续下一项。" : "草稿已保存至服务器，可以关闭后继续。 ");
+    message(complete ? "提交成功。统计仅纳入已提交记录；可继续下一项。" : (window.offlineAPI ? "草稿已保存。请定期下载备份，换浏览器或移动文件后用导入进度恢复。" : "草稿已保存至服务器，可以关闭后继续。 "));
+    if (result.volatile) message("浏览器未能持久保存，关闭前请点击备份全部进度。", true);
     await refreshTasks();
     if (complete) {
       element("stages").querySelectorAll("button").forEach((control, index) => {
@@ -298,7 +316,7 @@ element("enter").addEventListener("click", async () => {
   if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) {message("请输入字母、数字、下划线或连字符组成的标注员 ID。", true); return;}
   state.annotator = id; state.view = null; state.annotation = null; state.dirty = false;
   element("workspace").hidden = true; element("welcome").hidden = false;
-  sessionStorage.setItem("human-annotator", id);
+  tabStorage.setItem("human-annotator", id);
   try {await refreshTasks(); element("export").disabled = false; element("summary").disabled = false; message("任务已载入，点击左侧样本开始。");}
   catch (error) {message(error.message, true);}
 });
@@ -322,6 +340,7 @@ element("apply-json").addEventListener("click", () => {
   try {
     const value = JSON.parse(element("json-editor").value);
     if (!value || Array.isArray(value) || typeof value !== "object") throw new Error("顶层必须是对象");
+    if (window.offlineValidateDraft) window.offlineValidateDraft(value);
     state.annotation = value; dirty(); renderForm(); message("JSON 已应用，仍需保存或提交。 ");
   } catch (error) {message("JSON 无效：" + error.message, true);}
 });
@@ -394,3 +413,10 @@ element("summary").addEventListener("click", async () => {
     }
   } catch (error) { message(error.message, true); }
 })();
+
+window.offlineMessage = message;
+window.offlineReload = async () => {
+  state.view = null; state.annotation = null; state.dirty = false;
+  element("workspace").hidden = true; element("welcome").hidden = false;
+  await refreshTasks();
+};

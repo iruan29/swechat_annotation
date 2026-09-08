@@ -103,7 +103,7 @@ def build(source, destination, repo_root):
     package_src = destination / 'src' / 'swe_chat_analysis'
     package_src.mkdir(parents=True)
     # Explicit allowlist: never copy .env, databases, raw parquet, or existing annotations.
-    for name in ('__init__.py', 'human.py', 'human_simple.py', 'human_schema.py', 'human_team.py', 'io.py', 'packet.py', 'study1.py', 'study2.py'):
+    for name in ('__init__.py', 'human.py', 'human_simple.py', 'human_schema.py', 'human_team.py', 'human_offline.py', 'io.py', 'packet.py', 'study1.py', 'study2.py'):
         shutil.copy2(repo_root / 'src' / 'swe_chat_analysis' / name, package_src / name)
     shutil.copytree(repo_root / 'src' / 'swe_chat_analysis' / 'human_web', package_src / 'human_web')
     shutil.copy2(repo_root / 'scripts' / 'annotation_team.py', destination / 'annotate.py')
@@ -115,6 +115,8 @@ def build(source, destination, repo_root):
     (destination / '.gitignore').write_text('.local/\nsubmissions/\ncollected/\n*.sqlite3\n*.sqlite3-*\n__pycache__/\n*.pyc\n.venv/\n.env\n.DS_Store\n', encoding='utf-8')
     (destination / 'DATA_NOTICE.md').write_text('本包包含 SWE-Chat 原始数据的 100 条会话摘选（8–12 个用户轮次），仅保留原始 user / assistant / tool use / tool result 事件及成本元数据，未裁剪正文；不含模型预标注。来源与数据集许可见 DATA_SOURCE.md（原始数据卡标记 odc-by）。样本及分配校验值见 assignments.json。\n', encoding='utf-8')
     load_bundle(destination)
+    from .human_offline import generate
+    generate(destination)
     archive = destination.with_suffix('.zip')
     if archive.exists():
         raise ValueError(f'压缩包已存在：{archive}')
@@ -251,10 +253,14 @@ def main(root=None):
     merge_parser.add_argument('--output-dir', type=Path, default=Path('collected'))
     merge_parser.add_argument('--allow-partial', action='store_true')
     sub.add_parser('verify')
+    sub.add_parser('offline', help='生成可双击打开的离线 HTML')
     args = parser.parse_args()
     try:
         if args.command == 'build':
             build(args.source, args.destination, Path(__file__).resolve().parents[2])
+        elif args.command == 'offline':
+            from .human_offline import generate
+            generate(args.bundle_dir)
         elif args.command == 'verify':
             config, cases = load_bundle(args.bundle_dir)
             print(f'校验通过：{len(cases)} 条，30/30/40，批次 {config["package_id"]}')

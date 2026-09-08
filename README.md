@@ -1,8 +1,9 @@
-> **人工标注入口：100 条，三人 30 / 30 / 40**
+> **人工标注：双击 HTML 即可，无需 Python 或服务器**
 >
-> 已冻结至少 8 个用户 prompt 的样本，用户消息全部展示，Agent 按轮折叠。只需 Python 3.10+，不需要安装依赖或 API key。
-> 进入 `annotation_release/`，分别运行 `python annotate.py serve --rater rater_a`（30 条）、`rater_b`（30 条）或 `rater_c`（40 条）。
-> 每人导出一个 JSON，负责人使用 merge 命令校验并汇总。完整操作见 [三人标注指南](annotation_release/README.md)。
+> 点击 GitHub **Code → Download ZIP**，解压后进入 `annotation_release/offline/`：
+> 第一人打开 `rater_a.html`（30 条），第二人打开 `rater_b.html`（30 条），第三人打开 `rater_c.html`（40 条）。
+> 填写后自动保存浏览器草稿；完成每条需点击提交。关闭前下载「备份全部进度」，全部完成后导出 submission JSON 交给负责人。
+> 操作详情、备用 Python 版和最终汇总见 [三人标注指南](annotation_release/README.md)。
 >
 > 下文是原有自动研究流水线，人工标注请使用上述入口。
 
