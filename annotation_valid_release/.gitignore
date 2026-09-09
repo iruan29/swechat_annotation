@@ -1,0 +1,10 @@
+.local/
+submissions/
+collected/
+*.sqlite3
+*.sqlite3-*
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store

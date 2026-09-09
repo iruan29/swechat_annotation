@@ -1,0 +1,2359 @@
+{
+  "package_id": "bc9d14a9b046716fe08f553b8e0a900521c89b4eee9e3916ba0d818cb1c08b7c",
+  "summary": {
+    "sessions": 100,
+    "user_messages": 1436,
+    "segments_with_agent_or_tool_records": 1223,
+    "segments_without_visible_response": 213,
+    "sessions_with_at_least_one_gap": 70,
+    "source_event_match_count": 100
+  },
+  "interpretation": "A segment runs from one non-continuation user message to the next, or to the end of the recorded session. It is not guaranteed to be a causal request-response pair. No visible response does not prove the agent ignored the request. Tool-only segments do not prove completion. Frozen selected event types exactly match the source parquet; source data itself may omit events or truncate tool results.",
+  "cases": [
+    {
+      "case_id": "73e0eb94-b911-4ad2-8794-746acb97a112",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 103,
+          "next_source_prompt_turn": 104,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 104,
+          "next_source_prompt_turn": 106,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "735d638f-6cdf-43ab-a835-72cc7d395a44",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 199,
+          "next_source_prompt_turn": 200,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f0077c2f-21de-4863-8bd0-6384d8968181",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "173e23b9-df1a-4c81-b566-11b0ddebd2b9",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "b56442e6-68e3-48f4-a3b0-f97af13ce397",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 77,
+          "next_source_prompt_turn": 78,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "90def49d-2292-4ced-8ac6-f3ba3783a25b",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 687,
+          "next_source_prompt_turn": 689,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "072a56be-c14e-49f6-ad8d-4446a06e3011",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 167,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "c15bd67e-428b-4a17-a658-3952485c9375",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "28ebdec1-58a4-4a4a-90fe-40a6873c86a2",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "d0c9bbeb-350c-4b98-8cf9-00cb0afbcfcb",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "c79f1fed-6206-455e-81dd-2cfce84c7d67",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "185136bc-648d-4ba4-ad73-7caa4d4a50eb",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 130,
+          "next_source_prompt_turn": 134,
+          "intervening_source_event_types": {
+            "file_snapshot": 3
+          }
+        },
+        {
+          "source_prompt_turn": 134,
+          "next_source_prompt_turn": 135,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 135,
+          "next_source_prompt_turn": 136,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "a3e49a1b-75cc-4508-a321-6c2b026b2337",
+      "agent": "Claude Code",
+      "user_messages": 23,
+      "segments_with_agent_or_tool_records": 16,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 11,
+          "next_source_prompt_turn": 13,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 18,
+          "next_source_prompt_turn": 21,
+          "intervening_source_event_types": {
+            "file_snapshot": 1,
+            "system_injected": 1
+          }
+        },
+        {
+          "source_prompt_turn": 21,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "a5fa221f-c511-4bb9-ae4f-9627cf44ba36",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 260,
+          "next_source_prompt_turn": 262,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "c4d3dbfa-e6a6-49de-b344-ca356875b9b7",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "7d36588f-43e0-41fb-9741-d7b4cb4bee32",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "88d4e0ee-a711-4832-b79a-651beecf5f87",
+      "agent": "Claude Code",
+      "user_messages": 47,
+      "segments_with_agent_or_tool_records": 43,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 153,
+          "next_source_prompt_turn": 156,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 195,
+          "next_source_prompt_turn": 197,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 279,
+          "next_source_prompt_turn": 280,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f180c43b-2cc1-4cc8-ba37-e17fd307ad91",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 117,
+          "next_source_prompt_turn": 119,
+          "intervening_source_event_types": {
+            "system_injected": 1
+          }
+        },
+        {
+          "source_prompt_turn": 119,
+          "next_source_prompt_turn": 122,
+          "intervening_source_event_types": {
+            "file_snapshot": 2
+          }
+        },
+        {
+          "source_prompt_turn": 254,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "cfdde919-9d3f-41b8-a36c-d07c99b0d33a",
+      "agent": "Claude Code",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 2,
+          "next_source_prompt_turn": 3,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 3,
+          "next_source_prompt_turn": 5,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "6c6d863a-ab59-47be-87d3-77e1f8a4f370",
+      "agent": "Claude Code",
+      "user_messages": 21,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 107,
+          "next_source_prompt_turn": 108,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 108,
+          "next_source_prompt_turn": 110,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 110,
+          "next_source_prompt_turn": 111,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 111,
+          "next_source_prompt_turn": 113,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4cd77c47-fc77-4cac-86ec-9aebfdf4d3e3",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 6,
+      "gaps": [
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {
+            "queue_operation": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {
+            "file_snapshot": 2
+          }
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 70,
+          "next_source_prompt_turn": 71,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 71,
+          "next_source_prompt_turn": 74,
+          "intervening_source_event_types": {
+            "system_event": 1,
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "327f1292-9603-4e47-8b53-e1778317b947",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "56b4a299-7615-4e82-985c-76e481ea071a",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "fdd49a8e-d936-4a3f-99fd-d1ce23f3b09c",
+      "agent": "Claude Code",
+      "user_messages": 30,
+      "segments_with_agent_or_tool_records": 19,
+      "segments_without_visible_response": 11,
+      "gaps": [
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 89,
+          "next_source_prompt_turn": 93,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 93,
+          "next_source_prompt_turn": 96,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 109,
+          "next_source_prompt_turn": 112,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 112,
+          "next_source_prompt_turn": 113,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 113,
+          "next_source_prompt_turn": 116,
+          "intervening_source_event_types": {
+            "file_snapshot": 1,
+            "system_injected": 1
+          }
+        },
+        {
+          "source_prompt_turn": 116,
+          "next_source_prompt_turn": 120,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 120,
+          "next_source_prompt_turn": 123,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 272,
+          "next_source_prompt_turn": 273,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 273,
+          "next_source_prompt_turn": 275,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 303,
+          "next_source_prompt_turn": 305,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "dc4ca47f-a775-4b76-ba67-74fc7654a9e3",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 132,
+          "next_source_prompt_turn": 134,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "8bf95c26-d9d3-4f78-990c-9784125b69b8",
+      "agent": "Claude Code",
+      "user_messages": 37,
+      "segments_with_agent_or_tool_records": 30,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 511,
+          "next_source_prompt_turn": 603,
+          "intervening_source_event_types": {
+            "queue_operation": 1,
+            "file_snapshot": 1,
+            "progress": 89
+          }
+        },
+        {
+          "source_prompt_turn": 910,
+          "next_source_prompt_turn": 911,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 911,
+          "next_source_prompt_turn": 912,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 912,
+          "next_source_prompt_turn": 913,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 913,
+          "next_source_prompt_turn": 914,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 914,
+          "next_source_prompt_turn": 915,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 915,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e2acd781-c502-4749-ad14-7a77deb00146",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 69,
+          "next_source_prompt_turn": 72,
+          "intervening_source_event_types": {
+            "file_snapshot": 2
+          }
+        },
+        {
+          "source_prompt_turn": 75,
+          "next_source_prompt_turn": 77,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4576eb7c-1172-45d9-a16e-403ca10c2691",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 252,
+          "next_source_prompt_turn": 253,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 253,
+          "next_source_prompt_turn": 255,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 334,
+          "next_source_prompt_turn": 336,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e5bb989d-06ff-4fe9-a8fe-20eb98aad32f",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 87,
+          "next_source_prompt_turn": 88,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 88,
+          "next_source_prompt_turn": 90,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 1807,
+          "next_source_prompt_turn": 1809,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "599e80c7-dc41-450f-b53a-6f0397dfca7b",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "16e76550-0d80-441e-b289-9cd441fae07a",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "7ece1b4d-18d9-491b-bb1a-1ab532681015",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {
+            "queue_operation": 2
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ab1bb2b6-acea-4042-82b8-39dd82db4990",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 16,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "b11e39c2-46ca-4fea-9d13-1dd89789733a",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": 68,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 76,
+          "next_source_prompt_turn": 77,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "cb65a350-edb2-400e-8935-d798cb626cee",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 78,
+          "next_source_prompt_turn": 80,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "78bdaa12-befe-4056-b379-b3266d942057",
+      "agent": "Claude Code",
+      "user_messages": 25,
+      "segments_with_agent_or_tool_records": 21,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 2,
+          "next_source_prompt_turn": 3,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 3,
+          "next_source_prompt_turn": 5,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 80,
+          "next_source_prompt_turn": 81,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 81,
+          "next_source_prompt_turn": 83,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_282eb4a02ffe6aw0J6HCVROs7z",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "9687d852-3702-4920-8581-a960cdb68a79",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 165,
+          "next_source_prompt_turn": 166,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e4d2a949-d40f-45f6-8d98-4a6c8ee456c0",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 211,
+          "next_source_prompt_turn": 214,
+          "intervening_source_event_types": {
+            "system_event": 2
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "19f80b31-2dbb-4725-8f34-9ee8ae0d5891",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 125,
+          "next_source_prompt_turn": 131,
+          "intervening_source_event_types": {
+            "file_snapshot": 2,
+            "system_injected": 3
+          }
+        },
+        {
+          "source_prompt_turn": 155,
+          "next_source_prompt_turn": 164,
+          "intervening_source_event_types": {
+            "system_event": 8
+          }
+        },
+        {
+          "source_prompt_turn": 164,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "651abcf9-fbfa-4b51-9e92-be97fa1b1884",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 99,
+          "next_source_prompt_turn": 100,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 119,
+          "next_source_prompt_turn": 131,
+          "intervening_source_event_types": {
+            "file_snapshot": 1,
+            "system_event": 10
+          }
+        },
+        {
+          "source_prompt_turn": 131,
+          "next_source_prompt_turn": 138,
+          "intervening_source_event_types": {
+            "file_snapshot": 2,
+            "system_event": 4
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "410c9611-5a08-49a3-9520-28e347223e15",
+      "agent": "Claude Code",
+      "user_messages": 19,
+      "segments_with_agent_or_tool_records": 16,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 153,
+          "next_source_prompt_turn": 154,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 161,
+          "next_source_prompt_turn": 162,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 169,
+          "next_source_prompt_turn": 170,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "6ea75ebe-b348-407c-9781-8b65b31df6e6",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 311,
+          "next_source_prompt_turn": 313,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 353,
+          "next_source_prompt_turn": 355,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "721f77ea-fed9-4544-92cd-af593c50ea83",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 6,
+      "gaps": [
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 138,
+          "next_source_prompt_turn": 139,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 139,
+          "next_source_prompt_turn": 142,
+          "intervening_source_event_types": {
+            "file_snapshot": 1,
+            "system_injected": 1
+          }
+        },
+        {
+          "source_prompt_turn": 142,
+          "next_source_prompt_turn": 143,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 143,
+          "next_source_prompt_turn": 145,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "2dd2b053-1d56-428c-8cd0-b3587f1a1c32",
+      "agent": "Claude Code",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 5,
+      "gaps": [
+        {
+          "source_prompt_turn": 499,
+          "next_source_prompt_turn": 504,
+          "intervening_source_event_types": {
+            "queue_operation": 4
+          }
+        },
+        {
+          "source_prompt_turn": 504,
+          "next_source_prompt_turn": 506,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 506,
+          "next_source_prompt_turn": 509,
+          "intervening_source_event_types": {
+            "queue_operation": 2
+          }
+        },
+        {
+          "source_prompt_turn": 509,
+          "next_source_prompt_turn": 511,
+          "intervening_source_event_types": {
+            "system_injected": 1
+          }
+        },
+        {
+          "source_prompt_turn": 511,
+          "next_source_prompt_turn": 515,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 2
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "b9561101-d5e5-4463-989b-d8c56e5e4fcc",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 91,
+          "next_source_prompt_turn": 92,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ae480df4-d140-47bc-b9fb-689cc40773f9",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 412,
+          "next_source_prompt_turn": 413,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 413,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "aba4a2c6-c75e-48a5-af54-ea4f168c6006",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 15,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 489,
+          "next_source_prompt_turn": 491,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "0efd4422-44b4-46b8-a938-388550e1fa5c",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "5c2458b2-78dd-49e7-8fd2-df6648e958b5",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30923b961ffeNT0MbjVtd2LiNf",
+      "agent": "OpenCode",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 17,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "7d911558-dda5-49e9-bf9b-f5cc6f1be85a",
+      "agent": "Claude Code",
+      "user_messages": 18,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 77,
+          "next_source_prompt_turn": 78,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 91,
+          "next_source_prompt_turn": 93,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 306,
+          "next_source_prompt_turn": 307,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "07656ec3-0c97-4751-91d1-c1743bb63884",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "911488bc-edca-41cb-bb7c-aaff3a4586bf",
+      "agent": "Claude Code",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 8,
+      "gaps": [
+        {
+          "source_prompt_turn": 15,
+          "next_source_prompt_turn": 18,
+          "intervening_source_event_types": {
+            "queue_operation": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 18,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {
+            "queue_operation": 3,
+            "assistant_thinking": 1
+          }
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 184,
+          "next_source_prompt_turn": 186,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 186,
+          "next_source_prompt_turn": 187,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 187,
+          "next_source_prompt_turn": 190,
+          "intervening_source_event_types": {
+            "queue_operation": 1,
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "2c6fd2f9-51a5-4621-aebb-7120cc242cba",
+      "agent": "Claude Code",
+      "user_messages": 22,
+      "segments_with_agent_or_tool_records": 20,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 97,
+          "next_source_prompt_turn": 98,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 98,
+          "next_source_prompt_turn": 100,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "6e382dcc-9ee9-4b46-8373-f43f1efa9157",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "a9c8f24b-4c6f-44d8-8fed-afd8292c55bf",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 18,
+          "next_source_prompt_turn": 20,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 172,
+          "next_source_prompt_turn": 174,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 242,
+          "next_source_prompt_turn": 243,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 250,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "bd404006-541d-465d-a7f4-7f8f6d16ffd0",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "37f2ce60-5d6d-4407-8c72-f3dd95cdb647",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 2,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "af21f33a-2b39-4ff3-9aa0-b69d86da5e53",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 14,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 202,
+          "next_source_prompt_turn": 203,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 223,
+          "next_source_prompt_turn": 224,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "44ccf946-80c9-40f4-86c5-c17a145d3ec5",
+      "agent": "Claude Code",
+      "user_messages": 23,
+      "segments_with_agent_or_tool_records": 19,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 322,
+          "next_source_prompt_turn": 324,
+          "intervening_source_event_types": {
+            "assistant_thinking": 1
+          }
+        },
+        {
+          "source_prompt_turn": 324,
+          "next_source_prompt_turn": 326,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 735,
+          "next_source_prompt_turn": 737,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 831,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "0a8fa202-9a4d-4df6-afcf-ea50f7c23717",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 139,
+          "next_source_prompt_turn": 141,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "0b8a4140-199b-4978-92ec-9ae85ff55dfd",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "bbf10bba-263b-4b25-8980-32cbae77356b",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "e2172417-c330-4394-80c8-ae75a7da91f5",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "2e1f2a69-9a52-4598-9b99-b7421bc7c331",
+      "agent": "Claude Code",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 16,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 349,
+          "next_source_prompt_turn": 350,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "dbbfaf4b-8936-48c1-907d-669574333aa5",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 72,
+          "next_source_prompt_turn": 74,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 155,
+          "next_source_prompt_turn": 157,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 212,
+          "next_source_prompt_turn": 213,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "7690f79f-1e5a-48db-b84c-1c50f7f9b8fa",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 202,
+          "next_source_prompt_turn": 204,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "eafc6504-0a02-49d1-a9d6-3587b0e007a0",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 7,
+          "next_source_prompt_turn": 9,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "2f1f7721-f33e-4b14-b921-34f5c10307b1",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "038bd878-58fa-46f4-9e60-0a9acd47c2c5",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "f998d4cb-185d-4849-ac44-523eccac5934",
+      "agent": "Claude Code",
+      "user_messages": 29,
+      "segments_with_agent_or_tool_records": 21,
+      "segments_without_visible_response": 8,
+      "gaps": [
+        {
+          "source_prompt_turn": 17,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {
+            "file_snapshot": 3,
+            "system_injected": 6
+          }
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {
+            "queue_operation": 2
+          }
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 76,
+          "next_source_prompt_turn": 80,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 80,
+          "next_source_prompt_turn": 83,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 102,
+          "next_source_prompt_turn": 106,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 106,
+          "next_source_prompt_turn": 109,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 146,
+          "next_source_prompt_turn": 150,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 2
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "a68d9610-d0c5-4dfd-9f7c-d19dce3f745f",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 328,
+          "next_source_prompt_turn": 329,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 329,
+          "next_source_prompt_turn": 331,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 401,
+          "next_source_prompt_turn": 403,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 669,
+          "next_source_prompt_turn": 671,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f2d76a21-5e2d-40a7-8b4e-e993d41a4122",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "a032db5a-df02-44d7-ab1e-fb024213ecc4",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "e90f365e-d321-49b6-b2c5-04ea54def780",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {
+            "file_snapshot": 2,
+            "system_injected": 3
+          }
+        },
+        {
+          "source_prompt_turn": 149,
+          "next_source_prompt_turn": 150,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 150,
+          "next_source_prompt_turn": 152,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "45369b8c-9ea7-4dc4-aaf9-953bd3d6d1df",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 20,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {
+            "system_injected": 1,
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "c38c3684-7e27-4cad-96f9-1d050850dbed",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 122,
+          "next_source_prompt_turn": 123,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e4acc491-6f3b-40cf-9ea2-5a738161353a",
+      "agent": "Claude Code",
+      "user_messages": 17,
+      "segments_with_agent_or_tool_records": 15,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 16,
+          "next_source_prompt_turn": 17,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 17,
+          "next_source_prompt_turn": 19,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "d0c6616a-0555-4681-a89c-6be27423f25a",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 6,
+          "intervening_source_event_types": {
+            "file_snapshot": 2,
+            "system_injected": 2,
+            "system_event": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "b417c4ed-b173-4243-a27c-48d3f60afa4f",
+      "agent": "Claude Code",
+      "user_messages": 18,
+      "segments_with_agent_or_tool_records": 15,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 613,
+          "next_source_prompt_turn": 614,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 787,
+          "next_source_prompt_turn": 788,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 788,
+          "next_source_prompt_turn": 790,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4bbcb272-589b-4419-b2f3-6cb917e58005",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 79,
+          "next_source_prompt_turn": 80,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 106,
+          "next_source_prompt_turn": 107,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4583d70b-26e7-4297-97fe-001737ded8be",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 91,
+          "next_source_prompt_turn": 92,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 159,
+          "next_source_prompt_turn": 160,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e8bf05ea-c8a5-41f0-a1cb-439907ebf6d8",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 15,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "fe31c83e-f872-4bc0-bf1d-776dda23fe58",
+      "agent": "Claude Code",
+      "user_messages": 15,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 94,
+          "next_source_prompt_turn": 98,
+          "intervening_source_event_types": {
+            "system_event": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 150,
+          "next_source_prompt_turn": 151,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 301,
+          "next_source_prompt_turn": 305,
+          "intervening_source_event_types": {
+            "system_event": 2,
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 484,
+          "next_source_prompt_turn": 488,
+          "intervening_source_event_types": {
+            "system_event": 2,
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "0a446b72-6e8a-4d02-9bf3-dae7f8778d9e",
+      "agent": "Claude Code",
+      "user_messages": 21,
+      "segments_with_agent_or_tool_records": 20,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 201,
+          "next_source_prompt_turn": 203,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "a0be9749-76fd-43a9-8bb9-11d698feaec3",
+      "agent": "Claude Code",
+      "user_messages": 20,
+      "segments_with_agent_or_tool_records": 18,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 271,
+          "next_source_prompt_turn": 272,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 286,
+          "next_source_prompt_turn": 288,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "cda18bb5-5899-435e-a97d-329123cb1926",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 182,
+          "next_source_prompt_turn": 183,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 183,
+          "next_source_prompt_turn": 185,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "18eedf78-a903-4220-8a95-5bb1776cff57",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "bf94df2a-b46a-4b03-a28d-d0b909fae942",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 12,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "e526f008-627c-490d-a76e-9ffeb97d281c",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "1a9826a8-1af2-4c83-9a52-0bc82a414495",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "2d0f8232-8902-459e-84fd-75c018c6922d",
+      "agent": "Claude Code",
+      "user_messages": 16,
+      "segments_with_agent_or_tool_records": 13,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 140,
+          "next_source_prompt_turn": 142,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 187,
+          "next_source_prompt_turn": 189,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 274,
+          "next_source_prompt_turn": 276,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4ae9741e-af49-4d7e-abfa-f35972baf873",
+      "agent": "Claude Code",
+      "user_messages": 19,
+      "segments_with_agent_or_tool_records": 16,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 108,
+          "next_source_prompt_turn": 110,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 207,
+          "next_source_prompt_turn": 209,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 243,
+          "next_source_prompt_turn": 245,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "52ed5403-5041-4595-97cc-3116c1a5be0a",
+      "agent": "Claude Code",
+      "user_messages": 14,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 5,
+      "gaps": [
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 152,
+          "next_source_prompt_turn": 154,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 154,
+          "next_source_prompt_turn": 155,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 155,
+          "next_source_prompt_turn": 156,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 156,
+          "next_source_prompt_turn": 162,
+          "intervening_source_event_types": {
+            "file_snapshot": 2,
+            "system_injected": 3
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "636d0488-76fd-4e15-8ef2-faa431e0a99d",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 185,
+          "next_source_prompt_turn": 186,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 194,
+          "next_source_prompt_turn": 196,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 198,
+          "next_source_prompt_turn": 200,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 219,
+          "next_source_prompt_turn": 221,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f3cd53b2-b008-44ef-b08b-144f78216720",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 137,
+          "next_source_prompt_turn": 139,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "07c4c057-2c3a-4182-b615-061ae9733747",
+      "agent": "Claude Code",
+      "user_messages": 12,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 2963,
+          "next_source_prompt_turn": 2964,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 2964,
+          "next_source_prompt_turn": 2966,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "1ea94f87-069c-4f9c-ac33-5ec746a5dba6",
+      "agent": "Claude Code",
+      "user_messages": 13,
+      "segments_with_agent_or_tool_records": 10,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 133,
+          "next_source_prompt_turn": 134,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 170,
+          "next_source_prompt_turn": 171,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "dcd8ec1a-2545-462d-8a59-cc8660ba57e6",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "human_version": "human_simple_v2",
+  "rubric_versions": {
+    "review": "human_simple_v2"
+  },
+  "seed": 42,
+  "sample_size_requested": 40,
+  "session_count": 40,
+  "eligible_pool_count": 117,
+  "filter_version": "effective_interactions_v1",
+  "bounds": {
+    "min_prompts": 8,
+    "max_prompts": 0,
+    "min_chars": 1000,
+    "max_chars": 150000,
+    "max_events": 600
+  },
+  "sampling": "Uniform seed-based sample without replacement after effective interaction and readability filtering; exact normalized substantive user sequences deduplicated; no annotation outcome filtering.",
+  "interaction_definition": "Distinct substantive user request group followed by visible assistant/tool activity. Consecutive users without agent activity share one exchange. Acknowledgements, repeated prompts, automatic notifications, skill/command scaffolding and continuation records do not qualify. Activity is not proof of success.",
+  "exclusions": {
+    "readability_bounds": 1450,
+    "too_few_raw_messages": 3611,
+    "initial_prompt_automatic_or_context_only": 74,
+    "repeated_substring_fragments": 84,
+    "too_few_effective_interactions": 211,
+    "ambiguous_source_order": 1,
+    "review_template": 303
+  },
+  "case_fingerprints": {
+    "44ccf946-80c9-40f4-86c5-c17a145d3ec5": "633be4ce6acd6426921d1b06430f32a693994fa6edc64161c4496995ec3069f2",
+    "0a8fa202-9a4d-4df6-afcf-ea50f7c23717": "1bd504149d33d8e5f3ee3761e062829045fc45a74626c358bad91d47cbce2ecc",
+    "0b8a4140-199b-4978-92ec-9ae85ff55dfd": "b8f651a4f1b14cb121a7b4b8e732aaeda21e77d48031017f36033cdf2f1a64d4",
+    "bbf10bba-263b-4b25-8980-32cbae77356b": "d501e0869797b41533d54a755cdf478855de2f219285919e3c805499211d8561",
+    "e2172417-c330-4394-80c8-ae75a7da91f5": "3d02e3eb7bdec866c3a30e618c86b397cfbc2762e4c5a839c10cb86188a4b3ba",
+    "2e1f2a69-9a52-4598-9b99-b7421bc7c331": "6d498c7a1ee16f7e5021e32960410f35190dddb17a5a51f4680a56ed6bb64233",
+    "dbbfaf4b-8936-48c1-907d-669574333aa5": "ffa0abae2da98c99a371325d6aaf631151b9dfbaadeaed798f7998a061e65325",
+    "7690f79f-1e5a-48db-b84c-1c50f7f9b8fa": "6a1a53a8e388aa3bc817939c9a5864e1c83f3f6700ec7be45684285d1bc29eb6",
+    "eafc6504-0a02-49d1-a9d6-3587b0e007a0": "dd0350a6f4a6af556f130a6cb0085d442ae96f04c1075c29a2edf0d7ab0fc966",
+    "2f1f7721-f33e-4b14-b921-34f5c10307b1": "cb777ba0567e2a5a5da2b601a75c72f7d97d1a7999994f1281c45b4a48449844",
+    "038bd878-58fa-46f4-9e60-0a9acd47c2c5": "9b19bd1036acb6eb5b81c01a9a606182c43bc5dc0a8f584e8b297f739dd8bca3",
+    "f998d4cb-185d-4849-ac44-523eccac5934": "52bebb53ef1d19859231669a065bc4a8c1a1f4e19c0637ef0191bc1e02ceca8e",
+    "a68d9610-d0c5-4dfd-9f7c-d19dce3f745f": "29eb02bc7209433af0e9e33f97a8958bdafde653e61ec1859ab35c0b616de54c",
+    "f2d76a21-5e2d-40a7-8b4e-e993d41a4122": "0d8c00be6c1330b46c5dbf124242a2c22b016a082a75e2d923c10e0d6c0d6c9b",
+    "a032db5a-df02-44d7-ab1e-fb024213ecc4": "2b23db5d10c16d9424c7cc0760d3ff4e1b254130f92c8b54c4fe1e56798b8645",
+    "e90f365e-d321-49b6-b2c5-04ea54def780": "502d5456c27253b781b9c2d9e2bf0ba82dae8a960b0015ea50314874e0af395f",
+    "45369b8c-9ea7-4dc4-aaf9-953bd3d6d1df": "1c682de9651d0ea191eeb433beffec6f1b4f11c8798f1159a4b5aa52f0ca57ca",
+    "c38c3684-7e27-4cad-96f9-1d050850dbed": "9d61756cbbb6dcbf07ffc0a100626bdc76681205b2167eeb722f40894c18a8c9",
+    "e4acc491-6f3b-40cf-9ea2-5a738161353a": "84ab58316949cbb3ba5d9ef704948c7bd52be6a5b7dc7b7b0f82f6d154793f74",
+    "d0c6616a-0555-4681-a89c-6be27423f25a": "dbde8bb6792b318a04f5c563d0baeb7398b96d6a37aed20e20b033ab7eb30ae9",
+    "b417c4ed-b173-4243-a27c-48d3f60afa4f": "3f50e335b64e50450ddbb8aee44f86ca9436a51bcd50ae89c352250836116ef5",
+    "4bbcb272-589b-4419-b2f3-6cb917e58005": "179acc46385214d3b9d015d7a42b2d64169adc3d431b9244afb3d9874d3f09ca",
+    "4583d70b-26e7-4297-97fe-001737ded8be": "2a903712bf76ab4f682ab4ee9da999465d85cbbe9d6f7006dc040d0ab553905e",
+    "e8bf05ea-c8a5-41f0-a1cb-439907ebf6d8": "1bac004e151872e99a83826b63e3f0a4ccec960000c384c94f24367bca784f67",
+    "fe31c83e-f872-4bc0-bf1d-776dda23fe58": "ded844936c6bcded260b29edd8739ddea993807df2735afaa57d2839a02a3b23",
+    "0a446b72-6e8a-4d02-9bf3-dae7f8778d9e": "99f18beed98b9bf7ca21ebe79108c4ff9258c3344550f289fcc899f94f60db77",
+    "a0be9749-76fd-43a9-8bb9-11d698feaec3": "9a445fc18d9de9a10ca103237bfcf09b70c184023bbbca5145891f2d75b6337e",
+    "cda18bb5-5899-435e-a97d-329123cb1926": "2cc8261d89e36f9c891cdb7c43abf554579c3315de2219c32f5379204afd64f4",
+    "18eedf78-a903-4220-8a95-5bb1776cff57": "fb6ff705bd827784e13034be0dd894cd4484a58403f22360ec2bba49c57411fb",
+    "bf94df2a-b46a-4b03-a28d-d0b909fae942": "a75e5d12871d073caef653fc10ae84c25c2b63c31e46fdaf06da2cfe917ebdaf",
+    "e526f008-627c-490d-a76e-9ffeb97d281c": "3ce85b4c23634faadc40335e260b86b6dad5b08d562b497b8df26e3ec2a81f2f",
+    "1a9826a8-1af2-4c83-9a52-0bc82a414495": "2ba4f57c3e00849d44542bb12016666d73331d16a101c07d805f8f8274f984bb",
+    "2d0f8232-8902-459e-84fd-75c018c6922d": "71a778a3293334602fbaed446487f225ca8ed4a8190701ed32a83667c4c46a01",
+    "4ae9741e-af49-4d7e-abfa-f35972baf873": "5a694cda57d5ecefc16726e24eb096ae81737076ad8dbe9b0f00ae35366ed772",
+    "52ed5403-5041-4595-97cc-3116c1a5be0a": "0af489375b44ecfbb4031cd69718b64efa3b17929822c75e1f29c4db54bda41e",
+    "636d0488-76fd-4e15-8ef2-faa431e0a99d": "bc0941e90cfd72e6cb2c6e59b4b229ff309bfaebe2386d81faa545470b3d33ec",
+    "f3cd53b2-b008-44ef-b08b-144f78216720": "e3ec7e71995d18a26ab9e476bed4f5a92418e50e54bcd26900f2fe434527989e",
+    "07c4c057-2c3a-4182-b615-061ae9733747": "43127a36fca4e633724d7eeb12c5c9a8fc4044233be769056a25387fc2413fd7",
+    "1ea94f87-069c-4f9c-ac33-5ec746a5dba6": "a92d8e8947628f7d8b25712c633b77de0167c52836280eaf2c040d7c8f3e3ecc",
+    "dcd8ec1a-2545-462d-8a59-cc8660ba57e6": "1eb569779e53c721e93315986eb38076adf3de198e722b9141311cf2fa1e0141"
+  },
+  "created_at_unix": 1788920120,
+  "commits_included": false,
+  "source_files": {
+    "sessions.parquet": {
+      "bytes": 1997377,
+      "mtime_ns": 1787752360923861327
+    },
+    "conversations.parquet": {
+      "bytes": 1311422253,
+      "mtime_ns": 1787752988436380619
+    }
+  },
+  "assigned_annotator": "rater_c",
+  "package_id": "bc9d14a9b046716fe08f553b8e0a900521c89b4eee9e3916ba0d818cb1c08b7c",
+  "parent_session_count": 100
+}

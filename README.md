@@ -1,15 +1,12 @@
-> **当前样本质量说明**：8 条用户消息不等于 8 个完整问答回合。源表核对发现 95/100 条至少有一个无 Agent／工具记录的消息段，不能据此判定 Agent 忽略要求。新版 HTML 已标明缺口并修复分栏滚动；[详细说明](annotation_release/README.md)。
-
-> **人工标注：双击 HTML 即可，无需 Python 或服务器**
+> **当前正式标注批次：有效交互 100 条**。下载仓库 ZIP，解压后打开 `annotation_valid_release/offline/rater_a.html`（b/c 同理）。每条至少 8 次有效交互，轮数不设上限；三人仍按 30 / 30 / 40 分工。无需安装依赖或启动服务器。
 >
-> 点击 GitHub **Code → Download ZIP**，解压后进入 `annotation_release/offline/`：
-> 第一人打开 `rater_a.html`（30 条），第二人打开 `rater_b.html`（30 条），第三人打开 `rater_c.html`（40 条）。
-> 填写后自动保存浏览器草稿；完成每条需点击提交。关闭前下载「备份全部进度」，全部完成后导出 submission JSON 交给负责人。
-> 操作详情、备用 Python 版和最终汇总见 [三人标注指南](annotation_release/README.md)。
+> 逐条计数、筛选口径和分布见 [质量报告](annotation_valid_release/QUALITY_REPORT.md)；备份、导出和汇总见 [标注指南](annotation_valid_release/README.md)。旧 `annotation_release` 是历史批次，存在模板导致轮数虚高的问题，本次请使用新目录。旧 JSON 不能与新批次混收。
 >
-> 下文是原有自动研究流水线，人工标注请使用上述入口。
+> 重抽样使用 `python scripts/run_human_annotation.py prepare`，打包使用 `python scripts/annotation_team.py build`。每条 13 个基础必填字段，每个需求事件另加 8 项，详见 [标注口径](Human_annotation.md)。
 
 # SWE-Chat：全量标注与指标说明
+
+人工标注（规则抽取 100 个 session、浏览器标注、指标导出）见 [Human_annotation.md](Human_annotation.md)。以下为模型 API 自动标注流程。
 
 ## 1. 下载数据与启动全量标注
 
