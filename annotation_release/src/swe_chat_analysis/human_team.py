@@ -17,9 +17,9 @@ from .human import HumanProject, digest, handler
 from . import human_simple as simple
 from .io import read_jsonl, write_jsonl
 
-FORMAT = 'swe_chat_team_v1'
+FORMAT = 'swe_chat_team_v2'
 RATERS = ('rater_a', 'rater_b', 'rater_c')
-COUNTS = (30, 30, 40)
+COUNTS = (100, 100, 100)
 
 
 def write_json(path, value):
@@ -58,10 +58,10 @@ def load_bundle(root):
         for case in rows:
             sid = case['case_id']
             fingerprint = digest({key: value for key, value in case.items() if key != 'input_fingerprint'})
-            if sid in all_cases or not fingerprint == case['input_fingerprint'] == config['case_fingerprints'].get(sid) == manifest['case_fingerprints'].get(sid):
+            if not fingerprint == case['input_fingerprint'] == config['case_fingerprints'].get(sid) == manifest['case_fingerprints'].get(sid):
                 raise ValueError(f'重复或变更的样本：{sid}')
             all_cases[sid] = case
-    if set(all_cases) != set(config['case_fingerprints']):
+    if len(all_cases) != 100 or any(set(ids) != set(all_cases) for ids in config['assignments'].values()) or set(all_cases) != set(config['case_fingerprints']):
         raise ValueError('分发包未覆盖全部样本')
     return config, all_cases
 
@@ -71,7 +71,7 @@ def write_quality_report(source, destination, project, config):
     from statistics import median
     cases = list(project.cases.values())
     lines = ['# 有效交互样本质量报告', '', f"批次 ID：`{config['package_id']}`", '',
-             f"合格候选池：{project.manifest.get('eligible_pool_count', '未记录')} 条；按可见标注证据筛选后 seed=42 抽取 100 条，固定分配 30 / 30 / 40。", '',
+             f"合格候选池：{project.manifest.get('eligible_pool_count', '未记录')} 条；按可见标注证据筛选后 seed=42 抽取 100 条，固定分配 100 / 100 / 100。", '',
              '| 维度 | 最少 | 中位数 | 最多 |', '| --- | ---: | ---: | ---: |']
     for key, label in [('effective_interactions','有效交互'),('user_rounds','原始用户消息'),('characters','可见正文字符'),('events','可见事件')]:
         values = [c.get('reading_stats', {}).get(key) for c in cases]
@@ -125,10 +125,10 @@ def build(source, destination, repo_root):
             raise ValueError('有效交互审计与源事件不一致')
     ids = sorted(project.cases)
     random.Random(42).shuffle(ids)
-    allocations = {RATERS[0]: ids[:30], RATERS[1]: ids[30:60], RATERS[2]: ids[60:]}
+    allocations = {rater: list(ids) for rater in RATERS}
     config = dict(format=FORMAT, rubric_version=simple.VERSION, assignments=allocations,
                   case_fingerprints={sid: project.cases[sid]['input_fingerprint'] for sid in sorted(ids)},
-                  allocation_method='Seed 42 shuffle of sorted frozen case IDs; disjoint 30/30/40; no outcome filtering.')
+                  allocation_method='Seed 42 shuffle of sorted frozen case IDs; same 100 sessions independently assigned to each of three raters; no outcome filtering.')
     config['package_id'] = package_identity(config)
     destination.mkdir(parents=True)
     write_json(destination / 'assignments.json', config)
@@ -174,7 +174,7 @@ def build(source, destination, repo_root):
         for path in sorted(destination.rglob('*')):
             if path.is_file():
                 z.write(path, Path(destination.name) / path.relative_to(destination))
-    print(f'已打包：{destination}\nZIP：{archive}\n30 / 30 / 40，package_id={config["package_id"]}')
+    print(f'已打包：{destination}\nZIP：{archive}\n100 / 100 / 100，package_id={config["package_id"]}')
 
 
 def local_project(root, rater):
@@ -243,7 +243,7 @@ def merge(root, inputs, destination, allow_partial=False):
         received = set()
         for row in incoming:
             sid = row.get('session_id')
-            if sid not in assigned or sid in seen or row.get('annotator') != rater:
+            if sid not in assigned or (rater, sid) in seen or row.get('annotator') != rater:
                 raise ValueError(f'样本归属错误或重复：{sid}')
             case = cases[sid]
             if row.get('input_fingerprint') != case['input_fingerprint'] or row.get('rubric_version') != simple.VERSION or row.get('annotation_source') != 'human':
@@ -253,7 +253,7 @@ def merge(root, inputs, destination, allow_partial=False):
             normalized = simple.validate(row['annotation'], case['events'])
             if simple.validate(row['raw_annotation'], case['events']) != normalized:
                 raise ValueError(f'原始答案与提交答案不一致：{sid}')
-            seen.add(sid); received.add(sid)
+            seen.add((rater, sid)); received.add(sid)
             rows.append(dict(session_id=sid, repo_id=case['repo_id'], agent=case['agent'], annotator=rater,
                              annotation_source='human', rubric_version=simple.VERSION,
                              input_fingerprint=case['input_fingerprint'], revision=row['revision'],
@@ -263,22 +263,25 @@ def merge(root, inputs, destination, allow_partial=False):
         missing = sorted(assigned - received)
         if delivery.get('expected_count') != len(assigned) or delivery.get('completed_count') != len(incoming) or delivery.get('missing_case_ids') != missing or delivery.get('complete') is not (not missing):
             raise ValueError(f'{rater} 完成状态与实际条目不一致')
-    missing = sorted(set(cases) - seen)
+    expected = [(rater, sid) for rater in RATERS for sid in config['assignments'][rater]]
+    missing = [dict(annotator=rater, session_id=sid) for rater, sid in expected if (rater, sid) not in seen]
     if missing and not allow_partial:
-        raise ValueError(f'未收齐：{len(seen)}/100，缺少 {len(missing)} 条；正式汇总需全部收齐，中期检查用 --allow-partial')
-    order = {sid: index for index, sid in enumerate(sid for rater in RATERS for sid in config['assignments'][rater])}
-    rows.sort(key=lambda row: order[row['session_id']])
+        raise ValueError(f'未收齐：{len(seen)}/{len(expected)} 份标注，缺少 {len(missing)} 份；正式汇总需全部收齐，中期检查用 --allow-partial')
+    order = {pair: index for index, pair in enumerate(expected)}
+    rows.sort(key=lambda row: order[(row['annotator'], row['session_id'])])
     summary = dict(package_id=config['package_id'], rubric_version=simple.VERSION,
-                   run_completeness=dict(expected=100, completed=len(rows), complete=not missing, missing_case_ids=missing,
+                   run_completeness=dict(expected=len(expected), completed=len(rows), complete=not missing, missing_assignments=missing,
                                          by_annotator={rater: {'expected': len(config['assignments'][rater]), 'completed': sum(row['annotator'] == rater for row in rows)} for rater in RATERS}),
                    **simple.summarize(rows),
-                   agreement_note='30/30/40 为互不重叠分工，不能计算标注员间一致性；标注员差异可能影响组间比较。')
+                   unique_session_count=len({row['session_id'] for row in rows}),
+                   by_annotator={rater: simple.summarize([row for row in rows if row['annotator'] == rater]) for rater in RATERS},
+                   agreement_note='三人独立标注同一批 100 条；保留全部 300 份答案，不自动投票合并。总体汇总按标注记录计数，同一会话重复三次，不能当作 300 个独立样本；按人汇总另见 by_annotator。')
     destination.mkdir(parents=True)
     write_json(destination / 'merged.json', dict(summary=summary, annotations={'review': rows}))
     write_json(destination / 'summary.json', summary)
     write_jsonl(destination / 'annotations.jsonl', rows)
     analysis_csv(destination / 'analysis.csv', rows)
-    print(f'已校验并汇总 {len(rows)}/100 条：{destination}')
+    print(f'已校验并汇总 {len(rows)}/{len(expected)} 份标注：{destination}')
     return summary
 
 
@@ -313,7 +316,7 @@ def main(root=None):
             generate(args.bundle_dir)
         elif args.command == 'verify':
             config, cases = load_bundle(args.bundle_dir)
-            print(f'校验通过：{len(cases)} 条，30/30/40，批次 {config["package_id"]}')
+            print(f'校验通过：{len(cases)} 条，100/100/100，批次 {config["package_id"]}')
         elif args.command == 'export':
             export(args.bundle_dir, args.rater, args.output, args.allow_partial)
         elif args.command == 'merge':

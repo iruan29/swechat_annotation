@@ -42,9 +42,9 @@ def generate(root: Path) -> list[Path]:
 
 下载仓库 ZIP 并解压，然后打开自己的文件：
 
-- `rater_a.html`：30 条
-- `rater_b.html`：30 条
-- `rater_c.html`：40 条
+- `rater_a.html`：100 条
+- `rater_b.html`：100 条
+- `rater_c.html`：100 条
 
 用 Chrome、Edge 或 Firefox 打开。GitHub 的代码预览页不会运行 HTML，需要先下载。
 填写后自动保存为草稿；完成每条后点击“提交标注”。关闭前下载“备份全部进度”，它包含草稿和已提交答案。换电脑、浏览器或文件路径时，打开同一人的 HTML 并“导入进度”。备份也可以导入服务器版导出的 submission JSON，继续修订已提交答案；服务器数据库里的未提交草稿不会自动转移。

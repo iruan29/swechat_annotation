@@ -20,7 +20,7 @@ try:
         page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url))
         path=fixture.bundle/'offline'/'rater_a.html'
         page.goto(path.as_uri())
-        expect(page.locator('.queue-item')).to_have_count(30)
+        expect(page.locator('.queue-item')).to_have_count(100)
         page.locator('.queue-item').first.click()
         expect(page.locator('.user_prompt pre')).to_have_count(8)
         expect(page.locator('.agent-fold[open]')).to_have_count(0)
@@ -51,7 +51,7 @@ try:
         context=browser.new_context(accept_downloads=True);page=context.new_page()
         page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url))
         page.on('dialog',lambda d:d.accept())
-        page.goto(path.as_uri());expect(page.locator('.queue-item')).to_have_count(30)
+        page.goto(path.as_uri());expect(page.locator('.queue-item')).to_have_count(100)
         page.locator('#restore-progress').set_input_files(str(backup));expect(page.locator('#message')).to_contain_text('已导入进度')
         page.locator('.queue-item').nth(1).click();expect(page.locator('#field-evolution-initial_coverage')).to_have_value('全部')
         page.locator('.queue-item').first.click();expect(page.locator('#save-state')).to_contain_text('已提交')
@@ -62,7 +62,7 @@ try:
         inputs=[]
         for rater in ('rater_a','rater_b','rater_c'):
             page.goto((fixture.bundle/'offline'/f'{rater}.html').as_uri())
-            expect(page.locator('.queue-item')).to_have_count(40 if rater=='rater_c' else 30)
+            expect(page.locator('.queue-item')).to_have_count(100)
             page.evaluate('''async ({rater, answer}) => {
               const tasks=await window.offlineAPI('/api/tasks?annotator='+rater);
               for(const [index,task] of tasks.cases.entries()){
@@ -76,7 +76,7 @@ try:
             output=fixture.root/f'submission_{rater}.json';d.value.save_as(output);inputs.append(output)
             value=json.loads(output.read_text());assert value['delivery']['complete']
         result=merge(fixture.bundle,inputs,fixture.root/'offline_merged')
-        assert result['run_completeness']['completed']==100
+        assert result['run_completeness']['completed']==300
         _,cases=load_bundle(fixture.bundle)
         for path in inputs:
             payload=json.loads(path.read_text());rows=payload['annotations']['review']
@@ -88,12 +88,12 @@ try:
         denied=browser.new_context(accept_downloads=True)
         denied.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Denied','SecurityError')}});")
         dp=denied.new_page();dp.on('dialog',lambda d:d.accept())
-        dp.goto((fixture.bundle/'offline'/'rater_b.html').as_uri());expect(dp.locator('.queue-item')).to_have_count(30)
+        dp.goto((fixture.bundle/'offline'/'rater_b.html').as_uri());expect(dp.locator('.queue-item')).to_have_count(100)
         dp.locator('.queue-item').first.click();dp.locator('#field-evolution-initial_coverage').select_option('没有')
         expect(dp.locator('#save-state')).to_contain_text('仅保存在本页内存')
         with dp.expect_download() as d:dp.locator('#backup-progress').click()
         fallback=json.loads(Path(d.value.path()).read_text())
         assert next(iter(fallback['records'].values()))['annotation']['evolution']['initial_coverage']=='没有'
         browser.close()
-        print('OFFLINE PASS: file://, 8 prompts, autosave/reload, validation, backup/restore, wrong-owner rejection, 30/30/40 JSON merge, Python metric parity, no network, storage-denied fallback.')
+        print('OFFLINE PASS: file://, 8 prompts, autosave/reload, validation, backup/restore, wrong-owner rejection, 100/100/100 JSON merge, Python metric parity, no network, storage-denied fallback.')
 finally:fixture.doCleanups()

@@ -43,8 +43,10 @@ class TeamTests(unittest.TestCase):
 
     def test_portable_split_and_identity(self):
         config, cases = load_bundle(self.bundle)
-        self.assertEqual([len(config['assignments'][r]) for r in RATERS], [30,30,40])
+        self.assertEqual([len(config['assignments'][r]) for r in RATERS], [100,100,100])
         self.assertEqual(len(cases),100)
+        self.assertEqual(config["assignments"]["rater_a"], config["assignments"]["rater_b"])
+        self.assertEqual(config["assignments"]["rater_a"], config["assignments"]["rater_c"])
         # -S removes third-party site packages: the delivered runtime is stdlib only.
         result=subprocess.run([sys.executable,'-S',str(self.bundle/'annotate.py'),'verify'], capture_output=True, text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -65,9 +67,9 @@ class TeamTests(unittest.TestCase):
         result=merge(self.bundle, paths, output)
         self.assertTrue(result['run_completeness']['complete'])
         merged=json.loads((output/'merged.json').read_text())
-        self.assertEqual(len(merged['annotations']['review']),100)
+        self.assertEqual(len(merged['annotations']['review']),300)
         self.assertIsNone(merged['annotations']['review'][0]['metrics']['api_call_count'])
-        self.assertEqual(len((output/'analysis.csv').read_text(encoding='utf-8-sig').splitlines()),101)
+        self.assertEqual(len((output/'analysis.csv').read_text(encoding='utf-8-sig').splitlines()),301)
         with self.assertRaises(ValueError): merge(self.bundle,paths,output)
 
     def test_incomplete_duplicate_wrong_batch_wrong_evidence_rejected(self):
@@ -86,6 +88,13 @@ class TeamTests(unittest.TestCase):
             payload=deepcopy(original);mutate(payload);bad=self.root/f'bad{i}.json';write_json(bad,payload)
             with self.assertRaises(ValueError):merge(self.bundle,[bad],self.root/f'out{i}',True)
             self.assertFalse((self.root/f'out{i}').exists())
+
+    def test_one_complete_rater_is_not_complete_team(self):
+        path = self.complete("rater_a")
+        with self.assertRaises(ValueError): merge(self.bundle, [path], self.root/"incomplete_team")
+        report = merge(self.bundle, [path], self.root/"partial_team", True)
+        self.assertEqual(report["run_completeness"]["completed"], 100)
+        self.assertEqual(len(report["run_completeness"]["missing_assignments"]), 200)
 
     def test_frozen_assignment_tamper_rejected(self):
         path=self.bundle/'assignments'/'rater_a'/'cases.jsonl'

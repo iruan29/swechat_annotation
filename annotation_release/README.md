@@ -1,17 +1,17 @@
-# 中文／英文标注包 v4：三人 30 / 30 / 40
+# 中文／英文标注包 v4：三人 100 / 100 / 100
 
 **本次统一使用 `annotation_release`。** 新页面顶部显示「中文／英文 · 精简表单 v4」及批次 ID。不要继续用旧下载文件：离线 HTML 内嵌数据，刷新不会更新。旧批次保留在 `annotation_archive/`，旧答案不迁移、不混收。
 
 ## 直接用浏览器标注
 
 1. 下载仓库中的 **annotation_release.zip** 并解压，进入 `annotation_release/offline/`。也可下载整个仓库 ZIP 后进入同一路径。
-2. 每个人打开自己的 HTML，无需安装 Python 或启动服务器：
+2. 可以只给每个人发送其对应的一个 HTML，已内嵌同一批完整 100 条样本。每个人打开自己的 HTML，无需安装 Python 或启动服务器：
 
 | 人员 | 文件 | 数量 | 最终交付 |
 | --- | --- | ---: | --- |
-| A | `rater_a.html` | 30 | `submission_rater_a.json` |
-| B | `rater_b.html` | 30 | `submission_rater_b.json` |
-| C | `rater_c.html` | 40 | `submission_rater_c.json` |
+| A | `rater_a.html` | 100 | `submission_rater_a.json` |
+| B | `rater_b.html` | 100 | `submission_rater_b.json` |
+| C | `rater_c.html` | 100 | `submission_rater_c.json` |
 
 3. 通读用户消息，逐轮展开 Agent／工具内容，填写选择题。所有内容随整个页面滚动，可切换通栏阅读。
 4. 浏览器自动保存草稿；完成一条后点击「提交标注」。关闭前下载「备份全部进度」。换浏览器、电脑或文件路径时，导入同批次、同身份的备份。
@@ -37,7 +37,7 @@ GitHub 的 HTML 代码预览不能标注，需要下载后打开。不使用无�
 | 有新需求时 | 需求来源（单选） |
 | 指令缺口 | 指令质量；主要原因（单选）；字面执行能否达成目标；Agent 主要处理方式 |
 
-分类边界与例子见 [RUBRIC.md](RUBRIC.md)。没有足够证据时选「无法判断」，不需要补写解释。去掉文字理由减少工作量，但一致性仍需通过独立重复标注检验；本次 30/30/40 互不重叠，本身不能算标注员间一致性。
+分类边界与例子见 [RUBRIC.md](RUBRIC.md)。没有足够证据时选「无法判断」，不需要补写解释。去掉文字理由减少工作量，但一致性仍需通过独立重复标注检验；本次三人独立标注同一批 100 条，汇总保留 300 份答案，可用于后续一致性分析；不会自动投票覆盖个人答案。
 
 ## 样本与轮数
 
@@ -75,7 +75,7 @@ python annotate.py export --rater rater_a
 python annotate.py merge submissions/submission_rater_a.json submissions/submission_rater_b.json submissions/submission_rater_c.json --output-dir collected/final_v1
 ```
 
-输出 `merged.json`、`annotations.jsonl`、`analysis.csv`、`summary.json`。会校验版本、批次、身份、30/30/40 归属、漏标、重复、样本指纹和答案一致性；成本从冻结样本重算。修订后用新输出目录如 `collected/final_v2`，不要输入同一人的多个版本。
+输出 `merged.json`、`annotations.jsonl`、`analysis.csv`、`summary.json`。会校验版本、批次、身份、100/100/100 归属、漏标、重复、样本指纹和答案一致性；成本从冻结样本重算。修订后用新输出目录如 `collected/final_v2`，不要输入同一人的多个版本。
 
 自动计算整场会话的用户消息、有效交互、工具/API 调用、token 和时长。不再记录新需求出现位置，因此不计算“首次新需求之后”的成本，也不统计新需求个数。成本比较是描述性关联，不能估算“一开始说清楚会节省多少”。
 

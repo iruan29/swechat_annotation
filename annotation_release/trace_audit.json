@@ -1,5 +1,5 @@
 {
-  "package_id": "a314b7e5cc5095ba62cdcf07172504d9435064cef4ae16575ac12877b6f75996",
+  "package_id": "218dd8f15b81d1ede9a836fa798278504eba678feaaea1143f596a28a92563e5",
   "summary": {
     "sessions": 100,
     "user_messages": 1710,
@@ -2412,5 +2412,7 @@
       "gaps": [],
       "source_match": true
     }
-  ]
+  ],
+  "source_audit_package_id": "a314b7e5cc5095ba62cdcf07172504d9435064cef4ae16575ac12877b6f75996",
+  "reuse_note": "All 100 frozen case fingerprints match the previously source-verified batch; only rater allocations changed."
 }
