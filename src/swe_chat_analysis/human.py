@@ -262,7 +262,7 @@ class HumanProject:
 
     def agreement(self) -> dict[str, Any]:
         if self.simple:
-            return {"supported": False, "reason": "简洁版含多标签与变长需求事件，未定义事件对齐的一致性指标", "pairs": []}
+            return {"supported": False, "reason": "简洁版尚未实现复标一致性统计；需要同一批样本的独立重复标注", "pairs": []}
         with self.connect() as connection:
             rows = connection.execute("SELECT annotator,case_id,normalized_json FROM annotations WHERE stage='behavior' AND status='complete'").fetchall()
         labels: dict[str, dict[str, str]] = {}
@@ -359,20 +359,21 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     prepare_parser = sub.add_parser("prepare")
     prepare_parser.add_argument("--data-dir", default="data/swe-chat")
-    prepare_parser.add_argument("--output-dir", default="outputs/human_valid_100_seed42")
+    prepare_parser.add_argument("--output-dir", default="outputs/human_zh_en_v3_100_seed42")
     prepare_parser.add_argument("--sample-size", type=int, default=100)
     prepare_parser.add_argument("--seed", type=int, default=42)
     prepare_parser.add_argument("--min-prompts", type=int, default=8)
     prepare_parser.add_argument("--max-prompts", type=int, default=0, help="有效交互数上限；0 表示不限")
     prepare_parser.add_argument("--min-chars", type=int, default=1000)
-    prepare_parser.add_argument("--max-chars", type=int, default=150000)
+    prepare_parser.add_argument("--max-chars", type=int, default=180000)
     prepare_parser.add_argument("--max-events", type=int, default=600)
+    prepare_parser.set_defaults(language_filter=True)
     prepare_parser.add_argument("--legacy", action="store_true", help="使用旧三阶段表单")
     serve_parser = sub.add_parser("serve")
-    serve_parser.add_argument("--output-dir", default="outputs/human_valid_100_seed42")
+    serve_parser.add_argument("--output-dir", default="outputs/human_zh_en_v3_100_seed42")
     serve_parser.add_argument("--port", type=int, default=8765)
     export_parser = sub.add_parser("export")
-    export_parser.add_argument("--output-dir", default="outputs/human_valid_100_seed42")
+    export_parser.add_argument("--output-dir", default="outputs/human_zh_en_v3_100_seed42")
     export_parser.add_argument("--annotator", required=True)
     args = parser.parse_args()
     try:
@@ -396,11 +397,11 @@ def main() -> None:
                 import csv
                 rows = result["annotations"][human_simple.STAGE]
                 with (destination / "analysis.csv").open("w", encoding="utf-8-sig", newline="") as file:
-                    fields = ["session_id", "agent", "initial_coverage", "instruction_quality", "literal_feasibility"] + list(human_simple.costs(next(iter(project.cases.values())), {"updates": [], "evolution": {"update_extent": "无更新"}}))
+                    fields = ["session_id", "agent", "initial_coverage", "new_requirements", "requirement_source", "gap_driver", "instruction_quality", "literal_feasibility"] + list(human_simple.costs(next(iter(project.cases.values())), {"evolution": {"new_requirements": "没有", "first_new_turn": None}}))
                     writer = csv.DictWriter(file, fieldnames=fields)
                     writer.writeheader()
                     for row in rows:
-                        writer.writerow({"session_id": row["session_id"], "agent": row["agent"], "initial_coverage": row["annotation"]["evolution"]["initial_coverage"], "instruction_quality": row["annotation"]["gap"]["instruction_quality"], "literal_feasibility": row["annotation"]["gap"]["literal_feasibility"], **row["metrics"]})
+                        writer.writerow({"session_id": row["session_id"], "agent": row["agent"], "initial_coverage": row["annotation"]["evolution"]["initial_coverage"], "new_requirements": row["annotation"]["evolution"]["new_requirements"], "requirement_source": row["annotation"]["evolution"]["source"], "gap_driver": row["annotation"]["gap"]["driver"], "instruction_quality": row["annotation"]["gap"]["instruction_quality"], "literal_feasibility": row["annotation"]["gap"]["literal_feasibility"], **row["metrics"]})
             print(f"已导出至 {destination}；只统计已提交结果，不混入草稿或合并不同标注员")
         else:
             token = secrets.token_urlsafe(32)

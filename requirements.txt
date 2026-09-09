@@ -2,3 +2,4 @@ huggingface_hub>=1.0
 pyarrow>=15
 requests>=2.31
 matplotlib>=3.7
+langid==1.1.6

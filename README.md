@@ -1,8 +1,10 @@
-> **当前正式标注批次：有效交互 100 条**。下载仓库 ZIP，解压后打开 `annotation_valid_release/offline/rater_a.html`（b/c 同理）。每条至少 8 次有效交互，轮数不设上限；三人仍按 30 / 30 / 40 分工。无需安装依赖或启动服务器。
->
-> 逐条计数、筛选口径和分布见 [质量报告](annotation_valid_release/QUALITY_REPORT.md)；备份、导出和汇总见 [标注指南](annotation_valid_release/README.md)。旧 `annotation_release` 是历史批次，存在模板导致轮数虚高的问题，本次请使用新目录。旧 JSON 不能与新批次混收。
->
-> 重抽样使用 `python scripts/run_human_annotation.py prepare`，打包使用 `python scripts/annotation_team.py build`。每条 13 个基础必填字段，每个需求事件另加 8 项，详见 [标注口径](Human_annotation.md)。
+# 当前标注入口：中文／英文 100 条 · 精简表单 v3
+
+下载 [annotation_release.zip](annotation_release.zip)，解压后打开 `annotation_release/offline/rater_a.html`（b/c 同理）。无需启动服务器。三人 30 / 30 / 40，页面顶部应显示「中文／英文 · 精简表单 v3」。
+
+本次从原始 SWE-Chat parquet 重新筛选，剔除模板与自动消息造成的虚假轮次。7 个基础选择项，有新需求时共 9 项，没有项目概况或文字理由。筛选分布见 [质量报告](annotation_release/QUALITY_REPORT.md)，操作与汇总见 [三人指南](annotation_release/README.md)。
+
+旧文件内嵌旧数据，刷新不会更新。请重新下载；旧批次保留在 `annotation_archive/`，旧答案不能导入或混收。`annotation_valid_release/offline/` 仅保留指向本次入口的提示。
 
 # SWE-Chat：全量标注与指标说明
 

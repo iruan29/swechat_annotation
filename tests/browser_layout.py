@@ -7,7 +7,7 @@ with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=os.environ.get('SWE_CHROMIUM','/root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome'),headless=True,args=['--no-sandbox'])
     page=browser.new_page(viewport={'width':1440,'height':1000})
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-    page.goto(Path('annotation_valid_release/offline/rater_a.html').resolve().as_uri())
+    page.goto(Path('annotation_release/offline/rater_a.html').resolve().as_uri())
     page.locator('.queue-item').first.click()
     import json
     payload=json.loads(page.locator('#offline-data').text_content())
@@ -45,7 +45,7 @@ with sync_playwright() as p:
     page.locator('.reading-nav a[href="#evidence-panel"]').click()
     page.screenshot(path='/tmp/swe_redesign_reading.png')
     # Native controls remain reachable deep in the long page, with no overlaying submit toolbar.
-    page.locator('#field-overview-project').fill('Layout check draft')
+    page.locator('#field-evolution-initial_coverage').select_option('一部分')
     expect(page.locator('#save-state')).to_contain_text('自动保存')
     page.set_viewport_size({'width':390,'height':844})
     assert all(value=='visible' for value in positions()['overflow'])

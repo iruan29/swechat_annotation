@@ -61,7 +61,7 @@ def prepare(args):
     print('扫描完整源表，按实质性用户请求与后续 Agent 活动计算有效交互…', flush=True)
     records = compact_scan(data / 'conversations.parquet')
     sessions = {str(r['session_id']): r for r in pq.read_table(data / 'sessions.parquet', columns=_available_columns(data / 'sessions.parquet', SESSION_COLUMNS)).to_pylist()}
-    eligible, audits, fingerprints = {}, [], set()
+    eligible, audits, fingerprints, languages = {}, [], set(), {}
     for sid in sorted(sessions):
         ev = records.get(sid, [])
         chars = sum(e[4] for e in ev)
@@ -86,6 +86,10 @@ def prepare(args):
                 key = digest([normalize(e[3]) for e in sorted(ev, key=lambda e:e[0]) if e[1] == 'user_prompt' and e[0] in turns])
                 if key in fingerprints: reason = 'duplicate_user_sequence'
                 else: fingerprints.add(key)
+        if reason is None and getattr(args, 'language_filter', False):
+            from .human_language import screen
+            languages[sid] = screen(ev, q)
+            if not languages[sid]['accepted']: reason = 'language_not_chinese_or_english'
         audits.append(dict(case_id=sid, exclusion_reason=reason, raw_user_messages=raw_count,
                            effective_interactions=q['effective_interactions'] if q else None, characters=chars, events=len(ev)))
         if reason is None:
@@ -99,6 +103,7 @@ def prepare(args):
     for sid in selected:
         case = make_case(sessions[sid], source.pop(sid), {}, args.seed)
         case['interaction_quality'] = eligible[sid]
+        if sid in languages: case['language_screen'] = languages[sid]
         case['reading_stats'] = dict(user_rounds=len(case['user_turns']),
                                     effective_interactions=eligible[sid]['effective_interactions'],
                                     characters=sum(len(e['text']) for e in case['events']), events=len(case['events']))
@@ -109,6 +114,7 @@ def prepare(args):
     write_jsonl(output / 'candidate_audit.jsonl', audits)
     manifest = dict(human_version=VERSION, rubric_versions={STAGE:VERSION}, seed=args.seed,
         sample_size_requested=args.sample_size, session_count=len(cases), eligible_pool_count=len(eligible),
+        language_filter='Chinese and English only' if getattr(args, 'language_filter', False) else 'not applied',
         filter_version=FILTER_VERSION, bounds={k:getattr(args,k) for k in ('min_prompts','max_prompts','min_chars','max_chars','max_events')},
         sampling='Uniform seed-based sample without replacement after effective interaction and readability filtering; exact normalized substantive user sequences deduplicated; no annotation outcome filtering.',
         interaction_definition='Distinct substantive user request group followed by visible assistant/tool activity. Consecutive users without agent activity share one exchange. Acknowledgements, repeated prompts, automatic notifications, skill/command scaffolding and continuation records do not qualify. Activity is not proof of success.',

@@ -1,171 +1,74 @@
-> **历史批次，停止用于本次标注。** 原筛选误将固定模板/拆段计为多轮用户交互。请改用仓库中的 `annotation_valid_release/`；本目录保留供旧结果追溯，新旧 JSON 不可混收。
+# 中文／英文标注包 v3：三人 30 / 30 / 40
 
-# 三人 SWE-Chat 标注包：30 / 30 / 40
+**本次统一使用 `annotation_release`。** 新页面顶部显示「中文／英文 · 精简表单 v3」及批次 ID。不要继续用旧下载文件：离线 HTML 内嵌数据，刷新不会更新。旧批次保留在 `annotation_archive/`，旧答案不迁移、不混收。
 
-本目录可以单独放到 GitHub，也可以下载 ZIP 后解压使用。**推荐双击离线 HTML：标注员只需要浏览器，不需要 Python、服务器或安装依赖。** 最终汇总负责人使用 Python 3.10+。
+## 直接用浏览器标注
 
-100 条样本已冻结，用户 prompt **8–12 条**（至少 8 条），正文完整保留所选事件类型。每个人处理不同样本：
+1. 下载仓库中的 **annotation_release.zip** 并解压，进入 `annotation_release/offline/`。也可下载整个仓库 ZIP 后进入同一路径。
+2. 每个人打开自己的 HTML，无需安装 Python 或启动服务器：
 
-| 分工 | 固定身份 | 数量 | 交付文件 |
+| 人员 | 文件 | 数量 | 最终交付 |
 | --- | --- | ---: | --- |
-| 第一人 | `rater_a` | 30 | `submission_rater_a.json` |
-| 第二人 | `rater_b` | 30 | `submission_rater_b.json` |
-| 第三人 | `rater_c` | 40 | `submission_rater_c.json` |
+| A | `rater_a.html` | 30 | `submission_rater_a.json` |
+| B | `rater_b.html` | 30 | `submission_rater_b.json` |
+| C | `rater_c.html` | 40 | `submission_rater_c.json` |
 
-负责人把姓名与 a/b/c 对应好即可，不需要改代码或重分样本。分工互不重叠，总计 100 条；此设计不能计算标注员间一致性。建议开始前一起讨论标注口径，勿把讨论结果当成独立复标。
+3. 通读用户消息，逐轮展开 Agent／工具内容，填写选择题。所有内容随整个页面滚动，可切换通栏阅读。
+4. 浏览器自动保存草稿；完成一条后点击「提交标注」。关闭前下载「备份全部进度」。换浏览器、电脑或文件路径时，导入同批次、同身份的备份。
+5. 全部完成后点击「导出我的结果」，交付最新一份 submission JSON。backup 只用于恢复，不是正式交付文件。
 
-## 当前批次的交互记录说明
+GitHub 的 HTML 代码预览不能标注，需要下载后打开。不使用无痕窗口；浏览器禁止存储时，关闭前务必下载备份。同一身份只开一个标签页。
 
-当前 `user_rounds` / “至少 8 轮”筛选实际指**至少 8 条非自动续接的用户消息**，不代表 8 个完整问答回合。界面按源 `turn_number` 顺序显示，每条用户消息后的记录截止下一条用户消息；这是时间区间，不是严格的因果一一对应。
+## 每条只需填写什么
 
-对当前批次逐条核对原始 parquet 后，100 条样本的所选事件均与源表一致：共 821 条用户消息，210 段之后有 Agent 回复或工具记录，611 段没有可见响应；95 条会话至少有一个这样的空缺段。详细区间见 [trace_audit.json](trace_audit.json)。空缺可能涉及连续补充消息或源记录不完整，仅凭缺口无法区分，不能标成 Agent 忽略要求；只有工具记录也不表示要求已完成。
+**7 个基础选择项；有新需求时共 9 项。没有文字理由或项目概况，不逐事件填长表。**
 
-本次界面修复保留原样本、证据 T 编号、分配与批次 ID，已有 JSON 备份可继续导入。对于响应过程无法判断的样本，应选“部分可判断 / 无法判断”并说明缺口。当前批次不足以保证每个样本都能完成交互行为研究；如改为按至少 8 个带 Agent / 工具记录的消息段筛选，须另发新批次，不能与当前结果混收。
+| 部分 | 内容 |
+| --- | --- |
+| 需求 | 初始覆盖程度；有没有新需求；Agent 行为（多选） |
+| 有新需求时 | 需求来源（单选）；首次出现的用户消息（从下拉列表选择） |
+| 指令缺口 | 指令质量；主要原因（单选）；字面执行能否达成目标；Agent 主要处理方式 |
 
-所有内容随页面自然向下延伸，不再有对话或表单的小范围滚动框。桌面默认并排显示对话与标注，点击“切换为通栏阅读”可改为上下排列。顶部快捷导航可跳到对话、表单、样本列表和页面顶部；窄屏自动上下排列。样本编号卡片和进度条显示完成情况，HTML 保留每段“未收录响应”的提示。
+分类边界与例子见 [RUBRIC.md](RUBRIC.md)。没有足够证据时选「无法判断」，不需要补写解释。去掉文字理由减少工作量，但一致性仍需通过独立重复标注检验；本次 30/30/40 互不重叠，本身不能算标注员间一致性。
 
-本界面没有进一步裁剪所选正文，但源数据卡说明 `tool_result` 内容可能已截断到 10KB；不能称为原始所有事件的无损完整转录。
+## 样本与轮数
 
-## 推荐：双击 HTML，直接在浏览器中标注
+从原始 `conversations.parquet` 重新筛选，保留中文／英文的用户交互。至少 8 次有效交互，其中至少 6 次有文字 Agent 回复；轮数不设上限，正文最多 180,000 字符、600 条事件。
 
-1. 在 GitHub 点击 **Code → Download ZIP**，解压后进入 `annotation_release/offline/`。如果拿到的是独立标注包 ZIP，直接进入 `offline/`。
-2. 每个人用 Chrome / Edge / Firefox 打开自己的文件：
+有效交互是一组实质用户请求及其后可见的 Agent／工具活动。中间没有 Agent 活动的连续补充合并；固定模板、自动通知、技能／命令展开内容、纯确认和重复消息不计有效次数。界面保留这些源记录，但自动上下文默认折叠，并标明不计数原因。
 
-| 人员 | 双击打开 | 数量 |
-| --- | --- | ---: |
-| 第一人 | `rater_a.html` | 30 |
-| 第二人 | `rater_b.html` | 30 |
-| 第三人 | `rater_c.html` | 40 |
+T 是源事件证据编号，不是轮次。原始用户消息数与有效交互数分别显示。保留源 session 中全部 user、assistant、tool use、tool result 事件，不截取前 8 轮。源数据不保证项目从开始到结束均被收录，工具结果可能已截断；缺少记录不能判断 Agent 忽略要求。
 
-3. 填写内容会自动保存为**草稿**；完成一条后点击「提交标注」。无需运行 serve，也不会向服务器发送会话或答案。
-4. 关闭前点击「备份全部进度（含草稿）」下载 JSON。换电脑、浏览器或文件路径时，打开同一个人的 HTML，然后「导入进度」。浏览器本地保存不是随 HTML 文件一起携带的，移动文件后看不到进度时请导入备份。
-5. 全部完成后点击右上角「导出我的结果」，将 `submission_rater_a.json`（b/c 同理）交给负责人。**backup 是进度备份，submission 才是正式交付。**
+[QUALITY_REPORT.md](QUALITY_REPORT.md) 提供批次分布；`source_manifest.json`、`candidate_audit.jsonl`、`trace_audit.json` 和每条 case 的 `interaction_quality` / `language_screen` 提供筛选与原文核验依据。
 
-GitHub 的 HTML 文件预览页只显示代码，不会执行标注页面，需先下载到本地。不要使用无痕窗口长期标注；如果浏览器禁止存储，页面会提示仅保存在内存，此时关闭前必须下载备份。每个人只开一个标注标签页，避免版本冲突。
+## 备用：每个人自己启动服务
 
-离线版与下面的 Python 版使用同一批样本、身份和提交 JSON 格式。已有 Python 版的已提交结果可导入 HTML 继续修订；未提交的数据库草稿不会自动转移。离线版进度放在浏览器，不会出现在 Python 版的 status/export 命令里，请从 HTML 页面导出。
-
-负责人收齐三个 submission JSON 后，直接使用本文后面的 merge 命令，汇总流程不变。
-
-## 备用方式：Python 本地服务
-
-以下 serve/export/status 命令仅适用于 Python 版；使用上面的 HTML 版无需执行。
-
-## 每个人第一次使用
-
-1. 从负责人指定的 GitHub 仓库下载 ZIP 并解压，或 `git clone 仓库URL`。三个人使用同一批次；不要自己抽样或修改 `assignments/`。
-2. 在包含 `annotate.py` 的目录打开终端。
-3. 检查 Python 与样本完整性：
+需要 Python 3.10+，不需要第三方依赖。在含有 `annotate.py` 的目录执行；macOS/Linux 可把 python 换成 python3，Windows 可用 py -3。
 
 ```bash
-python --version
 python annotate.py verify
-```
-
-macOS / Linux 若 `python` 不存在，将以下命令的 `python` 换成 `python3`；Windows 可换成 `py -3`。版本需 ≥3.10。
-
-## 第一人：30 条
-
-```bash
 python annotate.py serve --rater rater_a
 ```
 
-打开终端打印的完整 `http://127.0.0.1:8765/#token=...` URL。页面自动选择 `rater_a`，只显示你的 30 条，不需要再输入 ID。
-
-全部提交后，点击页面右上角「导出我的结果」，将下载的 **`submission_rater_a.json`** 交给负责人。也可以在终端运行：
+B/C 把 `rater_a` 换成 `rater_b` / `rater_c`。打开终端打印的完整 `http://127.0.0.1:8765/#token=...` 链接。Python 版离开前点击保存草稿或提交；数据保存在 `.local/rater_a/human.sqlite3`，下次运行同一命令继续。
 
 ```bash
 python annotate.py status --rater rater_a
 python annotate.py export --rater rater_a
 ```
 
-文件写到 `submissions/submission_rater_a.json`。
+已完成的结果写入 `submissions/submission_rater_a.json`。中途导出须加 `--allow-partial`。同一电脑同时运行多个身份时用不同 `--port`。离线 HTML 进度存浏览器，不能用 Python export 导出，需从 HTML 页面导出。
 
-## 第二人：30 条
+## 负责人汇总
 
-```bash
-python annotate.py serve --rater rater_b
-# 完成后在新终端执行，或 Ctrl+C 停止服务后执行：
-python annotate.py export --rater rater_b
-```
-
-页面自动绑定 `rater_b`。交付下载的 JSON 或 `submissions/submission_rater_b.json`。
-
-## 第三人：40 条
-
-```bash
-python annotate.py serve --rater rater_c
-python annotate.py export --rater rater_c
-```
-
-页面自动绑定 `rater_c`。交付下载的 JSON 或 `submissions/submission_rater_c.json`。
-
-三个人在各自电脑都可以用 8765 端口。同一台机器同时开多份服务时，可分别用 `--port 8766`、`--port 8767`。不要为同一身份同时启动多个服务。
-
-## 如何读与标
-
-- 左侧默认展示**全部用户 prompt**，Agent / 工具按轮折叠；展开后才加载正文。没有“第一页只显示四轮”的限制。
-- 轮数 = 原始 `user_prompt` 且不是 `is_continuation` 的记录数。一条记录算一轮，不是 user + assistant 算两轮，也不是 T 编号。自动续接上下文可在折叠内容中看到，但不计入用户轮数。
-- 样本保留源 session 中全部 user / assistant / tool use / tool result 事件，不截取前几轮、不截断正文。thinking / system 等事件不在阅读界面；`trace_scope` 记录源事件数量及类型。数据集本身不一定包含项目真正从开始到结束的全部过程，不能把 session 完整提取等同于项目完整记录。
-- 一条会话一张表：**13 个基础必填字段**，加可选备注；每个需求事件另加 8 个字段。无事件为 13 项，一个事件为 21 项，两个为 29 项。同一要求的重复提及不新建事件。
-- 基础部分：项目目标与可判断程度（2 项）；需求覆盖、更新、行为、证据与理由（5 项）；指令质量、原因、字面可行性、Agent 处理、证据与理由（6 项）。
-- 初始遗漏、真正新增目标、旧要求修复要分开；用户局限需要证据，不猜测文化或能力。证据不足选「无法判断」，写明原因。
-- 证据用左侧 T 编号，点击可复制，多个编号用逗号分隔。点击「提交标注」前阅读完整会话。
-- 项目详情、Agent 分类与例子见 [RUBRIC.md](RUBRIC.md)。本包所有操作使用本 README 的 `annotate.py` 命令。
-- 用户轮数、工具 / API 调用、token 与时长自动算；不要人工估计「一开始说清楚会节省多少」。
-
-## Python 版：中断、继续与备份
-
-- 表单不会自动保存。离开前点击「保存草稿」或「提交标注」。未保存内容关闭浏览器会丢失，页面会提示。
-- `Ctrl+C` 停止服务；下次运行**同一身份、同一目录**的 serve 命令即可继续。启动 token 每次变化，请打开新打印的 URL。
-- 草稿和已提交结果在 **`.local/rater_a/human.sqlite3`**（b/c 同理），不在浏览器缓存。不要删除 `.local`。
-- 要换电脑：先停止服务，再拷贝整个标注包（包含隐藏目录 `.local`）到新电脑，继续相同命令。也可以停止服务后备份整个 `.local` 目录；恢复时放回**同批次**标注包。
-- 导出 JSON 只包含已提交结果，不含草稿，不是完整进度备份。中途 CLI 导出需显式添加 `--allow-partial`；页面中途导出会提示未完成数量。
-- 提交后允许修订；重新保存成草稿的样本会暂时退出统计，必须再次提交。修改完成后重新导出，将**最新一个** JSON 交给负责人。
-- 不需提交数据库或个人结果到 GitHub，`.gitignore` 已排除 `.local/`、`submissions/`、`collected/`。个人结果通过你们约定的文件渠道交付。
-
-## 负责人：回收并汇总
-
-将三份最新的 JSON 放到本包的 `submissions/` 目录：
-
-```text
-submissions/
-  submission_rater_a.json
-  submission_rater_b.json
-  submission_rater_c.json
-```
-
-执行（Windows 也可直接使用这一行）：
+收齐三份最新的 submission JSON，放入本包 `submissions/`，执行：
 
 ```bash
 python annotate.py merge submissions/submission_rater_a.json submissions/submission_rater_b.json submissions/submission_rater_c.json --output-dir collected/final_v1
 ```
 
-命令会检查批次 ID、30/30/40 归属、样本指纹、口径版本、重复项、漏标、证据编号、答案合法性及完成状态；从冻结样本重新计算成本，而不是信任用户 JSON 中的统计数字。任何一项不符都会报错，且不生成貌似完整的汇总。
+输出 `merged.json`、`annotations.jsonl`、`analysis.csv`、`summary.json`。会校验版本、批次、身份、30/30/40 归属、漏标、重复、样本指纹和答案一致性；成本从冻结样本重算。修订后用新输出目录如 `collected/final_v2`，不要输入同一人的多个版本。
 
-生成：
+自动计算用户消息、有效交互、工具/API 调用、token、时长，以及首次新需求之后的可见交互成本。不再逐事件统计新需求个数，该字段为 null。成本比较是描述性关联，不能估算“一开始说清楚会节省多少”。
 
-| 文件 | 内容 |
-| --- | --- |
-| `merged.json` | 三人全部有效标注与统一统计，保留标注员和证据 |
-| `annotations.jsonl` | 每行一条完整标注，便于分析 |
-| `analysis.csv` | 每样本主要分类与成本，可用 Excel / pandas 打开 |
-| `summary.json` | 完成数量、有无晚出现需求及指令质量的成本比较 |
-
-同一个输出目录不能覆盖。收到修订文件后只保留该人的最新 JSON，再用 `--output-dir collected/final_v2` 重做汇总；不要同时输入同一人的多个版本。
-
-中期检查允许只收到部分文件：
-
-```bash
-python annotate.py merge submissions/submission_rater_a.json --allow-partial --output-dir collected/interim_v1
-```
-
-中期结果明确标记未完成及缺失样本，不冒充 100 条最终结果。成本差异只是描述性关联；没有同任务的实验对照，不能估算清晰初始指令的因果节省。
-
-## 负责人：放到 GitHub
-
-将**这个独立包的内容**作为仓库内容（或放在已有仓库的一个独立目录）。它仅包含运行代码、前端、100 条样本、分配表和指南，不需要整个研究仓库的 `.env`、数 GB parquet、历史输出或数据库。
-
-推送前运行 `python annotate.py verify`。负责人给三个人同一个仓库版本，并确认各自身份。批次由 `assignments.json` 的 `package_id` 标识；发出后不要改分配表和样本。如需要新一批数据，应重新打包并单独通知，不能混收两批结果。
-
-数据来源说明见 [DATA_NOTICE.md](DATA_NOTICE.md) 和原始数据卡 [DATA_SOURCE.md](DATA_SOURCE.md)。
+个人答案、数据库和备份不要提交到 GitHub。需要继续旧批次时，用对应存档的运行代码；不要导入本次 v3。

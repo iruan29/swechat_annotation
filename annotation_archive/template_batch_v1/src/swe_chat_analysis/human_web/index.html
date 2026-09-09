@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SWE-Chat 人工标注台</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body id="page-top">
+<header><div><strong>SWE-Chat <span class="brand-light">/ 人工标注</span></strong><span class="muted">阅读对话，记录需求如何被理解。</span></div><div class="account"><label for="annotator">标注员 ID</label><input id="annotator" placeholder="例如 rater_a" maxlength="64"><button id="enter">载入任务</button><button id="summary" disabled>查看我的指标</button><button id="export" disabled>导出我的结果</button></div></header>
+<div id="message" role="status" aria-live="polite">输入标注员 ID 开始。每条会话一张表，支持保存草稿和提交后修订。</div>
+<main>
+<aside id="sample-list"><span class="eyebrow">YOUR WORKSPACE</span><h2>我的样本</h2><p id="progress">尚未载入</p><progress id="overall-progress" max="100" value="0" aria-label="标注完成进度"></progress><label><input type="checkbox" id="unfinished">只看未完成</label><div id="queue"></div></aside>
+<section id="workspace" hidden>
+<div class="case-heading"><div><span class="eyebrow">CONVERSATION REVIEW</span><h1 id="case-title"></h1><p id="case-id" class="case-id"></p></div><nav id="stages" aria-label="标注阶段"></nav></div>
+<p id="stage-help" class="notice"></p><nav class="reading-nav" aria-label="阅读与标注导航"><div class="jump-links"><a href="#evidence-panel">阅读对话</a><a href="#form-panel">填写标注</a><a href="#sample-list">选择样本</a><a href="#page-top">回到顶部 ↑</a></div><button id="layout-toggle" type="button" aria-pressed="false">切换为通栏阅读</button></nav>
+<div class="columns">
+<section class="evidence-panel" id="evidence-panel"><div class="panel-heading"><h2><span class="section-number">01</span> 原始对话</h2><span>按消息顺序阅读</span></div><p class="panel-help">按源事件顺序分组，不保证一问一答。T 是证据编号；源表工具结果可能已截断。</p><p id="trace-help" class="trace-help"></p>
+<div class="filters"><input id="search" placeholder="查找文本或 T 编号"><label><input type="checkbox" id="users-only">仅用户</label></div>
+<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="evidence-scroll" class="scroll-region" tabindex="0" role="region" aria-label="对话内容"><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details></div>
+</section>
+<section class="form-panel" id="form-panel"><div class="panel-heading"><h2><span class="section-number">02</span> 标注记录</h2><span>以可见证据为依据</span></div><div id="form-scroll" class="scroll-region" tabindex="0" role="region" aria-label="标注表单"><p>先填项目概况，再判断需求与指令缺口。缺少响应记录时，不要推断 Agent 忽略要求；证据不足请选择“无法判断”。</p>
+<details><summary>查看本阶段完整 rubric / 判定标准</summary><pre id="rubric"></pre></details>
+<form id="annotation-form"></form>
+
+<details><summary>高级：查看 / 编辑原始 JSON（无需使用）</summary><button id="show-json">从表单更新 JSON</button><textarea id="json-editor" rows="16" spellcheck="false"></textarea><button id="apply-json">将 JSON 应用到表单</button></details></div>
+<div class="actions"><button id="save-draft">保存草稿</button><button id="submit" class="primary">校验并提交（锁定本阶段）</button><button id="next-stage" hidden>进入下一阶段 / 样本</button><span id="save-state"></span></div>
+</section></div>
+</section>
+<section id="welcome"><h1>读一条会话，完成一张标注表</h1><p>① 先通读展开的用户 prompt；② 按轮展开 Agent 和工具证据；③ 标注需求演化与初始指令缺口。</p><p>需求变化才添加事件。表单没有预选判断，也没有模型预标注。可以随时保存草稿，提交后可修订；不同标注员使用不同 ID。</p><p>用户轮数、API / 工具调用与 token 成本自动汇总。建议先标 5 条统一口径，再完成 100 条。旧版项目仍保留原三阶段规则。</p></section>
+</main>
+<dialog id="summary-dialog"><button id="close-summary">关闭</button><h2>已提交标注的统计</h2><p>草稿不计入。按有无晚出现需求比较实际成本，并按 agent 和初始覆盖程度分组；成本差异是描述性关联，不是因果效应。</p><pre id="summary-completeness"></pre><div id="summary-table"></div></dialog>
+</body></html>

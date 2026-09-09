@@ -1,0 +1,75 @@
+{
+  "human_version": "human_simple_v2",
+  "rubric_versions": {
+    "review": "human_simple_v2"
+  },
+  "seed": 42,
+  "sample_size_requested": 40,
+  "session_count": 40,
+  "eligible_pool_count": 361,
+  "bounds": {
+    "min_prompts": 8,
+    "max_prompts": 12,
+    "min_chars": 1000,
+    "max_chars": 60000,
+    "max_events": 300
+  },
+  "sampling": "Uniform without replacement from sorted unique sessions after observed readability bounds; no outcome filtering; continuation prompts excluded from user rounds; full selected event text retained.",
+  "case_fingerprints": {
+    "ses_30ae8f253ffe6H6VW7ULSwnmDp": "0132f14b9df30a89ceddfc22c4c7240569df3aa4c3bb38e1f0d04a18f7a9307c",
+    "70367a83-c6e1-4d8c-b424-27c06bc5c082": "9f9bb93aeed9a3dd28573d3df7299d27f8c0c2ba83e5b59135c3375edcda8309",
+    "735b13d4-3a89-4f44-874e-e7e4c43277b1": "65b8479d18d14f6f04a7643b933ca901bf7c729614f036970ad9bf07626ecc01",
+    "ses_32c64d670ffeXzZ9fSueaRjR6K": "9a0ff3277296c44bb8e946a3a2f4bd9499cab3df25dc3811f0290591fc964a50",
+    "ses_33600c474ffee2fdP3UFZuGu1Q": "67fa14e23dbc75e3d3ce5bbb99842a89f315002325e21f46c8cb724310bb07cb",
+    "ses_2f1483b76ffeyBKHBfQZ3TYwMi": "1d39995aabe879d688235794d59810cd03ec6f4d800ba982daa5f944995e53e4",
+    "ses_3357d76b8ffeHphmGOmstEIZBX": "809e856a275b28e45638c2d57c89b72c112c66d44abc79f42b07a9ac7df72f60",
+    "ses_31607f6d0ffelzKhJxubybekIM": "2bec3ddebf03791115d40aa553c5ac75ada3e4afff25f3fd9d8ea6f53f0bd660",
+    "ses_339b6b76fffeBr70qCDgUoJwGy": "e7d2aa9d6ed6ac55c6df737590ad850a5cbe4bb462409a5a7157d1ab4360a895",
+    "ses_2f14ebe8fffeduOrTZf967VzDF": "d3e4e785afee1b4dca47702b8c43e97d5e62560cf250ea04fb83184d4cb6e83e",
+    "173e23b9-df1a-4c81-b566-11b0ddebd2b9": "9b1100a3a38f5935b14a4ddb0fcd25a4ec2d182c6b820d1b37b3b84ebc975a82",
+    "ses_33ac0accbffeWu6Hzwu7FW1CF8": "b2c291414da6437235dc2a7e019a58c2a4375343af59f0c28579e57fd8176d37",
+    "ses_322294ce9ffeVizDt15szQaONE": "71cbdbe9541b52267937be2a99d1cc3ca2b86cc46e212386aca2e4802ca63a5e",
+    "ses_33ab51cbdffeL0TBYqSb0lOzjZ": "097f56643b72e8243a15aff71cef01f152a6c7e573e330a719ce027dba8f80cb",
+    "ses_3201c2640ffelHDXNUgY7ve4n4": "4072acee40273114ab68602730f169dffaa9c54c43a6a74179c263334f2d6243",
+    "ses_339a8c60bffeqOuOqsQZDLox32": "0a11ff17c0b32efc855101784eb0146cdfb6d722521e421482630ab3115aaedc",
+    "ses_30c5f9a62ffeOFN2Z9gzqdb0cF": "8cbe21b22beb81be301f56700d8cd58a974f527849a3c49b6b8424da1ccdebb9",
+    "ses_330551b3affelgoxhUfCDWCBOw": "ec770572d5ed67a737350b51500c7ddc3c44b7acc3399947e929dab754c31c9d",
+    "ses_33626483cffeE9aGag3moqdOkO": "c54040dfab512da2ce7b6c694cfa86b43b0a0b91addc75238d5b9d23d01b24fc",
+    "ses_331a42b7cffenUECEVrQNZ6m47": "5e5212e4ff7f4794215f860f4c633723545834a28b8f752a34ec370614917f58",
+    "ses_32a825f42ffex4Ro5GvMc3Dx17": "4d80cc22a28a85416e52729ce12f72faddf5a4aedf8bc88535e13cd0aeb80d35",
+    "ses_30fff93c4ffegDFe8QJo8xJP5h": "dfd67dcfd98992f1391fc5e0c5e32d5b59ad261fd37e126ee849fff03f5e45e7",
+    "ses_30ff28d7affeCsZP7RYFuonA3o": "c5980fd3def16b2e158968ae86ab7614106c4d1e3a6a41856b69967de7064edb",
+    "ses_3399e769affe9fJXZW234M60Qq": "c915dd04dae19e794ad904d14f1fe5235a2056bc78b1bf6ca0e8f1e48763fd3b",
+    "ses_33b1987daffekXvOOhTlyLxPUM": "099b2a8774f228afe12c85b5480834e5b5c2246bf9548cedb01e2f651ef07327",
+    "584c0a94-6b71-4045-8d78-026a48c9eefe": "4e13925c37ffea12df93d2ed97fb45788e69fc30f626445ed46248523b5b8f79",
+    "ses_32025e833ffeBV46JzBKP1WMbu": "b00ae990593dc105169ed1af2bde344dced034d2bc77717aefda8e4c1fec8514",
+    "ses_331860f77ffetkfkLfdLiry3AJ": "ffe137b1b634816ca824e593956fc58516c323b3503999bdc92df45a5788c875",
+    "c88dc183-a68e-49b9-8583-608387c4f68a": "3ae36c4308f27ff174c11f2dd3dc664f167b311db2c7850d27ffd401ca64f0a1",
+    "ses_32fab6e8bffe1JUUg1cDjeDeIh": "648762ef8eb6686291f1219301a1430e90d95b819294449086cf53e42be785f8",
+    "ses_33963d830ffeGak5jKyhK59240": "89ea2b8f7555c7586a2a0a51e94601fe00a1d9da974365349e073513cc8a4d1e",
+    "e5f32201-1874-4d25-8abf-daec7e18ccd2": "b16a99da1c7c7fb0d09bfa370038f83ea2d7829306a88d40b8c1059ecf27ae2e",
+    "ses_282eb4a02ffe6aw0J6HCVROs7z": "bd73e146df266907ea896907f2ba41f64cdfbaa2c11ed044210e42221ba8bb27",
+    "ses_30ff85d75ffecfrQNIOVG7glN3": "9ea5e9b6d1a86e464ff8e5a26d26b8c9f6271510c2905ad3c2d0bc99d7c463d1",
+    "ses_3109afbc1ffenCZU3ALiLbAW0a": "d99f52b96cb006415fd228a851e0ccbe8e6c572ffdc070bc66c01f5e88218418",
+    "ses_312076f39ffewU3r9Ht2cQ4296": "cb700495f089c2d413b26fdc412cbbfcdabc5dbab678ceb599def8f759ba4a9f",
+    "ses_33ababb22ffelya5hl9qAVqBtA": "1a3399cc3745a93249db276b2a9fc8d9f77510356c1b3b75d6a28d7c38651490",
+    "54d68864-f678-4735-8e4f-85e47acb7433": "14ff63f70ea8d286b0f33a53fc729b14aa08b9db4d2254a27fed2ae21230f8fa",
+    "f0ae8882-f2a2-4704-aa70-ac5a70fa4cad": "afe33e321078dc3565c424b017a5735e0f74f78a30f60e819d879cbea6bc25e6",
+    "ses_335e76ca1ffe7P0y3TFDXoXGIs": "e028cd6fb68f054c03648d722294b60a6cda0737b8a75f7b53f654212c290b67"
+  },
+  "created_at_unix": 1788881363,
+  "commits_included": false,
+  "source_files": {
+    "sessions.parquet": {
+      "bytes": 1997377,
+      "mtime_ns": 1787752360923861327
+    },
+    "conversations.parquet": {
+      "bytes": 1311422253,
+      "mtime_ns": 1787752988436380619
+    }
+  },
+  "assigned_annotator": "rater_c",
+  "package_id": "37d9b9f0c28b15353a85a0df704a193295bbe17ff64e033bb6990e3aade04ce4",
+  "parent_session_count": 100
+}

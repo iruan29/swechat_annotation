@@ -66,14 +66,58 @@ def load_bundle(root):
     return config, all_cases
 
 
+def write_quality_report(source, destination, project, config):
+    from collections import Counter
+    from statistics import median
+    cases = list(project.cases.values())
+    lines = ['# 有效交互样本质量报告', '', f"批次 ID：`{config['package_id']}`", '',
+             f"合格候选池：{project.manifest.get('eligible_pool_count', '未记录')} 条；seed=42 抽取 100 条，固定分配 30 / 30 / 40。", '',
+             '| 维度 | 最少 | 中位数 | 最多 |', '| --- | ---: | ---: | ---: |']
+    for key, label in [('effective_interactions','有效交互'),('user_rounds','原始用户消息'),('characters','可见正文字符'),('events','可见事件')]:
+        values = [c.get('reading_stats', {}).get(key) for c in cases]
+        values = [v for v in values if v is not None]
+        if values:
+            lines.append(f'| {label} | {min(values):,} | {median(values):,} | {max(values):,} |')
+    languages = Counter(c.get('language_screen', {}).get('language', '未记录') for c in cases)
+    lines += ['', '用户语言识别：' + '；'.join(f'{k}: {v}' for k,v in languages.items()) + '。表单版本 human_simple_v3；7 项基础选择，有新需求时共 9 项。']
+    agents = Counter(c['agent'] for c in cases)
+    excluded = Counter()
+    for case in cases:
+        excluded.update(case.get('interaction_quality', {}).get('excluded_prompt_counts', {}))
+    lines += ['', f"覆盖 {len({c['repo_id'] for c in cases})} 个仓库。Agent 分布：" + '；'.join(f'{k}: {v}' for k,v in agents.items()) + '。', '',
+              '这是经过可读性与多次实质交互筛选的子集，不能当作全量 SWE-Chat 的代表样本，也不宜直接用于跨 Agent 排名。仅筛选中文／英文用户交互。', '',
+              '## 计数规则', '',
+              '有效交互指一组实质性用户请求，随后有非空 assistant 回复或工具活动。连续发送且中间没有 Agent 活动的用户消息合并为一组。至少 8 次有效交互，其中至少 6 次有文字 assistant 回复；轮数无固定上限。', '',
+              '排除固定 review 模板会话、明显重复拆段、起始环境/自动消息和源顺序有歧义的会话。对实质 prompt 序列去重。纯确认、自动通知、技能/命令展开模板及重复 prompt 不计有效次数，原文仍保留。短命令如 commit、git status 是用户实际操作请求，可以计数；不要求每次请求都新增项目需求。', '',
+              '这些是可审计的启发式规则，不是人工意图标签。缺少响应不能推断 Agent 忽略要求，有工具活动也不证明要求已完成。判断需求是否新增、指令是否有问题仍由标注员完成。', '',
+              '## 原文与追溯', '',
+              '- 全部保留源 session 的 user / assistant / tool use / tool result 事件及原编号，不只截取前 8 轮。',
+              '- 不保证项目从开始到结束的全部过程被源数据收录；thinking/system 不在界面，源工具结果可能已截断到 10KB。',
+              '- `source_manifest.json`：规则版本、边界、来源文件、候选排除统计与样本指纹。',
+              '- `candidate_audit.jsonl`：所有带 session 元数据的候选的首个排除原因，未做语义审查时的有效次数为 null。',
+              '- `assignment_inventory.csv`：逐条分配、两种轮数、长度与事件数。',
+              '- `assignments/*/cases.jsonl` 的 `interaction_quality`：每条 prompt 的分类原因、合并后的请求和响应 T 区间。',
+              '- `trace_audit.json`：本次发布额外用原始 parquet 逐条比对的报告；重建包后可运行 `python scripts/audit_human_traces.py` 重新生成。', '',
+              '## 已保留但不计有效请求的消息', '', '```json', json.dumps(excluded, ensure_ascii=False, indent=2), '```', '',
+              '旧批次存在模板凑轮或旧表单问题，保存在 `annotation_archive/`。本次请使用 `annotation_release`；旧备份不导入新包，结果不能混收。', '']
+    (destination / 'QUALITY_REPORT.md').write_text('\n'.join(lines), encoding='utf-8')
+    if (source / 'candidate_audit.jsonl').exists():
+        shutil.copy2(source / 'candidate_audit.jsonl', destination / 'candidate_audit.jsonl')
+
+
 def build(source, destination, repo_root):
     if destination.exists() or destination.with_suffix('.zip').exists():
         raise ValueError('分发目录或压缩包已存在；请保留已发出的固定批次，另选新目录')
     project = HumanProject(source)
     if not project.simple or len(project.cases) != 100:
         raise ValueError('需要简洁版的 100 条冻结样本')
-    if any(not 8 <= len(case['user_turns']) <= 12 for case in project.cases.values()):
-        raise ValueError('需要 8–12 用户轮次样本')
+    from .human_interactions import analyze
+    for case in project.cases.values():
+        q = analyze([(e['turn'], 'user_prompt' if e['kind'] == 'continuation_context' else e['kind'], e['kind'] == 'continuation_context', e['text'], len(e['text']), bool(e['text'].strip())) for e in case['events']])
+        if q['effective_interactions'] < 8 or q['answered_effective_interactions'] < 6 or q['template_session'] or q['fragment_count'] >= 2 or not q['first_prompt_substantive']:
+            raise ValueError('需要至少 8 次有效用户交互，不能使用模板或纯确认凑轮数')
+        if case.get('interaction_quality') is not None and case['interaction_quality'] != q:
+            raise ValueError('有效交互审计与源事件不一致')
     ids = sorted(project.cases)
     random.Random(42).shuffle(ids)
     allocations = {RATERS[0]: ids[:30], RATERS[1]: ids[30:60], RATERS[2]: ids[60:]}
@@ -94,26 +138,27 @@ def build(source, destination, repo_root):
         write_json(directory / 'manifest.json', manifest)
         write_jsonl(directory / 'cases.jsonl', subset)
     with (destination / 'assignment_inventory.csv').open('w', encoding='utf-8-sig', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=['annotator', 'position', 'case_id', 'user_rounds', 'characters', 'events'])
+        writer = csv.DictWriter(file, lineterminator='\n', fieldnames=['annotator', 'position', 'case_id', 'user_rounds', 'effective_interactions', 'characters', 'events'])
         writer.writeheader()
         for rater in RATERS:
             for index, sid in enumerate(allocations[rater], 1):
                 case = project.cases[sid]
-                writer.writerow(dict(annotator=rater, position=index, case_id=sid, **{key: case['reading_stats'][key] for key in ('user_rounds', 'characters', 'events')}))
+                writer.writerow(dict(annotator=rater, position=index, case_id=sid, effective_interactions=case.get('interaction_quality', {}).get('effective_interactions'), **{key: case['reading_stats'][key] for key in ('user_rounds', 'characters', 'events')}))
     package_src = destination / 'src' / 'swe_chat_analysis'
     package_src.mkdir(parents=True)
     # Explicit allowlist: never copy .env, databases, raw parquet, or existing annotations.
-    for name in ('__init__.py', 'human.py', 'human_simple.py', 'human_schema.py', 'human_team.py', 'human_offline.py', 'io.py', 'packet.py', 'study1.py', 'study2.py'):
+    for name in ('__init__.py', 'human.py', 'human_simple.py', 'human_schema.py', 'human_team.py', 'human_offline.py', 'human_interactions.py', 'io.py', 'packet.py', 'study1.py', 'study2.py'):
         shutil.copy2(repo_root / 'src' / 'swe_chat_analysis' / name, package_src / name)
     shutil.copytree(repo_root / 'src' / 'swe_chat_analysis' / 'human_web', package_src / 'human_web')
     shutil.copy2(repo_root / 'scripts' / 'annotation_team.py', destination / 'annotate.py')
     shutil.copy2(repo_root / 'docs' / 'TEAM_ANNOTATION.md', destination / 'README.md')
     guide = (repo_root / 'Human_annotation.md').read_text(encoding='utf-8')
     guide = guide[guide.index('## 每条需要标多少内容'):].split('## 旧项目')[0]
-    (destination / 'RUBRIC.md').write_text('# 标注口径与工作量\n\n' + guide, encoding='utf-8')
+    (destination / 'RUBRIC.md').write_text('# 标注口径与工作量\n\n' + guide.rstrip() + '\n', encoding='utf-8')
     shutil.copy2(repo_root / 'data' / 'swe-chat' / 'README.md', destination / 'DATA_SOURCE.md')
     (destination / '.gitignore').write_text('.local/\nsubmissions/\ncollected/\n*.sqlite3\n*.sqlite3-*\n__pycache__/\n*.pyc\n.venv/\n.env\n.DS_Store\n', encoding='utf-8')
-    (destination / 'DATA_NOTICE.md').write_text('本包包含 SWE-Chat 原始数据的 100 条会话摘选（8–12 个用户轮次），仅保留原始 user / assistant / tool use / tool result 事件及成本元数据，未裁剪正文；不含模型预标注。来源与数据集许可见 DATA_SOURCE.md（原始数据卡标记 odc-by）。样本及分配校验值见 assignments.json。\n', encoding='utf-8')
+    (destination / 'DATA_NOTICE.md').write_text('本包包含 SWE-Chat 原始数据的 100 条会话摘选（每条至少 8 次有效用户交互；原始消息另计），仅保留原始 user / assistant / tool use / tool result 事件及成本元数据，未裁剪正文；不含模型预标注。来源与数据集许可见 DATA_SOURCE.md（原始数据卡标记 odc-by）。样本及分配校验值见 assignments.json。\n', encoding='utf-8')
+    write_quality_report(source, destination, project, config)
     load_bundle(destination)
     from .human_offline import generate
     generate(destination)
@@ -156,15 +201,15 @@ def export(root, rater, destination=None, allow_partial=False):
 
 
 def analysis_csv(path, rows):
-    fields = ['session_id', 'annotator', 'agent', 'initial_coverage', 'update_extent', 'instruction_quality', 'literal_feasibility']
-    metric_keys = ['late_requirement', 'first_late_requirement_turn', 'requirement_update_count', 'user_rounds', 'visible_characters', 'observed_tool_events', 'user_rounds_after_first_update', 'tool_events_from_first_update', 'api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds']
+    fields = ['session_id', 'annotator', 'agent', 'initial_coverage', 'new_requirements', 'requirement_source', 'gap_driver', 'instruction_quality', 'literal_feasibility']
+    metric_keys = ['late_requirement', 'first_late_requirement_turn', 'requirement_update_count', 'effective_interactions', 'user_rounds', 'visible_characters', 'observed_tool_events', 'user_rounds_after_first_update', 'tool_events_from_first_update', 'api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds']
     with path.open('w', encoding='utf-8-sig', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fields + metric_keys)
         writer.writeheader()
         for row in rows:
             a = row['annotation']
             writer.writerow(dict(session_id=row['session_id'], annotator=row['annotator'], agent=row['agent'],
-                                 initial_coverage=a['evolution']['initial_coverage'], update_extent=a['evolution']['update_extent'],
+                                 initial_coverage=a['evolution']['initial_coverage'], new_requirements=a['evolution']['new_requirements'], requirement_source=a['evolution']['source'], gap_driver=a['gap']['driver'],
                                  instruction_quality=a['gap']['instruction_quality'], literal_feasibility=a['gap']['literal_feasibility'], **row['metrics']))
 
 
@@ -237,7 +282,7 @@ def main(root=None):
     parser.add_argument('--bundle-dir', type=Path, default=root or Path('annotation_release'))
     sub = parser.add_subparsers(dest='command', required=True)
     build_parser = sub.add_parser('build')
-    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_simple_100_min8_seed42'))
+    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_zh_en_v3_100_seed42'))
     build_parser.add_argument('--destination', type=Path, default=Path('annotation_release'))
     serve_parser = sub.add_parser('serve')
     serve_parser.add_argument('--rater', choices=RATERS, required=True)

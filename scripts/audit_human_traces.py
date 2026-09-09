@@ -48,9 +48,9 @@ def audit(bundle, conversations):
 if __name__=='__main__':
     import argparse
     parser=argparse.ArgumentParser()
-    parser.add_argument('--bundle',type=Path,default=Path('annotation_valid_release'))
+    parser.add_argument('--bundle',type=Path,default=Path('annotation_release'))
     parser.add_argument('--source',type=Path,default=Path('data/swe-chat/conversations.parquet'))
-    parser.add_argument('--output',type=Path,default=Path('annotation_valid_release/trace_audit.json'))
+    parser.add_argument('--output',type=Path,default=Path('annotation_release/trace_audit.json'))
     args=parser.parse_args()
     result=audit(args.bundle,args.source)
     path=args.output

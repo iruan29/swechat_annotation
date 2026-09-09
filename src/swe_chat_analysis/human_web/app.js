@@ -63,12 +63,14 @@ function dirty() {
 }
 
 function defaultValue(spec) {
+  if (spec.nullable) return null;
   if (spec.type === "object") return Object.fromEntries(Object.entries(spec.properties).map(([key, child]) => [key, defaultValue(child)]));
   if (spec.type === "array") return [];
   return spec.type === "string" ? "" : null;
 }
 
 function renderField(spec, value, update, path) {
+  if (state.view.simple && ['evolution.source', 'evolution.first_new_turn'].includes(path) && state.annotation.evolution.new_requirements !== '有') return node('div');
   const threadMatch = /^task_threads\.(\d+)\.([^.]+)$/.exec(path);
   if (state.view.stage === "study2" && threadMatch) {
     const thread = state.annotation.task_threads[Number(threadMatch[1])];
@@ -142,16 +144,26 @@ function renderField(spec, value, update, path) {
   label.htmlFor = fieldId;
   container.append(label);
   let input;
-  if (spec.type === "boolean" || spec.enum) {
+  if (state.view.simple && spec.field === 'first_new_turn') {
+    input = node('select'); input.append(new Option('请选择首次新增需求的用户消息', ''));
+    for (const event of state.view.events.filter(e => e.kind === 'user_prompt').slice(1)) {
+      input.append(new Option(`T${event.turn} · ${event.text.replace(/\s+/g, ' ').slice(0, 75)}`, String(event.turn)));
+    }
+    input.value = value === null ? '' : String(value);
+    input.addEventListener('change', () => { update(input.value === '' ? null : Number(input.value)); dirty(); });
+  } else if (spec.type === "boolean" || spec.enum) {
     input = node("select");
-    input.append(new Option(spec.nullable ? "未知 / 不可识别（null）" : "请选择（未回答）", ""));
+    input.append(new Option(spec.nullable && !state.view.simple ? "未知 / 不可识别（null）" : "请选择（未回答）", ""));
     const choices = spec.type === "boolean" ? [["true", "是"], ["false", "否"]] : spec.enum.map(choice => [choice, choice]);
     for (const [key, title] of choices) input.append(new Option(title, key));
     input.value = value === null || value === undefined ? "" : String(value);
     input.addEventListener("change", () => {
-      update(spec.type === "boolean" ? (input.value === "" ? null : input.value === "true") : input.value);
+      update(spec.type === "boolean" ? (input.value === "" ? null : input.value === "true") : (spec.nullable && input.value === "" ? null : input.value));
+      if (state.view.simple && spec.field === "new_requirements") {
+        state.annotation.evolution.source = null; state.annotation.evolution.first_new_turn = null;
+      }
       dirty();
-      if (["actual_situation_identifiable", "material_instruction_reality_mismatch", "user_belief_identifiable"].includes(spec.field)) renderForm();
+      if (["new_requirements", "actual_situation_identifiable", "material_instruction_reality_mismatch", "user_belief_identifiable"].includes(spec.field)) renderForm();
     });
   } else if (spec.type === "integer" || spec.type === "number") {
     input = node("input"); input.type = "number";

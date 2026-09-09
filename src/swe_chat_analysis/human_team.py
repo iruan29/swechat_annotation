@@ -78,12 +78,14 @@ def write_quality_report(source, destination, project, config):
         values = [v for v in values if v is not None]
         if values:
             lines.append(f'| {label} | {min(values):,} | {median(values):,} | {max(values):,} |')
+    languages = Counter(c.get('language_screen', {}).get('language', '未记录') for c in cases)
+    lines += ['', '用户语言识别：' + '；'.join(f'{k}: {v}' for k,v in languages.items()) + '。表单版本 human_simple_v3；7 项基础选择，有新需求时共 9 项。']
     agents = Counter(c['agent'] for c in cases)
     excluded = Counter()
     for case in cases:
         excluded.update(case.get('interaction_quality', {}).get('excluded_prompt_counts', {}))
     lines += ['', f"覆盖 {len({c['repo_id'] for c in cases})} 个仓库。Agent 分布：" + '；'.join(f'{k}: {v}' for k,v in agents.items()) + '。', '',
-              '这是经过可读性与多次实质交互筛选的子集，不能当作全量 SWE-Chat 的代表样本，也不宜直接用于跨 Agent 排名。包含多种语言。', '',
+              '这是经过可读性与多次实质交互筛选的子集，不能当作全量 SWE-Chat 的代表样本，也不宜直接用于跨 Agent 排名。仅筛选中文／英文用户交互。', '',
               '## 计数规则', '',
               '有效交互指一组实质性用户请求，随后有非空 assistant 回复或工具活动。连续发送且中间没有 Agent 活动的用户消息合并为一组。至少 8 次有效交互，其中至少 6 次有文字 assistant 回复；轮数无固定上限。', '',
               '排除固定 review 模板会话、明显重复拆段、起始环境/自动消息和源顺序有歧义的会话。对实质 prompt 序列去重。纯确认、自动通知、技能/命令展开模板及重复 prompt 不计有效次数，原文仍保留。短命令如 commit、git status 是用户实际操作请求，可以计数；不要求每次请求都新增项目需求。', '',
@@ -97,7 +99,7 @@ def write_quality_report(source, destination, project, config):
               '- `assignments/*/cases.jsonl` 的 `interaction_quality`：每条 prompt 的分类原因、合并后的请求和响应 T 区间。',
               '- `trace_audit.json`：本次发布额外用原始 parquet 逐条比对的报告；重建包后可运行 `python scripts/audit_human_traces.py` 重新生成。', '',
               '## 已保留但不计有效请求的消息', '', '```json', json.dumps(excluded, ensure_ascii=False, indent=2), '```', '',
-              '旧 `annotation_release` 存在模板凑轮问题，保留作为历史批次。本次请使用 `annotation_valid_release`；旧备份不导入新包，结果不能混收。', '']
+              '旧批次存在模板凑轮或旧表单问题，保存在 `annotation_archive/`。本次请使用 `annotation_release`；旧备份不导入新包，结果不能混收。', '']
     (destination / 'QUALITY_REPORT.md').write_text('\n'.join(lines), encoding='utf-8')
     if (source / 'candidate_audit.jsonl').exists():
         shutil.copy2(source / 'candidate_audit.jsonl', destination / 'candidate_audit.jsonl')
@@ -199,7 +201,7 @@ def export(root, rater, destination=None, allow_partial=False):
 
 
 def analysis_csv(path, rows):
-    fields = ['session_id', 'annotator', 'agent', 'initial_coverage', 'update_extent', 'instruction_quality', 'literal_feasibility']
+    fields = ['session_id', 'annotator', 'agent', 'initial_coverage', 'new_requirements', 'requirement_source', 'gap_driver', 'instruction_quality', 'literal_feasibility']
     metric_keys = ['late_requirement', 'first_late_requirement_turn', 'requirement_update_count', 'effective_interactions', 'user_rounds', 'visible_characters', 'observed_tool_events', 'user_rounds_after_first_update', 'tool_events_from_first_update', 'api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds']
     with path.open('w', encoding='utf-8-sig', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fields + metric_keys)
@@ -207,7 +209,7 @@ def analysis_csv(path, rows):
         for row in rows:
             a = row['annotation']
             writer.writerow(dict(session_id=row['session_id'], annotator=row['annotator'], agent=row['agent'],
-                                 initial_coverage=a['evolution']['initial_coverage'], update_extent=a['evolution']['update_extent'],
+                                 initial_coverage=a['evolution']['initial_coverage'], new_requirements=a['evolution']['new_requirements'], requirement_source=a['evolution']['source'], gap_driver=a['gap']['driver'],
                                  instruction_quality=a['gap']['instruction_quality'], literal_feasibility=a['gap']['literal_feasibility'], **row['metrics']))
 
 
@@ -277,11 +279,11 @@ def merge(root, inputs, destination, allow_partial=False):
 
 def main(root=None):
     parser = argparse.ArgumentParser(description='三人标注：固定分工、各自本地 serve、JSON 回收汇总（无需第三方依赖）')
-    parser.add_argument('--bundle-dir', type=Path, default=root or Path('annotation_valid_release'))
+    parser.add_argument('--bundle-dir', type=Path, default=root or Path('annotation_release'))
     sub = parser.add_subparsers(dest='command', required=True)
     build_parser = sub.add_parser('build')
-    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_valid_100_seed42'))
-    build_parser.add_argument('--destination', type=Path, default=Path('annotation_valid_release'))
+    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_zh_en_v3_100_seed42'))
+    build_parser.add_argument('--destination', type=Path, default=Path('annotation_release'))
     serve_parser = sub.add_parser('serve')
     serve_parser.add_argument('--rater', choices=RATERS, required=True)
     serve_parser.add_argument('--port', type=int, default=8765)

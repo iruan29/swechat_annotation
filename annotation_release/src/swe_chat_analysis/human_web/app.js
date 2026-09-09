@@ -63,12 +63,14 @@ function dirty() {
 }
 
 function defaultValue(spec) {
+  if (spec.nullable) return null;
   if (spec.type === "object") return Object.fromEntries(Object.entries(spec.properties).map(([key, child]) => [key, defaultValue(child)]));
   if (spec.type === "array") return [];
   return spec.type === "string" ? "" : null;
 }
 
 function renderField(spec, value, update, path) {
+  if (state.view.simple && ['evolution.source', 'evolution.first_new_turn'].includes(path) && state.annotation.evolution.new_requirements !== '有') return node('div');
   const threadMatch = /^task_threads\.(\d+)\.([^.]+)$/.exec(path);
   if (state.view.stage === "study2" && threadMatch) {
     const thread = state.annotation.task_threads[Number(threadMatch[1])];
@@ -142,16 +144,26 @@ function renderField(spec, value, update, path) {
   label.htmlFor = fieldId;
   container.append(label);
   let input;
-  if (spec.type === "boolean" || spec.enum) {
+  if (state.view.simple && spec.field === 'first_new_turn') {
+    input = node('select'); input.append(new Option('请选择首次新增需求的用户消息', ''));
+    for (const event of state.view.events.filter(e => e.kind === 'user_prompt').slice(1)) {
+      input.append(new Option(`T${event.turn} · ${event.text.replace(/\s+/g, ' ').slice(0, 75)}`, String(event.turn)));
+    }
+    input.value = value === null ? '' : String(value);
+    input.addEventListener('change', () => { update(input.value === '' ? null : Number(input.value)); dirty(); });
+  } else if (spec.type === "boolean" || spec.enum) {
     input = node("select");
-    input.append(new Option(spec.nullable ? "未知 / 不可识别（null）" : "请选择（未回答）", ""));
+    input.append(new Option(spec.nullable && !state.view.simple ? "未知 / 不可识别（null）" : "请选择（未回答）", ""));
     const choices = spec.type === "boolean" ? [["true", "是"], ["false", "否"]] : spec.enum.map(choice => [choice, choice]);
     for (const [key, title] of choices) input.append(new Option(title, key));
     input.value = value === null || value === undefined ? "" : String(value);
     input.addEventListener("change", () => {
-      update(spec.type === "boolean" ? (input.value === "" ? null : input.value === "true") : input.value);
+      update(spec.type === "boolean" ? (input.value === "" ? null : input.value === "true") : (spec.nullable && input.value === "" ? null : input.value));
+      if (state.view.simple && spec.field === "new_requirements") {
+        state.annotation.evolution.source = null; state.annotation.evolution.first_new_turn = null;
+      }
       dirty();
-      if (["actual_situation_identifiable", "material_instruction_reality_mismatch", "user_belief_identifiable"].includes(spec.field)) renderForm();
+      if (["new_requirements", "actual_situation_identifiable", "material_instruction_reality_mismatch", "user_belief_identifiable"].includes(spec.field)) renderForm();
     });
   } else if (spec.type === "integer" || spec.type === "number") {
     input = node("input"); input.type = "number";
@@ -187,6 +199,17 @@ function renderForm() {
 }
 
 function renderEvents() {
+  const quality = state.view.interaction_quality;
+  const excludedLabels = {automatic_or_context:"自动通知 / 上下文",acknowledgement_only:"简短确认",short_or_menu_choice:"短选择",command_only:"快捷命令",duplicate_prompt:"重复消息",empty:"空消息",review_template:"模板"};
+  const promptInfo = new Map((quality?.prompts || []).map(p => [p.turn,p]));
+  const exchangeInfo = new Map();
+  let exchangeIndex = 0;
+  for (const block of quality?.exchanges || []) {
+    if (block.substantive_turns.length && block.activity_turns.length) {
+      exchangeIndex++;
+      for (const turn of block.user_turns) exchangeInfo.set(turn,exchangeIndex);
+    }
+  }
   const query = element("search").value.trim().toLowerCase();
   const onlyUsers = element("users-only").checked;
   const groups = [];
@@ -196,7 +219,7 @@ function renderEvents() {
   }
   const promptGroups = groups.filter(group => group.some(event => event.kind === "user_prompt"));
   const covered = promptGroups.filter(group => group.some(event => ["assistant_response", "tool_use", "tool_result"].includes(event.kind))).length;
-  element("trace-help").textContent = `${promptGroups.length} 条用户消息；其中 ${covered} 段之后有 Agent / 工具记录，${promptGroups.length - covered} 段没有可见响应。每段截止下一条用户消息，分组不是因果对应。`;
+  element("trace-help").textContent = (quality ? `${quality.effective_interactions} 次有效交互（实质请求 + 后续 Agent 活动；连续补充合并，自动消息、纯确认和重复内容不计）。T 是原始事件证据编号，不是交互轮次。` : "") + `${promptGroups.length} 条用户消息；其中 ${covered} 段之后有 Agent / 工具记录，${promptGroups.length - covered} 段没有可见响应。每段截止下一条用户消息，分组不是因果对应。`;
   const matches = event => !query || ("t" + event.turn) === query || event.text.toLowerCase().includes(query);
   const matching = groups.filter(group => group.some(event => (!onlyUsers || event.kind === "user_prompt") && matches(event)));
   const pageSize = Math.max(1, matching.length); // Show every user prompt; lazy agent bodies keep rendering light.
@@ -214,8 +237,15 @@ function renderEvents() {
       try { await navigator.clipboard.writeText(String(event.turn)); message("已复制证据编号 " + event.turn); }
       catch { message("证据编号：" + event.turn); }
     }), node("strong", event.kind), node("span", event.source_turn !== event.turn ? "原编号 " + event.source_turn : ""));
+    if (event.kind === "user_prompt" && quality) {
+      const info = promptInfo.get(event.turn);
+      const exchange = exchangeInfo.get(event.turn);
+      heading.append(node("span", info?.reason ? `${excludedLabels[info.reason] || info.reason} · 不单独计入有效交互` : exchange ? `有效交互 ${exchange}` : "实质请求 · 未见后续响应", "interaction-label"));
+    }
     result.append(heading);
-    if (event.kind !== "user_prompt" && event.text.length > 3500) {
+    if (event.kind === "user_prompt" && promptInfo.get(event.turn)?.reason === "automatic_or_context") {
+      const detail = node("details"); detail.append(node("summary", "自动记录原文 · 不计入有效交互"), node("pre", event.text)); result.append(detail);
+    } else if (event.kind !== "user_prompt" && event.text.length > 3500) {
       const detail = node("details"); detail.append(node("summary", "完整正文 · " + event.text.length + " 字符"), node("pre", event.text)); result.append(detail);
     } else result.append(node("pre", event.text));
     return result;
@@ -288,7 +318,7 @@ async function openCase(caseId, stage) {
     element("case-title").textContent = "样本 " + String(state.tasks.findIndex(item => item.case_id === caseId) + 1).padStart(2, "0");
     element("case-id").textContent = caseId;
     element("stage-help").textContent = view.simple ?
-      `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
+      `逐轮阅读，完成一张表即可。${view.reading_stats ? (view.reading_stats.effective_interactions !== undefined ? view.reading_stats.effective_interactions + " 次有效交互 · " : "") + view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
       `只评价 T${view.target_instruction_turn} 这条指令的响应。可见其结束前的历史；未来消息与 commit 在服务器端被隐藏。提交后不可回改。` :
       "现在可以查看完整会话。要求可识别不等于实现成功；用户真正改变目标不等于最初错误；提交后本阶段锁定。";
     element("rubric").textContent = view.rubric;

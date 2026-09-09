@@ -14,10 +14,8 @@ import pyarrow.parquet as pq
 
 
 def annotation():
-    return dict(overview=dict(project='Implement export', assessability='充分'),
-                evolution=dict(initial_coverage='一部分', update_extent='少量补充或调整', behaviors=['收到新证据后正确更新'], evidence_turns=[0, 3], rationale='T0 omitted CSV, T3 adds CSV'),
-                updates=[dict(requirement='CSV export', turn=3, change='初始遗漏的既有要求', source='项目客观要求', trigger='用户自行提出', response='收到新证据后正确更新', evidence_turns=[4], rationale='T4 implements CSV')],
-                gap=dict(instruction_quality='不完整', drivers=['无法判断'], literal_feasibility='只能部分达成', response='用户指出后才调整', evidence_turns=[0, 3, 4], rationale='Missing CSV, no evidence of why'), notes='')
+    return dict(evolution=dict(initial_coverage='一部分', new_requirements='有', source='项目需求', first_new_turn=3, behaviors=['收到新证据后正确更新']),
+                gap=dict(instruction_quality='不完整', driver='无法判断', literal_feasibility='只能部分达成', response='用户指出后才调整'))
 
 
 class SimpleTests(unittest.TestCase):
@@ -50,22 +48,32 @@ class SimpleTests(unittest.TestCase):
         self.project.save('a', 's', 'review', 2, annotation(), False)
         self.assertEqual(self.project.export('a')['summary']['run_completeness']['completed'], 0)
 
-    def test_validation_evidence_unknown_and_repairs(self):
+    def test_conditional_fields_and_single_cause_validation(self):
         simple.validate(annotation(), self.case['events'])
-        for mutate in [lambda a: a['gap'].update(evidence_turns=[99]),
-                       lambda a: a['updates'][0].update(turn=0),
-                       lambda a: a['evolution'].update(update_extent='无更新'),
-                       lambda a: a['gap'].update(drivers=['无法判断', '专业知识局限']),
-                       lambda a: a['gap'].update(evidence_turns=[])]:
-            value = annotation(); mutate(value)
-            with self.assertRaises(ValueError): simple.validate(value, self.case['events'])
-        value = annotation()
-        value['updates'][0]['change'] = '既有要求的实现修复'
-        value['evolution']['update_extent'] = '无更新'
-        simple.validate(value, self.case['events'])
-        self.assertFalse(simple.costs(self.case, value)['late_requirement'])
-        value['updates'] = []; value['evolution']['update_extent'] = '无法判断'
-        self.assertIsNone(simple.costs(self.case, value)['late_requirement'])
+        for mutate in [lambda a: a['evolution'].update(first_new_turn=99),
+                       lambda a: a['evolution'].update(first_new_turn=0),
+                       lambda a: a['evolution'].update(first_new_turn=4),
+                       lambda a: a['evolution'].update(source=None),
+                       lambda a: a['evolution'].update(new_requirements='没有'),
+                       lambda a: a['gap'].update(driver=['无法判断']),
+                       lambda a: a['gap'].update(driver='不适用')]:
+            value=annotation();mutate(value)
+            with self.assertRaises(ValueError): simple.validate(value,self.case['events'])
+        for answer,expected in [('没有',False),('无法判断',None)]:
+            value=annotation();value['evolution'].update(new_requirements=answer,source=None,first_new_turn=None)
+            simple.validate(value,self.case['events'])
+            self.assertIs(simple.costs(self.case,value)['late_requirement'],expected)
+        self.assertIsNone(simple.costs(self.case,annotation())['requirement_update_count'])
+
+    def test_form_has_no_text_questions_and_no_project_overview(self):
+        spec=simple.schema()
+        self.assertEqual(set(spec['properties']),{'evolution','gap'})
+        def visit(node):
+            if node['type']=='string': self.assertIn('enum',node)
+            for child in node.get('properties',{}).values():visit(child)
+            if 'items' in node:visit(node['items'])
+        visit(spec)
+        self.assertEqual(spec['properties']['gap']['properties']['driver']['type'],'string')
 
     def test_scan_counts_actual_prompts_and_full_text(self):
         events = deepcopy(self.events)

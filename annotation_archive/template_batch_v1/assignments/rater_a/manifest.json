@@ -1,0 +1,65 @@
+{
+  "human_version": "human_simple_v2",
+  "rubric_versions": {
+    "review": "human_simple_v2"
+  },
+  "seed": 42,
+  "sample_size_requested": 30,
+  "session_count": 30,
+  "eligible_pool_count": 361,
+  "bounds": {
+    "min_prompts": 8,
+    "max_prompts": 12,
+    "min_chars": 1000,
+    "max_chars": 60000,
+    "max_events": 300
+  },
+  "sampling": "Uniform without replacement from sorted unique sessions after observed readability bounds; no outcome filtering; continuation prompts excluded from user rounds; full selected event text retained.",
+  "case_fingerprints": {
+    "ses_315fc3500ffefectRotlAzFw1D": "fbfdfb2599eecb46188e9c0a37e707e51821bfc7a1614b4c7ea6a04160ddadff",
+    "ses_3153da267ffe2vAzmJnbSKP32e": "57eb9408826525cfc9eb38c929cae97eacc53f845ac8f7f53153ebf6aaceb5d8",
+    "ses_33a1eeb40ffeJiG1xh8TgHlbkg": "70ec435087b6214e9e59fc6c5f37c30d5dc633cdbb41700055df407b2d841282",
+    "b6ad08d0-7120-46b7-9b44-bbd7afd539e8": "2af1bb8c24029d3f20d4971eda889037510640245a9325508dc88f60e9fb56ef",
+    "ses_32a86b575ffevgELtcbe7ADUDq": "2669e0268d5613ffcc0acc833e508013230129a2137c3cf7582ed2b4f95ac4ec",
+    "ses_31d0f11acffePiEvkiO7KmXygv": "79b3e26a842d95dbcbd649480f6e9cfc4d8968f947d1d06521b4ec1cbdfdce88",
+    "34db8997-aa1b-47e7-a34f-8e1e161a8410": "8b6fa1d5784d10320564cb20952086fa9f04d94748caf7845d5f4db9c7d6133f",
+    "ses_330376251ffey0S3zK09RE3rzw": "16725f42e984f41e6ddab6e403ae4bc4114d2fa6df7bf9b31d0da8820c7ee527",
+    "f545d8e7-cd4a-43e3-ac79-38154aa98851": "a7c5ed95e8c366f8ca29494de6de07b069c1f2424c51ba4407cb5c09a9a75bd3",
+    "ses_3357475cfffeopEj3XQHD5LXqo": "88cadb6e08a9e6655948f4550958fc164888c6ec4aae51ceba8fd1783ccaf215",
+    "ses_330a51733ffeIqCp7wogU8pAkI": "9284e84ab7b71a07bdf426c41547066e3f28f2ab61d4c9084b76bf7bcaab7c9e",
+    "ba5f7520-bd9d-40bd-9e6d-5aa70871472b": "e02fa462101d1d7fc1ff15ae3c4bebc34488b405ac0396d8efc07a8684b968ee",
+    "ses_3204ad9bdffeVbHlFKapQwYuiY": "f39446bbdb2cd20b27f09e9ca4a81907453e65a70efec7b2e255bf16c592c5e4",
+    "ses_322215b12ffeAEqM9V2o5USeUm": "618db89f50a834c0290fc78c5eef98b6183a8fcc38af59cc5dd3227efa0a6ca2",
+    "ses_330940fb0ffeoIuGnNyw5MWOGC": "aa61a8bb988abc36a8a603fa1a256939a177208a95feddbaecca6e948a0f1dd4",
+    "ses_316e81bd6ffeaKHBGaRxiv0EKe": "688dd64dbb4ba04b084b95a1df8be954c6ca0e3d6947d7a1038288a71c55187b",
+    "ses_31ceada9bffefvCWeGF953YmXs": "582b60a8922b08160789ebf22f8d59fe6b04a47c86090673655e46431767a431",
+    "ses_33aaae2d8ffe5Tuk6JJpuCnCOc": "56746af139399e04b53ecbad7afc77170009ddfb4bb068b2677f3ec31e1c1113",
+    "ses_3319eb553ffeuwYRHLVoXI2gwZ": "2c64ff0240c130ee8029416e58b2ebf34c20369fc187c38315edf1de249abee9",
+    "ses_312ffce18ffd6YX4Xlcuk6i1wG": "f6c622c52636caa77382d44c65d180a2c0b0e5c01fc5704ceab41100554be159",
+    "ses_310974b8cffea1uj8aHzzse6ZL": "66ef75f7138fdce8bddec2258b182036d7eba953fa8e56ad2b10ff5a648e7878",
+    "ses_2f7157b9dffeQZbNX0nfCVmC5O": "c144e965961fcfc21a0b029ad3a45e636b7e8a1f7d1b18afaaf4a189e08b0c69",
+    "ses_3114a3e01ffemV3CrcYY5pvSuD": "6f35f11ed787cab1a075535a8465cb45f73a5d57fa2808ffd5708384fed99ff8",
+    "ses_33b0c70f0ffesgL8QLHxLCct5v": "82d99b49f2110ae455d992c1c304574d94bd45f24c01f6cb7bdc7736b5643775",
+    "ses_335e2756cffe3l9jmVYybOGw0k": "02ce617c55805328e29203228d1513c511f588b3f924ba8ca5a61b78bc2c00d5",
+    "ses_31cfe125affexF1Sa1shUYzHh4": "c22d56a27ba07d792cd4f849e61a6722a53a400e68adcfd43f40da863ca99308",
+    "ses_33619502dffeBhkECQTCWQF1aJ": "60811cea852629189741977a9bea2eaa10d000e0fe73c1915ae25fb901a812df",
+    "ses_30c8826d3ffeObFloaGHIPMNSP": "c141424952241b83055daa1e8cd5487ac79f4155470a53b1df9cb15e750be2ea",
+    "ses_3396efeadffelnR10z7DmzWgVX": "4ea482af32f1fefb131872e032b42d94b740e15024aa00b7c5db6db16a166c6f",
+    "ses_311547e4dffeJx2IsIJldwV119": "431e888bb2c24f47d3981e11d553afacbb1b52014082f7d701bcab60aa2485ef"
+  },
+  "created_at_unix": 1788881363,
+  "commits_included": false,
+  "source_files": {
+    "sessions.parquet": {
+      "bytes": 1997377,
+      "mtime_ns": 1787752360923861327
+    },
+    "conversations.parquet": {
+      "bytes": 1311422253,
+      "mtime_ns": 1787752988436380619
+    }
+  },
+  "assigned_annotator": "rater_a",
+  "package_id": "37d9b9f0c28b15353a85a0df704a193295bbe17ff64e033bb6990e3aade04ce4",
+  "parent_session_count": 100
+}

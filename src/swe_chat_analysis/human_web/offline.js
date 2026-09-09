@@ -32,6 +32,7 @@
   }
   function shape(spec, value, complete, path = '') {
     const label = spec.label || path;
+    if (value === null && spec.nullable) return;
     if (spec.type === 'object') {
       if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(label + '：必须是对象');
       for (const [name, child] of Object.entries(spec.properties)) shape(child, value[name], complete, path + '.' + name);
@@ -46,25 +47,14 @@
   }
   function validate(value, item) {
     shape(bundle.schema, value, true);
-    const turns = new Set(item.events.map(event => event.turn));
-    function walk(node, field = '') {
-      if (Array.isArray(node)) {
-        if (field === 'evidence_turns' && !node.length) throw new Error('每个判断至少需要一个证据 T 编号');
-        node.forEach(child => walk(child, field === 'evidence_turns' ? 'turn' : field));
-      } else if (node && typeof node === 'object') {
-        Object.entries(node).forEach(([name, child]) => walk(child, name));
-      } else if (field === 'turn' && !turns.has(node)) throw new Error('T' + node + ' 不在本会话中');
-    }
-    walk(value);
-    for (const options of [value.evolution.behaviors, value.gap.drivers]) {
-      if (!options.length) throw new Error('请选择 Agent 行为和指令问题原因，可选无法判断 / 不适用');
-      if (new Set(options).size !== options.length || options.length > 1 && options.some(v => ['无法判断', '不适用'].includes(v))) throw new Error('选项不可重复，无法判断 / 不适用不能与其他选项并选');
-    }
-    const initial = Math.min(...item.user_turns);
-    if (value.updates.some(update => update.turn <= initial)) throw new Error('需求事件应在初始用户指令之后');
-    const real = value.updates.filter(update => update.change !== '既有要求的实现修复');
-    const extent = value.evolution.update_extent;
-    if (extent === '无更新' && real.length || ['少量补充或调整', '实质变化'].includes(extent) && !real.length) throw new Error('更新程度与需求事件不一致；真实更新须至少记录一项');
+    const e = value.evolution, g = value.gap, options = e.behaviors;
+    if (!options.length || new Set(options).size !== options.length || options.length > 1 && options.includes('无法判断')) throw new Error('请选择 Agent 行为；无法判断不能与其他行为并选');
+    if (e.new_requirements === '有') {
+      if (e.source === null) throw new Error('有新需求时请选择需求来源');
+      if (!item.user_turns.includes(e.first_new_turn) || e.first_new_turn <= Math.min(...item.user_turns)) throw new Error('该 T 编号不在本会话的后续用户消息中');
+    } else if (e.source !== null || e.first_new_turn !== null) throw new Error('没有或无法判断新需求时，来源和首次消息必须留空');
+    if (g.instruction_quality === '完整且无已知错误' && g.driver !== '不适用') throw new Error('初始指令无已知问题时，原因应选不适用');
+    if (g.instruction_quality !== '完整且无已知错误' && g.driver === '不适用') throw new Error('有问题或无法判断时，原因应选有证据的主因或无法判断');
     return copy(value);
   }
   function save(caseId, revision, annotation, complete) {
@@ -78,12 +68,11 @@
     return {revision: record.revision, status: record.status, normalized, volatile: !storageAvailable};
   }
   function metrics(item, annotation) {
-    const updates = annotation.updates.filter(u => ['初始遗漏的既有要求', '用户真正新增或改变目标'].includes(u.change));
-    const first = updates.length ? Math.min(...updates.map(u => u.turn)) : null;
-    const unknown = annotation.evolution.update_extent === '无法判断' || annotation.updates.some(u => u.change === '无法判断');
-    return {late_requirement: first !== null ? true : unknown ? null : false, first_late_requirement_turn: first,
+    const first = annotation.evolution.first_new_turn;
+    const late = {'有':true,'没有':false,'无法判断':null}[annotation.evolution.new_requirements];
+    return {late_requirement: late, first_late_requirement_turn: first,
       effective_interactions: item.interaction_quality?.effective_interactions ?? null,
-      requirement_update_count: updates.length, user_rounds: item.user_turns.length,
+      requirement_update_count: null, user_rounds: item.user_turns.length,
       visible_characters: item.events.reduce((n,e) => n + [...e.text].length, 0),
       observed_tool_events: item.events.filter(e => e.kind === 'tool_use').length,
       user_rounds_after_first_update: first === null ? null : item.events.filter(e => e.kind === 'user_prompt' && e.turn > first).length,

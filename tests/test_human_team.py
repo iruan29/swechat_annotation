@@ -20,7 +20,7 @@ class TeamTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         source = self.root / 'source'
         source.mkdir()
-        events = [dict(turn_number=t, turn_type='user_prompt' if t % 2 == 0 else 'assistant_response', content=f'Evidence request {t}') for t in range(16)]
+        events = [dict(turn_number=t, turn_type='user_prompt' if t % 3 == 0 else 'assistant_response', content=f'Evidence request {t}') for t in range(24)]
         cases = []
         for i in range(100):
             case = make_case(dict(session_id=f's{i:03}', repo_id='r', agent='agent'), events, {}, 42)

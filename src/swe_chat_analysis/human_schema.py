@@ -123,6 +123,8 @@ def schema(stage: str) -> dict[str, Any]:
 
 
 def blank(node: dict[str, Any]) -> Any:
+    if node.get("nullable"):
+        return None
     kind = node["type"]
     if kind == "object":
         return {key: blank(child) for key, child in node["properties"].items()}

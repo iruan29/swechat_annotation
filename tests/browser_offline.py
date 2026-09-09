@@ -24,17 +24,25 @@ try:
         page.locator('.queue-item').first.click()
         expect(page.locator('.user_prompt pre')).to_have_count(8)
         expect(page.locator('.agent-fold[open]')).to_have_count(0)
-        page.locator('#field-overview-project').fill('Autosaved offline draft')
+        expect(page.locator('#annotation-form textarea')).to_have_count(0)
+        expect(page.locator('#field-gap-driver')).to_have_count(1)
+        page.locator('#field-evolution-new_requirements').select_option('有')
+        expect(page.locator('#field-evolution-source')).to_be_visible()
+        page.locator('#field-evolution-source').select_option('用户偏好')
+        page.locator('#field-evolution-first_new_turn').select_option('3')
+        page.locator('#field-evolution-new_requirements').select_option('没有')
+        expect(page.locator('#field-evolution-source')).to_have_count(0)
+        page.locator('#field-evolution-initial_coverage').select_option('一部分')
         expect(page.locator('#save-state')).to_contain_text('自动保存')
         page.reload();page.locator('.queue-item').first.click()
-        expect(page.locator('#field-overview-project')).to_have_value('Autosaved offline draft')
+        expect(page.locator('#field-evolution-initial_coverage')).to_have_value('一部分')
         page.locator('summary').filter(has_text='高级').click()
-        bad=annotation();bad['gap']['evidence_turns']=[999]
+        bad=annotation();bad['evolution']['first_new_turn']=999
         page.locator('#json-editor').fill(json.dumps(bad,ensure_ascii=False));page.locator('#apply-json').click();page.locator('#submit').click()
         expect(page.locator('#message')).to_contain_text('不在本会话')
         page.locator('#json-editor').fill(json.dumps(annotation(),ensure_ascii=False));page.locator('#apply-json').click();page.locator('#submit').click()
         expect(page.locator('#save-state')).to_contain_text('已提交')
-        page.locator('.queue-item').nth(1).click();page.locator('#field-overview-project').fill('Second draft')
+        page.locator('.queue-item').nth(1).click();page.locator('#field-evolution-initial_coverage').select_option('全部')
         with page.expect_download() as d:page.locator('#backup-progress').click()
         backup=fixture.root/'backup.json';d.value.save_as(backup)
         assert json.loads(backup.read_text())['records']
@@ -45,7 +53,7 @@ try:
         page.on('dialog',lambda d:d.accept())
         page.goto(path.as_uri());expect(page.locator('.queue-item')).to_have_count(30)
         page.locator('#restore-progress').set_input_files(str(backup));expect(page.locator('#message')).to_contain_text('已导入进度')
-        page.locator('.queue-item').nth(1).click();expect(page.locator('#field-overview-project')).to_have_value('Second draft')
+        page.locator('.queue-item').nth(1).click();expect(page.locator('#field-evolution-initial_coverage')).to_have_value('全部')
         page.locator('.queue-item').first.click();expect(page.locator('#save-state')).to_contain_text('已提交')
         # Reject wrong-owner restore without overwriting any records.
         wrong=json.loads(backup.read_text());wrong['annotator']='rater_b'
@@ -57,9 +65,11 @@ try:
             expect(page.locator('.queue-item')).to_have_count(40 if rater=='rater_c' else 30)
             page.evaluate('''async ({rater, answer}) => {
               const tasks=await window.offlineAPI('/api/tasks?annotator='+rater);
-              for(const task of tasks.cases){
+              for(const [index,task] of tasks.cases.entries()){
+                const caseAnswer=structuredClone(answer);
+                if(index % 3) Object.assign(caseAnswer.evolution,{new_requirements:index % 3 === 1 ? "没有" : "无法判断",source:null,first_new_turn:null});
                 const view=await window.offlineAPI('/api/case?annotator='+rater+'&case_id='+task.case_id+'&stage=review');
-                await window.offlineAPI('/api/save',{annotator:rater,case_id:task.case_id,stage:'review',revision:view.revision,annotation:answer,complete:true});
+                await window.offlineAPI('/api/save',{annotator:rater,case_id:task.case_id,stage:'review',revision:view.revision,annotation:caseAnswer,complete:true});
               }
             }''',dict(rater=rater,answer=annotation()))
             with page.expect_download() as d:page.locator('#export').click()
@@ -79,11 +89,11 @@ try:
         denied.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Denied','SecurityError')}});")
         dp=denied.new_page();dp.on('dialog',lambda d:d.accept())
         dp.goto((fixture.bundle/'offline'/'rater_b.html').as_uri());expect(dp.locator('.queue-item')).to_have_count(30)
-        dp.locator('.queue-item').first.click();dp.locator('#field-overview-project').fill('Memory fallback')
+        dp.locator('.queue-item').first.click();dp.locator('#field-evolution-initial_coverage').select_option('没有')
         expect(dp.locator('#save-state')).to_contain_text('仅保存在本页内存')
         with dp.expect_download() as d:dp.locator('#backup-progress').click()
         fallback=json.loads(Path(d.value.path()).read_text())
-        assert next(iter(fallback['records'].values()))['annotation']['overview']['project']=='Memory fallback'
+        assert next(iter(fallback['records'].values()))['annotation']['evolution']['initial_coverage']=='没有'
         browser.close()
         print('OFFLINE PASS: file://, 8 prompts, autosave/reload, validation, backup/restore, wrong-owner rejection, 30/30/40 JSON merge, Python metric parity, no network, storage-denied fallback.')
 finally:fixture.doCleanups()
