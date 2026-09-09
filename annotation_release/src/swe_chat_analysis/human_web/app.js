@@ -249,11 +249,20 @@ function renderEvents() {
 
 function renderQueue() {
   const unfinished = element("unfinished").checked;
+  const done = state.tasks.filter(task => stageOrder.every(stage => task.statuses[stage] === "complete")).length;
+  element("overall-progress").max = state.tasks.length || 1;
+  element("overall-progress").value = done;
   element("queue").replaceChildren(...state.tasks.map((task, index) => {
-    const completed = stageOrder.filter(stage => task.statuses[stage] === "complete").length;
-    if (unfinished && completed === stageOrder.length) return null;
-    return button(`${index + 1}. ${task.case_id}\n${completed}/${stageOrder.length} 已提交`, () => openCase(task.case_id),
-      "queue-item" + (state.view && state.view.case_id === task.case_id ? " active" : ""));
+    const completed = stageOrder.every(stage => task.statuses[stage] === "complete");
+    if (unfinished && completed) return null;
+    const status = completed ? "已提交" : Object.values(task.statuses).includes("draft") ? "草稿" : "待标注";
+    const control = button("", () => openCase(task.case_id), "queue-item" + (completed ? " completed" : "") +
+      (state.view && state.view.case_id === task.case_id ? " active" : ""));
+    control.append(node("strong", String(index + 1).padStart(2, "0")), node("span", status));
+    control.title = task.case_id;
+    control.setAttribute("aria-label", `样本 ${index + 1} · ${status} · ${task.case_id}`);
+    if (state.view?.case_id === task.case_id) control.setAttribute("aria-current", "true");
+    return control;
   }).filter(Boolean));
 }
 
@@ -276,7 +285,8 @@ async function openCase(caseId, stage) {
     const view = await api("/api/case?" + query);
     state.view = view; state.annotation = view.annotation; state.dirty = false; state.page = 0;
     element("workspace").hidden = false; element("welcome").hidden = true;
-    element("case-title").textContent = "Session " + caseId;
+    element("case-title").textContent = "样本 " + String(state.tasks.findIndex(item => item.case_id === caseId) + 1).padStart(2, "0");
+    element("case-id").textContent = caseId;
     element("stage-help").textContent = view.simple ?
       `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
       `只评价 T${view.target_instruction_turn} 这条指令的响应。可见其结束前的历史；未来消息与 commit 在服务器端被隐藏。提交后不可回改。` :
@@ -293,7 +303,7 @@ async function openCase(caseId, stage) {
     element("submit").textContent = view.simple ? "提交标注" : "校验并提交（锁定本阶段）";
     element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? (window.offlineAPI ? "已恢复浏览器草稿" : "已恢复服务器草稿") : "尚未保存";
     renderEvents(); renderForm(); renderQueue();
-    element("evidence-scroll").scrollTop = 0; element("form-scroll").scrollTop = 0;
+    element("case-title").scrollIntoView({block: "start"});
     message("已载入 " + stageNames[stage] + " · " + view.rubric_version);
   } catch (error) {message(error.message, true);}
 }
@@ -431,3 +441,12 @@ window.offlineReload = async () => {
   element("workspace").hidden = true; element("welcome").hidden = false;
   await refreshTasks();
 };
+
+function setReadingLayout(wide) {
+  document.body.classList.toggle("reading-wide", wide);
+  element("layout-toggle").setAttribute("aria-pressed", String(wide));
+  element("layout-toggle").textContent = wide ? "切换为并排标注" : "切换为通栏阅读";
+  tabStorage.setItem("human-reading-wide", wide ? "1" : "0");
+}
+element("layout-toggle").addEventListener("click", () => setReadingLayout(!document.body.classList.contains("reading-wide")));
+setReadingLayout(tabStorage.getItem("human-reading-wide") === "1");

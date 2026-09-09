@@ -1,89 +1,121 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SWE-Chat · rater_a · 离线标注</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><style>:root { color-scheme: light; font: 14px/1.6 system-ui, -apple-system, "Microsoft YaHei", sans-serif; color: #243247; background: #f3f6fa; }
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SWE-Chat · rater_a · 离线标注</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><style>:root { color-scheme: light; font: 15px/1.7 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; color: #273d49; background: #f4f6f7; --accent: #16736b; --line: #e1e8eb; --muted: #6e7e88; }
 * { box-sizing: border-box; }
-html { height: 100%; }
-body { margin: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-header { padding: 12px 20px; background: #132b45; color: white; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; flex-shrink: 0; }
-header strong { font-size: 20px; } .muted { display: block; opacity: .75; font-size: 12px; }
-.account, .filters, .pagination, .actions, nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-input, select, textarea, button { font: inherit; border: 1px solid #bbc8d8; border-radius: 6px; padding: 7px 10px; }
-input, select, textarea { background: white; color: #182b42; max-width: 100%; }
-button { background: #fff; color: #233d58; cursor: pointer; } button:hover { background: #e7f1fc; } button:disabled { opacity: .5; cursor: default; }
-button.primary, button.active { background: #1569ad; color: white; border-color: #1569ad; }
-button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, .scroll-region:focus-visible { outline: 3px solid #68a8e7; outline-offset: -2px; }
-#message { padding: 6px 20px; background: #e6eff8; white-space: pre-wrap; overflow-wrap: anywhere; flex-shrink: 0; max-height: 12vh; overflow: auto; font-size: 12px; } #message.error { background: #ffe4df; color: #a12513; }
-main { display: grid; grid-template-columns: 180px minmax(0, 1fr); flex: 1; min-height: 0; overflow: hidden; }
-aside { padding: 12px; background: #fff; border-right: 1px solid #dae2ec; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-h1 { font-size: 16px; overflow-wrap: anywhere; margin: 0; } h2 { font-size: 17px; margin: 0; }
-#progress { margin: 6px 0; font-size: 12px; }
-#queue { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; margin-top: 12px; flex: 1; }
-.queue-item { display: block; width: 100%; text-align: left; margin-bottom: 7px; font-size: 12px; overflow-wrap: anywhere; }
-#welcome, #workspace { padding: 12px; min-width: 0; min-height: 0; } #welcome { overflow: auto; }
-#workspace { display: flex; flex-direction: column; overflow: hidden; }
+html { scroll-padding-top: 90px; }
+body { margin: 0; min-height: 100vh; }
+/* Content grows with the document. No viewport-height containers or inner scrollbars. */
+main { max-width: 1720px; margin: 0 auto; padding: 32px 28px 100px; display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; align-items: start; }
+header { padding: 25px 32px; background: #fff; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+header strong { font-size: 23px; letter-spacing: -.6px; color: #163e40; } .brand-light { font-weight: 450; color: #73838a; }
+.muted { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+.account, .filters, .pagination, .actions, nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.account { font-size: 13px; } .account input { width: 130px; }
+input, select, textarea, button { font: inherit; border: 1px solid #d4dfe3; border-radius: 9px; padding: 9px 12px; }
+input, select, textarea { background: #fff; color: #263f49; max-width: 100%; }
+button { background: #fff; color: #405862; cursor: pointer; transition: background .15s, border-color .15s; }
+button:hover { background: #edf5f3; border-color: #9ebfba; } button:disabled { opacity: .55; cursor: default; }
+button.primary, button.active { background: var(--accent); color: white; border-color: var(--accent); }
+button.primary:hover { background: #105f58; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible, .scroll-region:focus-visible { outline: 3px solid #78bcb1; outline-offset: 3px; }
+input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; }
+#message { padding: 8px 32px; background: #eef4f3; color: #57706b; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; } #message.error { background: #ffebe6; color: #a03d28; }
+.offline-tools { padding: 14px 32px; background: #fafbf9; border-bottom: 1px solid var(--line); font-size: 12px; }
+.offline-tools p { margin: 0 0 10px; color: #7b8277; max-width: 1150px; }
+.offline-tools label { display: inline-block; margin-left: 12px; color: var(--muted); }
+.offline-tools button, .offline-tools input { font-size: 12px; padding: 6px 10px; }
+aside { min-width: 0; padding-top: 9px; }
+.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: #7d9596; }
+h1 { font-size: 30px; line-height: 1.3; letter-spacing: -.8px; margin: 7px 0 6px; }
+h2 { font-size: 18px; line-height: 1.5; margin: 6px 0 10px; font-weight: 650; }
+#progress { margin: 4px 0 10px; font-size: 12px; color: var(--muted); }
+#overall-progress { display: block; width: 100%; height: 6px; margin-bottom: 20px; appearance: none; border: 0; border-radius: 8px; background: #e1e9e6; accent-color: var(--accent); }
+#overall-progress::-webkit-progress-bar { background: #e1e9e6; border-radius: 8px; } #overall-progress::-webkit-progress-value { background: var(--accent); border-radius: 8px; } #overall-progress::-moz-progress-bar { background: var(--accent); }
+aside > label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+#queue { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 16px; }
+.queue-item { display: flex; flex-direction: column; align-items: center; padding: 9px 3px; min-width: 0; gap: 2px; border-color: transparent; background: #eaf0f0; }
+.queue-item strong { font-size: 15px; font-weight: 600; } .queue-item span { font-size: 10px; }
+.queue-item.completed { background: #e6f1e9; color: #548060; } .queue-item.active { background: var(--accent); color: #fff; box-shadow: 0 3px 9px #16736b21; }
+#welcome, #workspace { min-width: 0; } #welcome { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 36px; }
 [hidden] { display: none !important; }
-.case-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
-.case-heading button { font-size: 12px; padding: 4px 8px; }
-.columns { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(320px, 1fr); gap: 12px; align-items: stretch; flex: 1; min-height: 0; }
-.evidence-panel, .form-panel { background: #fff; border: 1px solid #dce4ee; border-radius: 10px; padding: 12px; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
-.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-shrink: 0; }
-.panel-heading span { font-size: 11px; color: #6e7e92; }
-.panel-help { margin: 4px 0; font-size: 12px; }
-.trace-help { font-size: 12px; color: #77561d; background: #fff6df; border-radius: 5px; margin: 4px 0 8px; padding: 6px; }
-.scroll-region { overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; flex: 1; min-height: 0; padding: 0 8px 4px 0; }
-#form-scroll { margin-top: 6px; }
-.evidence-panel > :not(.scroll-region), .form-panel > :not(.scroll-region) { flex-shrink: 0; }
-.notice { background: #fff2ce; border-left: 4px solid #dfac30; padding: 6px 10px; margin: 6px 0 10px; font-size: 12px; flex-shrink: 0; }
-p { color: #53647a; } pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.65 ui-monospace, monospace; }
-.event { border-left: 3px solid #9aaabc; padding: 12px; margin: 10px 0; background: #f7f9fc; border-radius: 4px; }
-.event.user_prompt { border-left-color: #2274b9; background: #edf5fc; } .event.target { outline: 2px solid #daa929; }
-.event pre { margin: 8px 0 0; } .event-head { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-.field { margin: 13px 0; } .field > label { display: block; font-weight: 600; margin-bottom: 5px; }
-.field > input, .field > select, .field > textarea { width: 100%; } .field > small { display: block; color: #78869a; font-size: 11px; overflow-wrap: anywhere; }
-textarea { resize: vertical; min-height: 62px; width: 100%; }
-details { margin: 12px 0; padding: 10px; background: #f7f9fc; border: 1px solid #dde5ee; border-radius: 7px; min-width: 0; }
-summary { cursor: pointer; font-weight: 600; } .array-item { padding: 10px; border: 1px solid #d7e1eb; margin: 8px 0; background: white; border-radius: 6px; }
-.remove { font-size: 12px; color: #a13c3c; }
-.actions { padding-top: 10px; margin-top: 6px; background: white; border-top: 1px solid #dde4ee; flex-shrink: 0; }
-#save-state { font-size: 12px; color: #5d7087; } .pagination { margin: 6px 0; font-size: 12px; }
-dialog { width: min(1100px, 94vw); max-height: 88vh; overflow: auto; border: 1px solid #c4d3e3; border-radius: 10px; }
-dialog::backdrop { background: #10233c88; } table { border-collapse: collapse; width: 100%; font-size: 12px; }
-td, th { text-align: left; border-bottom: 1px solid #dce4ee; padding: 8px; overflow-wrap: anywhere; } td:first-child { width: 40%; }
-.check-option { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
-fieldset { border: 1px solid #dce4ee; border-radius: 7px; margin: 12px 0; }
-legend { font-weight: 600; }
-.round { border-bottom: 1px solid #dae2ec; padding-bottom: 14px; }
-.round h3 { color: #1569ad; margin: 8px 0 4px; font-size: 14px; }
-.agent-fold > summary { color: #53647a; }
-.missing-response { padding: 8px 10px; border-left: 3px solid #d6ae65; background: #fff8e8; font-size: 12px; }
-/* Small screens use one document scroll, with no sticky or nested conversation pane. */
+.case-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.case-id { margin: 0; font: 11px/1.7 ui-monospace, monospace; color: #8a989f; overflow-wrap: anywhere; }
+.case-heading button { font-size: 12px; padding: 7px 12px; background: #e5eeec; color: #43756c; border-color: transparent; }
+.notice { padding: 0; margin: 16px 0 20px; font-size: 12px; color: #7a8790; line-height: 1.8; }
+.reading-nav { position: sticky; top: 12px; z-index: 5; justify-content: space-between; margin: 0 0 20px; padding: 10px 14px; border: 1px solid #dce5e4; background: #fffffff5; border-radius: 12px; box-shadow: 0 4px 20px #28483a09; }
+.jump-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.reading-nav a { color: #47635f; font-size: 12px; text-decoration: none; padding: 4px 0; } .reading-nav a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 5px; }
+#layout-toggle { font-size: 12px; padding: 6px 10px; border-color: #e0e9e6; }
+.columns { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 24px; align-items: start; }
+.evidence-panel, .form-panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; min-width: 0; box-shadow: 0 4px 18px #203d4203; scroll-margin-top: 0; }
+.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #edf1f2; margin-bottom: 16px; }
+.panel-heading h2 { margin: 0; display: flex; gap: 10px; align-items: center; } .panel-heading > span { font-size: 11px; color: #89989d; }
+.section-number { display: inline-flex; align-items: center; justify-content: center; width: 27px; height: 27px; border-radius: 8px; background: #e9f2ef; color: #497c73; font: 12px/1 ui-monospace, monospace; }
+.panel-help { margin: 0 0 12px; font-size: 12px; color: #879297; }
+.trace-help { font-size: 12px; color: #927b53; background: #faf7ef; border: 1px solid #f1eadb; border-radius: 9px; margin: 0 0 18px; padding: 11px 13px; line-height: 1.8; }
+.scroll-region { overflow: visible; max-height: none; }
+#form-scroll > p { font-size: 12px; color: #849297; margin-top: 0; }
+p { color: #61747e; } pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.85 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.filters { gap: 12px; font-size: 12px; }.filters input[type="text"], #search { flex: 1; min-width: 80px; font-size: 13px; background: #fafcfc; }
+.filters label { display: flex; align-items: center; gap: 6px; }
+.pagination { margin: 12px 0 24px; color: #92a0a5; font-size: 11px; }
+.event { padding: 17px 18px; margin: 12px 0; border: 1px solid #e6edef; border-radius: 11px; background: #fafcfc; }
+.event.user_prompt { background: #f4f9f8; border-color: #e2eeea; }
+.event.target { outline: 2px solid #d2b984; }
+.event pre { margin: 12px 0 0; } .event.user_prompt pre { font-family: inherit; font-size: 15px; line-height: 1.95; color: #304b50; }
+.event-head { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #829399; flex-wrap: wrap; }
+.event-head strong { font-weight: 500; } .event-head button { font: 11px/1.5 ui-monospace, monospace; padding: 3px 8px; color: #4c857a; background: #fff; border-color: #d8e8e2; }
+.field { margin: 20px 0; } .field > label { display: block; font-weight: 550; font-size: 13px; margin-bottom: 8px; color: #48616b; }
+.field > input, .field > select, .field > textarea { width: 100%; font-size: 13px; line-height: 1.7; }
+.field > small { display: block; color: #93a0a6; font-size: 11px; overflow-wrap: anywhere; }
+textarea { resize: vertical; min-height: 86px; width: 100%; } select { min-height: 42px; }
+details { margin: 16px 0; padding: 14px 16px; background: #fafbfc; border: 1px solid #e4eaee; border-radius: 11px; min-width: 0; }
+summary { cursor: pointer; font-size: 13px; font-weight: 600; color: #526b76; line-height: 1.8; }
+#annotation-form > div > details { background: #fff; padding: 17px; margin: 22px 0; }
+#annotation-form > div > details > summary { color: #375e5c; }
+.array-item { padding: 15px; border: 1px solid #e2e9e8; margin: 14px 0; background: #fff; border-radius: 10px; }
+.remove { font-size: 12px; color: #a76656; }
+.actions { display: flex; padding-top: 20px; margin-top: 26px; border-top: 1px solid var(--line); gap: 9px; }
+.actions button { font-size: 13px; } #save-state { display: block; flex-basis: 100%; font-size: 11px; color: #869690; }
+.check-option { display: flex; align-items: start; gap: 9px; margin: 9px 0; font-size: 13px; color: #587078; }.check-option input { margin-top: 4px; }
+fieldset { border: 1px solid #e5eceb; border-radius: 9px; padding: 12px; margin: 18px 0; }
+legend { font-weight: 550; font-size: 13px; color: #48616b; padding: 0 5px; }
+.round { border-bottom: 1px solid #edf1f1; padding-bottom: 18px; margin-bottom: 24px; }
+.round:last-child { border-bottom: 0; }
+.round h3 { color: #719088; margin: 0 0 12px; font-size: 12px; font-weight: 550; }
+.agent-fold { padding: 12px 14px; background: #fafbfc; border-style: dashed; }.agent-fold > summary { color: #7d8c94; font-size: 12px; font-weight: 450; }
+.missing-response { padding: 10px 13px; border-radius: 8px; background: #faf8f2; font-size: 12px; color: #9b8764; line-height: 1.8; }
+dialog { width: min(1100px, 94vw); max-height: 88vh; overflow: auto; border: 1px solid #d6e1df; padding: 25px; border-radius: 16px; }
+dialog::backdrop { background: #18353070; } table { border-collapse: collapse; width: 100%; font-size: 12px; }
+td, th { text-align: left; border-bottom: 1px solid #e1e9e7; padding: 11px; overflow-wrap: anywhere; } td:first-child { width: 40%; }
+.reading-wide .columns { grid-template-columns: minmax(0, 1fr); }
+.reading-wide .evidence-panel, .reading-wide .form-panel { padding: 32px clamp(24px, 6vw, 90px); }
+@media (max-width: 1150px) { main { grid-template-columns: 135px minmax(0,1fr); gap: 20px; padding: 24px 20px 70px; }.columns { gap: 16px; }.evidence-panel, .form-panel { padding: 18px; }#queue { grid-template-columns: repeat(2,minmax(0,1fr)); }.panel-heading > span { display: none; } }
 @media (max-width: 900px) {
-  html, body { height: auto; min-height: 100%; overflow: visible; } body { display: block; }
-  main { display: block; overflow: visible; }
-  aside { display: block; } #queue { max-height: 130px; }
-  #workspace, .columns, .evidence-panel, .form-panel { display: block; overflow: visible; }
-  .form-panel { margin-top: 12px; }
-  .scroll-region { overflow: visible; padding: 0; }
-  header { padding: 10px; } #workspace { padding: 10px; }
-  .panel-heading span { display: none; }
+  header { padding: 20px; } main { display: block; padding: 20px 16px 70px; }
+  aside { margin-bottom: 30px; } #queue { grid-template-columns: repeat(8,minmax(0,1fr)); }
+  .columns { display: block; } .form-panel { margin-top: 24px; }
+  .offline-tools { padding: 12px 20px; } .offline-tools label { margin: 8px 0 0; }
+  .reading-nav { top: 8px; gap: 8px; } .jump-links { gap: 14px; } #layout-toggle { display: none; }
+  h1 { font-size: 27px; } .reading-wide .evidence-panel, .reading-wide .form-panel { padding: 20px; }
 }
-
-.offline-tools {padding:6px 20px;background:#fff5d9;flex-shrink:0;font-size:12px;} .offline-tools p {margin:0 0 4px;} .offline-tools button,.offline-tools input {padding:4px 8px;font-size:12px;} .offline-tools label {display:inline-block;margin-left:8px;}
+@media (max-width: 520px) { #queue { grid-template-columns: repeat(5,minmax(0,1fr)); }.brand-light { font-size: 17px; }.account { gap: 6px; }.account button { font-size: 12px; padding: 7px; }.evidence-panel, .form-panel { padding: 16px; }.event { padding: 13px; }.panel-heading h2 { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style></head>
-<body>
-<header><div><strong>SWE-Chat 人工标注台</strong><span class="muted">独立判断 · 证据优先 · 不显示模型预标注</span></div><div class="account"><label for="annotator">标注员 ID</label><input id="annotator" placeholder="例如 rater_a" maxlength="64"><button id="enter">载入任务</button><button id="summary" disabled>查看我的指标</button><button id="export" disabled>导出我的结果</button></div></header>
+<body id="page-top">
+<header><div><strong>SWE-Chat <span class="brand-light">/ 人工标注</span></strong><span class="muted">阅读对话，记录需求如何被理解。</span></div><div class="account"><label for="annotator">标注员 ID</label><input id="annotator" placeholder="例如 rater_a" maxlength="64"><button id="enter">载入任务</button><button id="summary" disabled>查看我的指标</button><button id="export" disabled>导出我的结果</button></div></header>
 <div id="message" role="status" aria-live="polite">输入标注员 ID 开始。每条会话一张表，支持保存草稿和提交后修订。</div>
 <div class="offline-tools"><p id="offline-notice">离线版：无需服务器，填写后自动保存到当前浏览器。关闭前建议「备份全部进度」；换电脑、移动文件或清理浏览器后，可用备份恢复。最终交付请点击右上角「导出我的结果」。</p><button id="backup-progress">备份全部进度（含草稿）</button><label>导入进度 <input id="restore-progress" type="file" accept=".json,application/json"></label></div><main>
-<aside><h2>样本队列</h2><p id="progress">尚未载入</p><label><input type="checkbox" id="unfinished">只看未完成</label><div id="queue"></div></aside>
+<aside id="sample-list"><span class="eyebrow">YOUR WORKSPACE</span><h2>我的样本</h2><p id="progress">尚未载入</p><progress id="overall-progress" max="100" value="0" aria-label="标注完成进度"></progress><label><input type="checkbox" id="unfinished">只看未完成</label><div id="queue"></div></aside>
 <section id="workspace" hidden>
-<div class="case-heading"><h1 id="case-title"></h1><nav id="stages" aria-label="标注阶段"></nav></div>
-<p id="stage-help" class="notice"></p>
+<div class="case-heading"><div><span class="eyebrow">CONVERSATION REVIEW</span><h1 id="case-title"></h1><p id="case-id" class="case-id"></p></div><nav id="stages" aria-label="标注阶段"></nav></div>
+<p id="stage-help" class="notice"></p><nav class="reading-nav" aria-label="阅读与标注导航"><div class="jump-links"><a href="#evidence-panel">阅读对话</a><a href="#form-panel">填写标注</a><a href="#sample-list">选择样本</a><a href="#page-top">回到顶部 ↑</a></div><button id="layout-toggle" type="button" aria-pressed="false">切换为通栏阅读</button></nav>
 <div class="columns">
-<section class="evidence-panel"><div class="panel-heading"><h2>按顺序阅读对话</h2><span>在此列内滚动</span></div><p class="panel-help">按源事件顺序分组，不保证一问一答。T 是证据编号；源表工具结果可能已截断。</p><p id="trace-help" class="trace-help"></p>
+<section class="evidence-panel" id="evidence-panel"><div class="panel-heading"><h2><span class="section-number">01</span> 原始对话</h2><span>按消息顺序阅读</span></div><p class="panel-help">按源事件顺序分组，不保证一问一答。T 是证据编号；源表工具结果可能已截断。</p><p id="trace-help" class="trace-help"></p>
 <div class="filters"><input id="search" placeholder="查找文本或 T 编号"><label><input type="checkbox" id="users-only">仅用户</label></div>
-<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="evidence-scroll" class="scroll-region" tabindex="0" role="region" aria-label="对话内容，可独立滚动"><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details></div>
+<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="evidence-scroll" class="scroll-region" tabindex="0" role="region" aria-label="对话内容"><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details></div>
 </section>
-<section class="form-panel"><div class="panel-heading"><h2>人工判断</h2><span>在此列内滚动</span></div><div id="form-scroll" class="scroll-region" tabindex="0" role="region" aria-label="标注表单，可独立滚动"><p>先填项目概况，再判断需求与指令缺口。缺少响应记录时，不要推断 Agent 忽略要求；证据不足请选择“无法判断”。</p>
+<section class="form-panel" id="form-panel"><div class="panel-heading"><h2><span class="section-number">02</span> 标注记录</h2><span>以可见证据为依据</span></div><div id="form-scroll" class="scroll-region" tabindex="0" role="region" aria-label="标注表单"><p>先填项目概况，再判断需求与指令缺口。缺少响应记录时，不要推断 Agent 忽略要求；证据不足请选择“无法判断”。</p>
 <details><summary>查看本阶段完整 rubric / 判定标准</summary><pre id="rubric"></pre></details>
 <form id="annotation-form"></form>
 
@@ -556,11 +588,20 @@ function renderEvents() {
 
 function renderQueue() {
   const unfinished = element("unfinished").checked;
+  const done = state.tasks.filter(task => stageOrder.every(stage => task.statuses[stage] === "complete")).length;
+  element("overall-progress").max = state.tasks.length || 1;
+  element("overall-progress").value = done;
   element("queue").replaceChildren(...state.tasks.map((task, index) => {
-    const completed = stageOrder.filter(stage => task.statuses[stage] === "complete").length;
-    if (unfinished && completed === stageOrder.length) return null;
-    return button(`${index + 1}. ${task.case_id}\n${completed}/${stageOrder.length} 已提交`, () => openCase(task.case_id),
-      "queue-item" + (state.view && state.view.case_id === task.case_id ? " active" : ""));
+    const completed = stageOrder.every(stage => task.statuses[stage] === "complete");
+    if (unfinished && completed) return null;
+    const status = completed ? "已提交" : Object.values(task.statuses).includes("draft") ? "草稿" : "待标注";
+    const control = button("", () => openCase(task.case_id), "queue-item" + (completed ? " completed" : "") +
+      (state.view && state.view.case_id === task.case_id ? " active" : ""));
+    control.append(node("strong", String(index + 1).padStart(2, "0")), node("span", status));
+    control.title = task.case_id;
+    control.setAttribute("aria-label", `样本 ${index + 1} · ${status} · ${task.case_id}`);
+    if (state.view?.case_id === task.case_id) control.setAttribute("aria-current", "true");
+    return control;
   }).filter(Boolean));
 }
 
@@ -583,7 +624,8 @@ async function openCase(caseId, stage) {
     const view = await api("/api/case?" + query);
     state.view = view; state.annotation = view.annotation; state.dirty = false; state.page = 0;
     element("workspace").hidden = false; element("welcome").hidden = true;
-    element("case-title").textContent = "Session " + caseId;
+    element("case-title").textContent = "样本 " + String(state.tasks.findIndex(item => item.case_id === caseId) + 1).padStart(2, "0");
+    element("case-id").textContent = caseId;
     element("stage-help").textContent = view.simple ?
       `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
       `只评价 T${view.target_instruction_turn} 这条指令的响应。可见其结束前的历史；未来消息与 commit 在服务器端被隐藏。提交后不可回改。` :
@@ -600,7 +642,7 @@ async function openCase(caseId, stage) {
     element("submit").textContent = view.simple ? "提交标注" : "校验并提交（锁定本阶段）";
     element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? (window.offlineAPI ? "已恢复浏览器草稿" : "已恢复服务器草稿") : "尚未保存";
     renderEvents(); renderForm(); renderQueue();
-    element("evidence-scroll").scrollTop = 0; element("form-scroll").scrollTop = 0;
+    element("case-title").scrollIntoView({block: "start"});
     message("已载入 " + stageNames[stage] + " · " + view.rubric_version);
   } catch (error) {message(error.message, true);}
 }
@@ -738,6 +780,15 @@ window.offlineReload = async () => {
   element("workspace").hidden = true; element("welcome").hidden = false;
   await refreshTasks();
 };
+
+function setReadingLayout(wide) {
+  document.body.classList.toggle("reading-wide", wide);
+  element("layout-toggle").setAttribute("aria-pressed", String(wide));
+  element("layout-toggle").textContent = wide ? "切换为并排标注" : "切换为通栏阅读";
+  tabStorage.setItem("human-reading-wide", wide ? "1" : "0");
+}
+element("layout-toggle").addEventListener("click", () => setReadingLayout(!document.body.classList.contains("reading-wide")));
+setReadingLayout(tabStorage.getItem("human-reading-wide") === "1");
 
 </script>
 </body></html>
