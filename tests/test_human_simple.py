@@ -14,7 +14,7 @@ import pyarrow.parquet as pq
 
 
 def annotation():
-    return dict(evolution=dict(initial_coverage='一部分', new_requirements='有', source='项目需求', first_new_turn=3, behaviors=['收到新证据后正确更新']),
+    return dict(evolution=dict(initial_coverage='一部分', new_requirements='有', source='项目需求', behaviors=['收到新证据后正确更新']),
                 gap=dict(instruction_quality='不完整', driver='无法判断', literal_feasibility='只能部分达成', response='用户指出后才调整'))
 
 
@@ -38,7 +38,8 @@ class SimpleTests(unittest.TestCase):
         result = self.project.export('a')
         metrics = result['annotations']['review'][0]['metrics']
         self.assertEqual(metrics['user_rounds'], 2)
-        self.assertEqual(metrics['tool_events_from_first_update'], 1)
+        self.assertNotIn('tool_events_from_first_update', metrics)
+        self.assertNotIn('first_late_requirement_turn', metrics)
         self.assertIsNone(metrics['api_call_count'])
         self.assertTrue(metrics['late_requirement'])
         self.project.save('a', 's', 'review', 1, annotation(), True)
@@ -50,9 +51,7 @@ class SimpleTests(unittest.TestCase):
 
     def test_conditional_fields_and_single_cause_validation(self):
         simple.validate(annotation(), self.case['events'])
-        for mutate in [lambda a: a['evolution'].update(first_new_turn=99),
-                       lambda a: a['evolution'].update(first_new_turn=0),
-                       lambda a: a['evolution'].update(first_new_turn=4),
+        for mutate in [lambda a: a['evolution'].update(first_new_turn=3),
                        lambda a: a['evolution'].update(source=None),
                        lambda a: a['evolution'].update(new_requirements='没有'),
                        lambda a: a['gap'].update(driver=['无法判断']),
@@ -60,14 +59,15 @@ class SimpleTests(unittest.TestCase):
             value=annotation();mutate(value)
             with self.assertRaises(ValueError): simple.validate(value,self.case['events'])
         for answer,expected in [('没有',False),('无法判断',None)]:
-            value=annotation();value['evolution'].update(new_requirements=answer,source=None,first_new_turn=None)
+            value=annotation();value['evolution'].update(new_requirements=answer,source=None)
             simple.validate(value,self.case['events'])
             self.assertIs(simple.costs(self.case,value)['late_requirement'],expected)
-        self.assertIsNone(simple.costs(self.case,annotation())['requirement_update_count'])
+        self.assertNotIn('requirement_update_count',simple.costs(self.case,annotation()))
 
     def test_form_has_no_text_questions_and_no_project_overview(self):
         spec=simple.schema()
         self.assertEqual(set(spec['properties']),{'evolution','gap'})
+        self.assertNotIn('first_new_turn',spec['properties']['evolution']['properties'])
         def visit(node):
             if node['type']=='string': self.assertIn('enum',node)
             for child in node.get('properties',{}).values():visit(child)

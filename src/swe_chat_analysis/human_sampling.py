@@ -96,27 +96,48 @@ def prepare(args):
             eligible[sid] = q
     if len(eligible) < args.sample_size:
         raise ValueError(f'只有 {len(eligible)} 条合格候选，少于 {args.sample_size}；请显式放宽可读长度，勿降低真实性要求')
-    selected = random.Random(args.seed).sample(sorted(eligible), args.sample_size)
-    print(f'合格候选 {len(eligible)} 条，seed={args.seed} 抽取 {len(selected)} 条；读取完整所选类型记录…', flush=True)
-    source = read_conversations(data / 'conversations.parquet', selected)
-    cases = []
-    for sid in selected:
+    print(f'基础合格候选 {len(eligible)} 条；读取候选的完整所选类型记录，检查标注证据…', flush=True)
+    source = read_conversations(data / 'conversations.parquet', sorted(eligible))
+    prepared, relevance = {}, {}
+    review_path = Path(__file__).resolve().parents[2] / 'docs' / 'human_selection_review.json'
+    review = json.loads(review_path.read_text()) if getattr(args,'relevance_filter',False) and review_path.exists() else {}
+    exclusions = {r['case_id']:r for r in review.get('exclusions',[])}
+    for sid in sorted(eligible):
         case = make_case(sessions[sid], source.pop(sid), {}, args.seed)
         case['interaction_quality'] = eligible[sid]
         if sid in languages: case['language_screen'] = languages[sid]
-        case['reading_stats'] = dict(user_rounds=len(case['user_turns']),
-                                    effective_interactions=eligible[sid]['effective_interactions'],
+        case['reading_stats'] = dict(user_rounds=len(case['user_turns']), effective_interactions=eligible[sid]['effective_interactions'],
                                     characters=sum(len(e['text']) for e in case['events']), events=len(case['events']))
+        if getattr(args, 'relevance_filter', False):
+            from .human_relevance import assess
+            relevance[sid] = assess(case)
+            excluded = exclusions.get(sid)
+            if excluded and excluded['trace_fingerprint'] == digest(case['events']):
+                relevance[sid].update(eligible=False,reason=excluded['reason'],review_exclusion=True)
+            if not relevance[sid]['eligible']:
+                next(a for a in audits if a['case_id']==sid)['exclusion_reason'] = 'insufficient_visible_annotation_evidence'
+                continue
         case['input_fingerprint'] = digest({k:v for k,v in case.items() if k != 'input_fingerprint'})
-        cases.append(case)
+        prepared[sid] = case
+    if len(prepared) < args.sample_size:
+        raise ValueError(f'仅 {len(prepared)} 条有足够标注证据，不能凑满 {args.sample_size}；请扩大候选池')
+    selected = random.Random(args.seed).sample(sorted(prepared), args.sample_size)
+    cases = [prepared[sid] for sid in selected]
+    print(f'可标注候选 {len(prepared)} 条；冻结 {len(cases)} 条。', flush=True)
     output.mkdir(parents=True, exist_ok=True)
     write_jsonl(output / 'cases.jsonl', cases)
     write_jsonl(output / 'candidate_audit.jsonl', audits)
+    if review:
+        (output / 'selection_review.json').write_text(json.dumps(review,ensure_ascii=False,indent=2)+'\n')
+    if relevance:
+        write_jsonl(output / 'selection_audit.jsonl', [dict(case_id=sid, **relevance[sid]) for sid in selected])
     manifest = dict(human_version=VERSION, rubric_versions={STAGE:VERSION}, seed=args.seed,
-        sample_size_requested=args.sample_size, session_count=len(cases), eligible_pool_count=len(eligible),
+        sample_size_requested=args.sample_size, session_count=len(cases), eligible_pool_count=len(prepared), base_pool_count=len(eligible),
+        selection_review_digest=digest(review) if review else None,
+        relevance_filter="annotation_evidence_v2: at least two later substantive user messages with textual agent responses and diverse request/constraint/clarification cues" if relevance else None,
         language_filter='Chinese and English only' if getattr(args, 'language_filter', False) else 'not applied',
         filter_version=FILTER_VERSION, bounds={k:getattr(args,k) for k in ('min_prompts','max_prompts','min_chars','max_chars','max_events')},
-        sampling='Uniform seed-based sample without replacement after effective interaction and readability filtering; exact normalized substantive user sequences deduplicated; no annotation outcome filtering.',
+        sampling='Uniform seed-based sample without replacement after effective interaction and readability filtering; exact normalized substantive user sequences deduplicated; observable dialogue evidence enrichment when enabled; cue matches are not annotation answers and this is not a prevalence sample.',
         interaction_definition='Distinct substantive user request group followed by visible assistant/tool activity. Consecutive users without agent activity share one exchange. Acknowledgements, repeated prompts, automatic notifications, skill/command scaffolding and continuation records do not qualify. Activity is not proof of success.',
         exclusions=dict(Counter(a['exclusion_reason'] for a in audits if a['exclusion_reason'])),
         case_fingerprints={c['case_id']:c['input_fingerprint'] for c in cases},

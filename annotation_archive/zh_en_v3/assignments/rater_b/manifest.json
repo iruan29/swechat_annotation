@@ -1,0 +1,78 @@
+{
+  "human_version": "human_simple_v3",
+  "rubric_versions": {
+    "review": "human_simple_v3"
+  },
+  "seed": 42,
+  "sample_size_requested": 30,
+  "session_count": 30,
+  "eligible_pool_count": 141,
+  "language_filter": "Chinese and English only",
+  "filter_version": "effective_interactions_v2",
+  "bounds": {
+    "min_prompts": 8,
+    "max_prompts": 0,
+    "min_chars": 1000,
+    "max_chars": 180000,
+    "max_events": 600
+  },
+  "sampling": "Uniform seed-based sample without replacement after effective interaction and readability filtering; exact normalized substantive user sequences deduplicated; no annotation outcome filtering.",
+  "interaction_definition": "Distinct substantive user request group followed by visible assistant/tool activity. Consecutive users without agent activity share one exchange. Acknowledgements, repeated prompts, automatic notifications, skill/command scaffolding and continuation records do not qualify. Activity is not proof of success.",
+  "exclusions": {
+    "readability_bounds": 1324,
+    "too_few_raw_messages": 3611,
+    "initial_prompt_automatic_or_context_only": 103,
+    "repeated_substring_fragments": 110,
+    "too_few_effective_interactions": 237,
+    "language_not_chinese_or_english": 20,
+    "ambiguous_source_order": 2,
+    "review_template": 303
+  },
+  "case_fingerprints": {
+    "170cebcc-4cb9-42aa-a322-6e590fc9db0d": "0637e42aeeb6e0b3fcf064f4b4b7e1c0a3b6f2c9f9cd844c707f496d0293bad6",
+    "7d911558-dda5-49e9-bf9b-f5cc6f1be85a": "2754cf4fca2685cddf09694ec254c153e4262ccf9afe3c48ad7b7759c716e2e0",
+    "a68d9610-d0c5-4dfd-9f7c-d19dce3f745f": "bb9c5d0f869063027f00ff4c292117b21b422c93c97d5efc89be30030f56e75e",
+    "a8d96970-0e9c-4be2-a62f-8d6e1cbe1495": "206f7c11d6313f9ece9b60c156c6688f11eb646c0fb0b5dd67a26945e56d0a15",
+    "bf94df2a-b46a-4b03-a28d-d0b909fae942": "b45d5d4a31b701610cfe9d0bc59bcaeb129620c07fee2155abf6764abcab2e5d",
+    "7596272b-4e69-4141-8c7c-ac47e9f935e1": "21c5d0a60b50daf976cef6d8ffed5d5d61cfd961d81fa4e75c7305496746dfe3",
+    "fe31c83e-f872-4bc0-bf1d-776dda23fe58": "a5b85158a0a09c3bf8320b2722af5f97f5d1c7d866a198df6998181bc70bbe59",
+    "90c86dfe-61c7-43d3-8757-1da9c91495c2": "ee05952b14f3bcadf586eaef7e87b328f8413f120c90ade77cd3a70764eac640",
+    "dc4ca47f-a775-4b76-ba67-74fc7654a9e3": "92ef4c083da027592eb0a8011dea3c249b4f126e2a49de1405046f7705cb3d39",
+    "19f80b31-2dbb-4725-8f34-9ee8ae0d5891": "798257372d3931be649a8e903c6c53038619f01f0e3f0f1abd71da052d084f8c",
+    "62b1ddd2-64c8-46c2-b74f-ce21078f81aa": "6f31adac0a4bc73a2f8470d6cc3bf953c6d9b7cbf0076bac1e145a56a3e0d0d4",
+    "3712fa4e-19a9-4d39-aa2c-383b5d2117d5": "7e29401d8d037ba93fb9f83c5eb743708d86826ea97a398c4e6439945d01ea27",
+    "6e6e3a00-9b98-4c4e-9ee9-2f75aff4f488": "4cae998dc11ece0f70a05b8b8df2492c2662b8e572571fc11258299da8806de6",
+    "6ea75ebe-b348-407c-9781-8b65b31df6e6": "eca125aad6c409a7d4a2fca9c54bda8a3fd7c1eb57999a198de9b20293dea6f2",
+    "29e2d3a9-90ab-4bff-8d7a-4ebe920f71d1": "e47c5eae45edac752ef8b85c209230788249bbb73ce685a456ed361424dc7fee",
+    "ae480df4-d140-47bc-b9fb-689cc40773f9": "e2f07a696f67601547fad380b5067b57cf29b8e5214e17aebbd3a064bf968d5c",
+    "a851941e-91ed-4706-a4e2-39177a334681": "0c1dc62bda87c2f0ee91dcb445e1af16165c1c895c19fd58df660a4072a1626b",
+    "a74cbf2d-24be-4caf-93f5-f6ae7886aa9a": "a511e5b0d350d89ad2f8dbe9b8e7a6d4578708e1262a1d512bbd9df976871024",
+    "145e3aa4-0001-43a6-a9a0-bb9493a1c135": "2553f0620bf05286affe85c584d7a0ca56d4e781d15042231be1a05bb8f9d6ae",
+    "599e80c7-dc41-450f-b53a-6f0397dfca7b": "f6405956bb9a69b3009713eb92c42c719bb8dad121221d3d4c322c96f1631997",
+    "ses_30923b961ffeNT0MbjVtd2LiNf": "f819e7918877bfa31fa14157f351cfecdcf57296703dc3a5972e5bf5cad138a8",
+    "78bdaa12-befe-4056-b379-b3266d942057": "15c6e363203b77b59a78c03aa19d11857a97c5f935e3cc3fffb70949563c0a3a",
+    "07c4c057-2c3a-4182-b615-061ae9733747": "fe4a44d73cad44143b19136dcd250c404abe11eff9f5e2e9589f2da7bfb1071b",
+    "8bf95c26-d9d3-4f78-990c-9784125b69b8": "479082a17e8e7ae89781cb56990f89f1dda0c3b24246845cd882a43b2956fa67",
+    "2746461b-bc24-4542-abce-41547d1447d1": "a47688419dd5feebb8f2f3208f77f932c36aeb93e9cfbb01cca2fb8425fec8de",
+    "6e382dcc-9ee9-4b46-8373-f43f1efa9157": "5751b6ee29541a79a408a496e236dec3ef602007108f3a89f0033dd65d9331bc",
+    "a5fa221f-c511-4bb9-ae4f-9627cf44ba36": "f6f35cd1d220db99141c4df4a689ad692aece1d1b38c3c793d62fcb985488568",
+    "b417c4ed-b173-4243-a27c-48d3f60afa4f": "2ddd4b22c2ac1cc55e1a4e67629b23e0370dfa40c640ce8679a43f98d6d4df37",
+    "327f1292-9603-4e47-8b53-e1778317b947": "986acf674a5dce2415c8c4f14c1887e8079e56bde17e3c37771c2a2e931bf381",
+    "a8533fc6-4167-49d5-9143-32f1d83dd315": "80c202f0133b59a918eac8c068f1c4fcf1dd16d8676633fe66cfb36cfa108f0f"
+  },
+  "created_at_unix": 1788923706,
+  "commits_included": false,
+  "source_files": {
+    "sessions.parquet": {
+      "bytes": 1997377,
+      "mtime_ns": 1787752360923861327
+    },
+    "conversations.parquet": {
+      "bytes": 1311422253,
+      "mtime_ns": 1787752988436380619
+    }
+  },
+  "assigned_annotator": "rater_b",
+  "package_id": "4b2f3cf60f72147f54407ac39bcfad7889208fe6b1ef73520ebf301b1c7a6e75",
+  "parent_session_count": 100
+}

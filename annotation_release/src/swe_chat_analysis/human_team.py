@@ -71,7 +71,7 @@ def write_quality_report(source, destination, project, config):
     from statistics import median
     cases = list(project.cases.values())
     lines = ['# 有效交互样本质量报告', '', f"批次 ID：`{config['package_id']}`", '',
-             f"合格候选池：{project.manifest.get('eligible_pool_count', '未记录')} 条；seed=42 抽取 100 条，固定分配 30 / 30 / 40。", '',
+             f"合格候选池：{project.manifest.get('eligible_pool_count', '未记录')} 条；按可见标注证据筛选后 seed=42 抽取 100 条，固定分配 30 / 30 / 40。", '',
              '| 维度 | 最少 | 中位数 | 最多 |', '| --- | ---: | ---: | ---: |']
     for key, label in [('effective_interactions','有效交互'),('user_rounds','原始用户消息'),('characters','可见正文字符'),('events','可见事件')]:
         values = [c.get('reading_stats', {}).get(key) for c in cases]
@@ -79,7 +79,7 @@ def write_quality_report(source, destination, project, config):
         if values:
             lines.append(f'| {label} | {min(values):,} | {median(values):,} | {max(values):,} |')
     languages = Counter(c.get('language_screen', {}).get('language', '未记录') for c in cases)
-    lines += ['', '用户语言识别：' + '；'.join(f'{k}: {v}' for k,v in languages.items()) + '。表单版本 human_simple_v3；7 项基础选择，有新需求时共 9 项。']
+    lines += ['', '用户语言识别：' + '；'.join(f'{k}: {v}' for k,v in languages.items()) + '。表单版本 human_simple_v4；7 项基础选择，有新需求时共 8 项。']
     agents = Counter(c['agent'] for c in cases)
     excluded = Counter()
     for case in cases:
@@ -90,6 +90,10 @@ def write_quality_report(source, destination, project, config):
               '有效交互指一组实质性用户请求，随后有非空 assistant 回复或工具活动。连续发送且中间没有 Agent 活动的用户消息合并为一组。至少 8 次有效交互，其中至少 6 次有文字 assistant 回复；轮数无固定上限。', '',
               '排除固定 review 模板会话、明显重复拆段、起始环境/自动消息和源顺序有歧义的会话。对实质 prompt 序列去重。纯确认、自动通知、技能/命令展开模板及重复 prompt 不计有效次数，原文仍保留。短命令如 commit、git status 是用户实际操作请求，可以计数；不要求每次请求都新增项目需求。', '',
               '这些是可审计的启发式规则，不是人工意图标签。缺少响应不能推断 Agent 忽略要求，有工具活动也不证明要求已完成。判断需求是否新增、指令是否有问题仍由标注员完成。', '',
+              '## 可标注性门槛', '',
+              '在基础可读候选中，要求至少两段后续实质用户消息及可读的 Agent 回复，并有多种需求补充、原意纠正、理解差异、项目约束或澄清线索。API 错误文本不当作可读回复。选中的初始 prompt 与候选片段经过适用性检查，排除日志/模板主导和明显不适合软件项目分析的会话。', '',
+              '这是定向富集的研究样本，不能估计总体缺口发生率。关键词线索不是人工标签，不预先判定初始指令一定有错。selection_audit.jsonl 提供候选证据区间，selection_review.json 记录复核范围与排除原因；这些信息不在标注表中预填。', '',
+              '成本只统计整场会话。表单不再记录新需求位置，故不计算新需求之后的成本或新需求个数。', '',
               '## 原文与追溯', '',
               '- 全部保留源 session 的 user / assistant / tool use / tool result 事件及原编号，不只截取前 8 轮。',
               '- 不保证项目从开始到结束的全部过程被源数据收录；thinking/system 不在界面，源工具结果可能已截断到 10KB。',
@@ -101,8 +105,9 @@ def write_quality_report(source, destination, project, config):
               '## 已保留但不计有效请求的消息', '', '```json', json.dumps(excluded, ensure_ascii=False, indent=2), '```', '',
               '旧批次存在模板凑轮或旧表单问题，保存在 `annotation_archive/`。本次请使用 `annotation_release`；旧备份不导入新包，结果不能混收。', '']
     (destination / 'QUALITY_REPORT.md').write_text('\n'.join(lines), encoding='utf-8')
-    if (source / 'candidate_audit.jsonl').exists():
-        shutil.copy2(source / 'candidate_audit.jsonl', destination / 'candidate_audit.jsonl')
+    for name in ('candidate_audit.jsonl', 'selection_audit.jsonl', 'selection_review.json'):
+        if (source / name).exists():
+            shutil.copy2(source / name, destination / name)
 
 
 def build(source, destination, repo_root):
@@ -202,7 +207,7 @@ def export(root, rater, destination=None, allow_partial=False):
 
 def analysis_csv(path, rows):
     fields = ['session_id', 'annotator', 'agent', 'initial_coverage', 'new_requirements', 'requirement_source', 'gap_driver', 'instruction_quality', 'literal_feasibility']
-    metric_keys = ['late_requirement', 'first_late_requirement_turn', 'requirement_update_count', 'effective_interactions', 'user_rounds', 'visible_characters', 'observed_tool_events', 'user_rounds_after_first_update', 'tool_events_from_first_update', 'api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds']
+    metric_keys = ['late_requirement', 'effective_interactions', 'user_rounds', 'visible_characters', 'observed_tool_events', 'api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds']
     with path.open('w', encoding='utf-8-sig', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fields + metric_keys)
         writer.writeheader()
@@ -282,7 +287,7 @@ def main(root=None):
     parser.add_argument('--bundle-dir', type=Path, default=root or Path('annotation_release'))
     sub = parser.add_subparsers(dest='command', required=True)
     build_parser = sub.add_parser('build')
-    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_zh_en_v3_100_seed42'))
+    build_parser.add_argument('--source', type=Path, default=Path('outputs/human_relevant_v4_100_seed42'))
     build_parser.add_argument('--destination', type=Path, default=Path('annotation_release'))
     serve_parser = sub.add_parser('serve')
     serve_parser.add_argument('--rater', choices=RATERS, required=True)

@@ -31,7 +31,7 @@ def generate(root: Path) -> list[Path]:
         scripts = '<script id="offline-data" type="application/json">' + data + '</script>\n<script>' + offline.replace('</script', '<\\/script') + '\n</script>\n<script>' + app.replace('</script', '<\\/script') + '\n</script>'
         html = base.replace('<title>SWE-Chat 人工标注台</title>', f'<title>SWE-Chat · {rater} · 离线标注</title>')
         is_effective = all(cases[sid].get('interaction_quality') for sid in config['assignments'][rater])
-        label = '中文／英文 · 精简表单 v3' if simple.VERSION == 'human_simple_v3' else '有效交互新版' if is_effective else '历史批次 · 请核对筛选口径'
+        label = '中文／英文 · 精简表单 v4' if simple.VERSION == 'human_simple_v4' else '有效交互新版' if is_effective else '历史批次 · 请核对筛选口径'
         banner = f'<div id="batch-banner" class="offline-tools"><strong>{label} · {rater} · {len(payload["cases"])} 条</strong><p>批次：{config["package_id"][:12]} · 原始用户消息数与有效交互数分别展示。</p></div>'
         html = html.replace('<body id="page-top">', '<body id="page-top">' + banner)
         html = html.replace('</body>', scripts + '\n</body>')

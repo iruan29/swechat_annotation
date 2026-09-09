@@ -47,12 +47,12 @@
   }
   function validate(value, item) {
     shape(bundle.schema, value, true);
+    if (Object.keys(value).sort().join() !== "evolution,gap" || Object.keys(value).some(k => Object.keys(value[k]).sort().join() !== Object.keys(bundle.schema.properties[k].properties).sort().join())) throw new Error("标注包含旧版或未知字段，请使用当前表单");
     const e = value.evolution, g = value.gap, options = e.behaviors;
     if (!options.length || new Set(options).size !== options.length || options.length > 1 && options.includes('无法判断')) throw new Error('请选择 Agent 行为；无法判断不能与其他行为并选');
     if (e.new_requirements === '有') {
       if (e.source === null) throw new Error('有新需求时请选择需求来源');
-      if (!item.user_turns.includes(e.first_new_turn) || e.first_new_turn <= Math.min(...item.user_turns)) throw new Error('该 T 编号不在本会话的后续用户消息中');
-    } else if (e.source !== null || e.first_new_turn !== null) throw new Error('没有或无法判断新需求时，来源和首次消息必须留空');
+    } else if (e.source !== null) throw new Error('没有或无法判断新需求时，来源必须留空');
     if (g.instruction_quality === '完整且无已知错误' && g.driver !== '不适用') throw new Error('初始指令无已知问题时，原因应选不适用');
     if (g.instruction_quality !== '完整且无已知错误' && g.driver === '不适用') throw new Error('有问题或无法判断时，原因应选有证据的主因或无法判断');
     return copy(value);
@@ -68,15 +68,12 @@
     return {revision: record.revision, status: record.status, normalized, volatile: !storageAvailable};
   }
   function metrics(item, annotation) {
-    const first = annotation.evolution.first_new_turn;
     const late = {'有':true,'没有':false,'无法判断':null}[annotation.evolution.new_requirements];
-    return {late_requirement: late, first_late_requirement_turn: first,
+    return {late_requirement: late,
       effective_interactions: item.interaction_quality?.effective_interactions ?? null,
-      requirement_update_count: null, user_rounds: item.user_turns.length,
+      user_rounds: item.user_turns.length,
       visible_characters: item.events.reduce((n,e) => n + [...e.text].length, 0),
       observed_tool_events: item.events.filter(e => e.kind === 'tool_use').length,
-      user_rounds_after_first_update: first === null ? null : item.events.filter(e => e.kind === 'user_prompt' && e.turn > first).length,
-      tool_events_from_first_update: first === null ? null : item.events.filter(e => e.kind === 'tool_use' && e.turn >= first).length,
       ...Object.fromEntries(['api_call_count','tool_call_count','total_tokens','duration_seconds'].map(name => [name,item.observed_costs[name] ?? null]))};
   }
   function summarize(rows) {

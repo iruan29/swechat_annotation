@@ -1,8 +1,8 @@
-# 当前标注入口：中文／英文 100 条 · 精简表单 v3
+# 当前标注入口：中文／英文 100 条 · 精简表单 v4
 
-下载 [annotation_release.zip](annotation_release.zip)，解压后打开 `annotation_release/offline/rater_a.html`（b/c 同理）。无需启动服务器。三人 30 / 30 / 40，页面顶部应显示「中文／英文 · 精简表单 v3」。
+下载 [annotation_release.zip](annotation_release.zip)，解压后打开 `annotation_release/offline/rater_a.html`（b/c 同理）。无需启动服务器。三人 30 / 30 / 40，页面顶部应显示「中文／英文 · 精简表单 v4」。
 
-本次从原始 SWE-Chat parquet 重新筛选，剔除模板与自动消息造成的虚假轮次。7 个基础选择项，有新需求时共 9 项，没有项目概况或文字理由。筛选分布见 [质量报告](annotation_release/QUALITY_REPORT.md)，操作与汇总见 [三人指南](annotation_release/README.md)。
+本次从原始 SWE-Chat parquet 重新筛选，剔除模板与自动消息造成的虚假轮次，并针对需求补充、指令澄清或预期与实际偏差的可见讨论选样。这是定向研究样本，不能用于估计总体发生率。7 个基础选择项，有新需求时共 8 项，没有项目概况或文字理由。筛选分布见 [质量报告](annotation_release/QUALITY_REPORT.md)，操作与汇总见 [三人指南](annotation_release/README.md)。
 
 旧文件内嵌旧数据，刷新不会更新。请重新下载；旧批次保留在 `annotation_archive/`，旧答案不能导入或混收。`annotation_valid_release/offline/` 仅保留指向本次入口的提示。
 

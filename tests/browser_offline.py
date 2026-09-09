@@ -29,7 +29,7 @@ try:
         page.locator('#field-evolution-new_requirements').select_option('有')
         expect(page.locator('#field-evolution-source')).to_be_visible()
         page.locator('#field-evolution-source').select_option('用户偏好')
-        page.locator('#field-evolution-first_new_turn').select_option('3')
+        expect(page.locator('#field-evolution-first_new_turn')).to_have_count(0)
         page.locator('#field-evolution-new_requirements').select_option('没有')
         expect(page.locator('#field-evolution-source')).to_have_count(0)
         page.locator('#field-evolution-initial_coverage').select_option('一部分')
@@ -37,9 +37,9 @@ try:
         page.reload();page.locator('.queue-item').first.click()
         expect(page.locator('#field-evolution-initial_coverage')).to_have_value('一部分')
         page.locator('summary').filter(has_text='高级').click()
-        bad=annotation();bad['evolution']['first_new_turn']=999
+        bad=annotation();bad['evolution']['source']=None
         page.locator('#json-editor').fill(json.dumps(bad,ensure_ascii=False));page.locator('#apply-json').click();page.locator('#submit').click()
-        expect(page.locator('#message')).to_contain_text('不在本会话')
+        expect(page.locator('#message')).to_contain_text('请选择需求来源')
         page.locator('#json-editor').fill(json.dumps(annotation(),ensure_ascii=False));page.locator('#apply-json').click();page.locator('#submit').click()
         expect(page.locator('#save-state')).to_contain_text('已提交')
         page.locator('.queue-item').nth(1).click();page.locator('#field-evolution-initial_coverage').select_option('全部')
@@ -67,7 +67,7 @@ try:
               const tasks=await window.offlineAPI('/api/tasks?annotator='+rater);
               for(const [index,task] of tasks.cases.entries()){
                 const caseAnswer=structuredClone(answer);
-                if(index % 3) Object.assign(caseAnswer.evolution,{new_requirements:index % 3 === 1 ? "没有" : "无法判断",source:null,first_new_turn:null});
+                if(index % 3) Object.assign(caseAnswer.evolution,{new_requirements:index % 3 === 1 ? "没有" : "无法判断",source:null});
                 const view=await window.offlineAPI('/api/case?annotator='+rater+'&case_id='+task.case_id+'&stage=review');
                 await window.offlineAPI('/api/save',{annotator:rater,case_id:task.case_id,stage:'review',revision:view.revision,annotation:caseAnswer,complete:true});
               }

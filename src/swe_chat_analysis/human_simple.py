@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 from statistics import mean, median
 from copy import deepcopy
 
-VERSION = 'human_simple_v3'
+VERSION = 'human_simple_v4'
 STAGE = 'review'
 RUBRIC = '''以整个会话的主要项目目标为单位，先通读用户消息，再逐轮查看 Agent 证据。
 最终要求是可确认的验收要求，不等于 Agent 实际实现的功能。
@@ -15,7 +15,7 @@ RUBRIC = '''以整个会话的主要项目目标为单位，先通读用户消�
 完整且无已知错误时，原因选不适用；有缺口但原因没证据时选无法判断。
 Literal=执行明确指令；仅澄清=询问歧义但未识别隐藏目标或现实约束；主动发现并行动=在用户指出前识别缺口并改变行动。
 行为可多选，但只选会话中明确发生的行为；“无法判断”不与其他选项并选。提前完成需要完成证据，仅承诺不算；忽略证据需要明确反例，不能由日志缺口推断。
-不需要填写项目概况、文字理由或逐事件长表。有新需求时选择首次出现的用户消息，系统自动计算后续成本；不能估计反事实节省。
+不需要填写项目概况、文字理由或逐事件长表。有新需求时只选择来源；系统仅统计整场会话成本，不定位首次出现位置；不能估计反事实节省。
 这些说明用于统一分类边界，不保证未经重复标注测量的一致性。'''
 
 
@@ -41,7 +41,6 @@ SPEC = obj('',
         initial_coverage=choice('初始 instruction 覆盖了多少最终要求', '没有|一部分|全部|无法判断'),
         new_requirements=choice('用户在交互中有没有提出新需求', '有|没有|无法判断'),
         source=dict(choice('新需求来源', '用户偏好|项目需求|两者都有|无法判断'), nullable=True),
-        first_new_turn=dict(type='integer', label='首次提出新需求的用户消息（用于自动计算成本）', nullable=True),
         behaviors=array('Agent 行为（可多选）', choice('行为', BEHAVIORS))),
     gap=obj('二、初始指令的缺口',
         instruction_quality=choice('初始 instruction 是否有问题', '完整且无已知错误|不完整|错误或误导|不完整且错误或误导|无法判断'),
@@ -65,18 +64,17 @@ def schema():
 def validate(raw, events):
     from .human_schema import check_answers
     check_answers(schema(), raw)
+    if set(raw) != {"evolution", "gap"} or any(set(raw[k]) != set(SPEC["properties"][k]["properties"]) for k in raw):
+        raise ValueError("标注包含旧版或未知字段，请使用当前表单")
     e, g = raw['evolution'], raw['gap']
     values = e['behaviors']
     if not values or len(values) != len(set(values)) or len(values) > 1 and '无法判断' in values:
         raise ValueError('请选择 Agent 行为；无法判断不能与其他行为并选')
-    users = [event['turn'] for event in events if event['kind'] == 'user_prompt']
     if e['new_requirements'] == '有':
         if e['source'] is None:
             raise ValueError('有新需求时请选择需求来源')
-        if e['first_new_turn'] not in users or e['first_new_turn'] <= min(users):
-            raise ValueError('请选择初始指令之后的用户消息；该 T 编号不在本会话的后续用户消息中')
-    elif e['source'] is not None or e['first_new_turn'] is not None:
-        raise ValueError('没有或无法判断新需求时，来源和首次消息必须留空')
+    elif e['source'] is not None:
+        raise ValueError('没有或无法判断新需求时，来源必须留空')
     if g['instruction_quality'] == '完整且无已知错误' and g['driver'] != '不适用':
         raise ValueError('初始指令无已知问题时，原因应选不适用')
     if g['instruction_quality'] != '完整且无已知错误' and g['driver'] == '不适用':
@@ -86,18 +84,13 @@ def validate(raw, events):
 
 def costs(case, annotation):
     events = case['events']
-    first = annotation['evolution']['first_new_turn']
     late = {'有': True, '没有': False, '无法判断': None}[annotation['evolution']['new_requirements']]
     return {
         'late_requirement': late,
-        'first_late_requirement_turn': first,
-        'requirement_update_count': None,
         'user_rounds': len(case['user_turns']),
         'effective_interactions': case.get('interaction_quality', {}).get('effective_interactions'),
         'visible_characters': sum(len(event['text']) for event in events),
         'observed_tool_events': sum(event['kind'] == 'tool_use' for event in events),
-        'user_rounds_after_first_update': sum(event['kind'] == 'user_prompt' and event['turn'] > first for event in events) if first is not None else None,
-        'tool_events_from_first_update': sum(event['kind'] == 'tool_use' and event['turn'] >= first for event in events) if first is not None else None,
         **{key: case['observed_costs'].get(key) for key in ('api_call_count', 'tool_call_count', 'total_tokens', 'duration_seconds')},
     }
 
@@ -118,4 +111,4 @@ def summarize(rows):
             'cost_by_instruction_quality': {quality: stats([row for row in rows if row['annotation']['gap']['instruction_quality'] == quality]) for quality in sorted({row['annotation']['gap']['instruction_quality'] for row in rows})},
             'by_agent_and_initial_coverage': [{'agent': agent, 'initial_coverage': coverage, 'groups': {name: stats([row for row in group if row['metrics']['late_requirement'] is flag]) for name, flag in [('有晚出现需求', True), ('无晚出现需求', False)]}} for (agent, coverage), group in strata.items()],
             'instruction_quality': dict(Counter(row['annotation']['gap']['instruction_quality'] for row in rows)),
-            'interpretation': '仅已提交会话的描述性关联；后出现=用户在初始之后首次明确的重要新增/补充；重复催促和旧要求修复排除。不再逐事件计数，需求数量为 null。缺失成本不填零。样本限于可人工阅读的会话，不代表全数据。无法观测清晰初始指令的反事实成本，不提供节省量或因果结论。'}
+            'interpretation': '仅已提交会话的描述性关联；后出现=用户在初始之后首次明确的重要新增/补充；重复催促和旧要求修复排除。不记录新需求位置或数量；仅比较整场会话成本。缺失成本不填零。样本限于可人工阅读的会话，不代表全数据。无法观测清晰初始指令的反事实成本，不提供节省量或因果结论。'}
