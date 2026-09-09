@@ -1,3 +1,5 @@
+> **当前样本质量说明**：8 条用户消息不等于 8 个完整问答回合。源表核对发现 95/100 条至少有一个无 Agent／工具记录的消息段，不能据此判定 Agent 忽略要求。新版 HTML 已标明缺口并修复分栏滚动；[详细说明](annotation_release/README.md)。
+
 > **人工标注：双击 HTML 即可，无需 Python 或服务器**
 >
 > 点击 GitHub **Code → Download ZIP**，解压后进入 `annotation_release/offline/`：

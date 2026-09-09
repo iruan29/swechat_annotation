@@ -17,7 +17,7 @@ def generate(root: Path) -> list[Path]:
     app = (assets / 'app.js').read_text(encoding='utf-8')
     offline = (assets / 'offline.js').read_text(encoding='utf-8')
     base = base.replace('<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>',
-                        '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'"><style>' + css + '\n.offline-tools {padding:12px 24px;background:#fff5d9;} .offline-tools p {margin:4px 0 8px;} .offline-tools label {display:inline-block;margin-left:8px;}\n</style>')
+                        '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'"><style>' + css + '\n.offline-tools {padding:6px 20px;background:#fff5d9;flex-shrink:0;font-size:12px;} .offline-tools p {margin:0 0 4px;} .offline-tools button,.offline-tools input {padding:4px 8px;font-size:12px;} .offline-tools label {display:inline-block;margin-left:8px;}\n</style>')
     base = base.replace('<main>', '''<div class="offline-tools"><p id="offline-notice">离线版：无需服务器，填写后自动保存到当前浏览器。关闭前建议「备份全部进度」；换电脑、移动文件或清理浏览器后，可用备份恢复。最终交付请点击右上角「导出我的结果」。</p><button id="backup-progress">备份全部进度（含草稿）</button><label>导入进度 <input id="restore-progress" type="file" accept=".json,application/json"></label></div><main>''')
     base = base.replace('旧版项目仍保留原三阶段规则。', '只需打开自己的 HTML 文件，不需要 Python。')
     directory = root / 'offline'

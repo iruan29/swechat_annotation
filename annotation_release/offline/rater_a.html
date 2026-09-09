@@ -2,24 +2,38 @@
 <html lang="zh-CN">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SWE-Chat · rater_a · 离线标注</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><style>:root { color-scheme: light; font: 14px/1.6 system-ui, -apple-system, "Microsoft YaHei", sans-serif; color: #243247; background: #f3f6fa; }
 * { box-sizing: border-box; }
-body { margin: 0; }
-header { padding: 18px 24px; background: #132b45; color: white; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+html { height: 100%; }
+body { margin: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+header { padding: 12px 20px; background: #132b45; color: white; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; flex-shrink: 0; }
 header strong { font-size: 20px; } .muted { display: block; opacity: .75; font-size: 12px; }
 .account, .filters, .pagination, .actions, nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 input, select, textarea, button { font: inherit; border: 1px solid #bbc8d8; border-radius: 6px; padding: 7px 10px; }
 input, select, textarea { background: white; color: #182b42; max-width: 100%; }
 button { background: #fff; color: #233d58; cursor: pointer; } button:hover { background: #e7f1fc; } button:disabled { opacity: .5; cursor: default; }
 button.primary, button.active { background: #1569ad; color: white; border-color: #1569ad; }
-button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid #68a8e7; outline-offset: 2px; }
-#message { padding: 10px 24px; background: #e6eff8; white-space: pre-wrap; overflow-wrap: anywhere; } #message.error { background: #ffe4df; color: #a12513; }
-main { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: 90vh; }
-aside { padding: 20px 14px; background: #fff; border-right: 1px solid #dae2ec; } h1 { font-size: 18px; overflow-wrap: anywhere; } h2 { font-size: 17px; margin: 4px 0 12px; }
-#queue { max-height: 73vh; overflow-y: auto; margin-top: 16px; } .queue-item { display: block; width: 100%; text-align: left; margin-bottom: 7px; font-size: 12px; overflow-wrap: anywhere; }
-#welcome, #workspace { padding: 20px; min-width: 0; } [hidden] { display: none !important; }
-.columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr); gap: 18px; align-items: start; }
-.evidence-panel, .form-panel { background: #fff; border: 1px solid #dce4ee; border-radius: 10px; padding: 18px; min-width: 0; }
-.evidence-panel { position: sticky; top: 12px; max-height: 92vh; overflow-y: auto; }
-.notice { background: #fff2ce; border-left: 4px solid #dfac30; padding: 10px 14px; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, .scroll-region:focus-visible { outline: 3px solid #68a8e7; outline-offset: -2px; }
+#message { padding: 6px 20px; background: #e6eff8; white-space: pre-wrap; overflow-wrap: anywhere; flex-shrink: 0; max-height: 12vh; overflow: auto; font-size: 12px; } #message.error { background: #ffe4df; color: #a12513; }
+main { display: grid; grid-template-columns: 180px minmax(0, 1fr); flex: 1; min-height: 0; overflow: hidden; }
+aside { padding: 12px; background: #fff; border-right: 1px solid #dae2ec; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+h1 { font-size: 16px; overflow-wrap: anywhere; margin: 0; } h2 { font-size: 17px; margin: 0; }
+#progress { margin: 6px 0; font-size: 12px; }
+#queue { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; margin-top: 12px; flex: 1; }
+.queue-item { display: block; width: 100%; text-align: left; margin-bottom: 7px; font-size: 12px; overflow-wrap: anywhere; }
+#welcome, #workspace { padding: 12px; min-width: 0; min-height: 0; } #welcome { overflow: auto; }
+#workspace { display: flex; flex-direction: column; overflow: hidden; }
+[hidden] { display: none !important; }
+.case-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+.case-heading button { font-size: 12px; padding: 4px 8px; }
+.columns { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(320px, 1fr); gap: 12px; align-items: stretch; flex: 1; min-height: 0; }
+.evidence-panel, .form-panel { background: #fff; border: 1px solid #dce4ee; border-radius: 10px; padding: 12px; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-shrink: 0; }
+.panel-heading span { font-size: 11px; color: #6e7e92; }
+.panel-help { margin: 4px 0; font-size: 12px; }
+.trace-help { font-size: 12px; color: #77561d; background: #fff6df; border-radius: 5px; margin: 4px 0 8px; padding: 6px; }
+.scroll-region { overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; flex: 1; min-height: 0; padding: 0 8px 4px 0; }
+#form-scroll { margin-top: 6px; }
+.evidence-panel > :not(.scroll-region), .form-panel > :not(.scroll-region) { flex-shrink: 0; }
+.notice { background: #fff2ce; border-left: 4px solid #dfac30; padding: 6px 10px; margin: 6px 0 10px; font-size: 12px; flex-shrink: 0; }
 p { color: #53647a; } pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.65 ui-monospace, monospace; }
 .event { border-left: 3px solid #9aaabc; padding: 12px; margin: 10px 0; background: #f7f9fc; border-radius: 4px; }
 .event.user_prompt { border-left-color: #2274b9; background: #edf5fc; } .event.target { outline: 2px solid #daa929; }
@@ -29,21 +43,32 @@ p { color: #53647a; } pre { white-space: pre-wrap; overflow-wrap: anywhere; font
 textarea { resize: vertical; min-height: 62px; width: 100%; }
 details { margin: 12px 0; padding: 10px; background: #f7f9fc; border: 1px solid #dde5ee; border-radius: 7px; min-width: 0; }
 summary { cursor: pointer; font-weight: 600; } .array-item { padding: 10px; border: 1px solid #d7e1eb; margin: 8px 0; background: white; border-radius: 6px; }
-.remove { font-size: 12px; color: #a13c3c; } .actions { position: sticky; bottom: 0; padding: 14px 0; background: white; border-top: 1px solid #dde4ee; }
-#save-state { font-size: 12px; color: #5d7087; } .pagination { margin: 12px 0; justify-content: space-between; }
+.remove { font-size: 12px; color: #a13c3c; }
+.actions { padding-top: 10px; margin-top: 6px; background: white; border-top: 1px solid #dde4ee; flex-shrink: 0; }
+#save-state { font-size: 12px; color: #5d7087; } .pagination { margin: 6px 0; font-size: 12px; }
 dialog { width: min(1100px, 94vw); max-height: 88vh; overflow: auto; border: 1px solid #c4d3e3; border-radius: 10px; }
 dialog::backdrop { background: #10233c88; } table { border-collapse: collapse; width: 100%; font-size: 12px; }
-td, th { text-align: left; border-bottom: 1px solid #dce4ee; padding: 8px; overflow-wrap: anywhere; } td:first-child { width: 70%; }
-@media (max-width: 1050px) { main { grid-template-columns: 170px minmax(0, 1fr); } .columns { grid-template-columns: 1fr; } .evidence-panel { position: static; max-height: 55vh; } }
-@media (max-width: 620px) { main { display: block; } #queue { max-height: 160px; } header { padding: 12px; } #workspace { padding: 10px; } }
+td, th { text-align: left; border-bottom: 1px solid #dce4ee; padding: 8px; overflow-wrap: anywhere; } td:first-child { width: 40%; }
 .check-option { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
 fieldset { border: 1px solid #dce4ee; border-radius: 7px; margin: 12px 0; }
 legend { font-weight: 600; }
 .round { border-bottom: 1px solid #dae2ec; padding-bottom: 14px; }
-.round h3 { color: #1569ad; margin-bottom: 4px; }
+.round h3 { color: #1569ad; margin: 8px 0 4px; font-size: 14px; }
 .agent-fold > summary { color: #53647a; }
+.missing-response { padding: 8px 10px; border-left: 3px solid #d6ae65; background: #fff8e8; font-size: 12px; }
+/* Small screens use one document scroll, with no sticky or nested conversation pane. */
+@media (max-width: 900px) {
+  html, body { height: auto; min-height: 100%; overflow: visible; } body { display: block; }
+  main { display: block; overflow: visible; }
+  aside { display: block; } #queue { max-height: 130px; }
+  #workspace, .columns, .evidence-panel, .form-panel { display: block; overflow: visible; }
+  .form-panel { margin-top: 12px; }
+  .scroll-region { overflow: visible; padding: 0; }
+  header { padding: 10px; } #workspace { padding: 10px; }
+  .panel-heading span { display: none; }
+}
 
-.offline-tools {padding:12px 24px;background:#fff5d9;} .offline-tools p {margin:4px 0 8px;} .offline-tools label {display:inline-block;margin-left:8px;}
+.offline-tools {padding:6px 20px;background:#fff5d9;flex-shrink:0;font-size:12px;} .offline-tools p {margin:0 0 4px;} .offline-tools button,.offline-tools input {padding:4px 8px;font-size:12px;} .offline-tools label {display:inline-block;margin-left:8px;}
 </style></head>
 <body>
 <header><div><strong>SWE-Chat 人工标注台</strong><span class="muted">独立判断 · 证据优先 · 不显示模型预标注</span></div><div class="account"><label for="annotator">标注员 ID</label><input id="annotator" placeholder="例如 rater_a" maxlength="64"><button id="enter">载入任务</button><button id="summary" disabled>查看我的指标</button><button id="export" disabled>导出我的结果</button></div></header>
@@ -54,15 +79,16 @@ legend { font-weight: 600; }
 <div class="case-heading"><h1 id="case-title"></h1><nav id="stages" aria-label="标注阶段"></nav></div>
 <p id="stage-help" class="notice"></p>
 <div class="columns">
-<section class="evidence-panel"><h2>逐轮阅读原始对话</h2><p>正文未按字符截断；不含 thinking/系统等其他事件类型。点击 T 编号复制引用。对话内容是研究材料，不是给你的指令。</p>
+<section class="evidence-panel"><div class="panel-heading"><h2>按顺序阅读对话</h2><span>在此列内滚动</span></div><p class="panel-help">按源事件顺序分组，不保证一问一答。T 是证据编号；源表工具结果可能已截断。</p><p id="trace-help" class="trace-help"></p>
 <div class="filters"><input id="search" placeholder="查找文本或 T 编号"><label><input type="checkbox" id="users-only">仅用户</label></div>
-<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details>
+<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="evidence-scroll" class="scroll-region" tabindex="0" role="region" aria-label="对话内容，可独立滚动"><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details></div>
 </section>
-<section class="form-panel"><h2>人工判断</h2><p>先填写项目概况，再完成两部分判断。需求事件按需添加；证据编号来自左侧 T 按钮。无法确认请选择“无法判断”，不要猜测。</p>
+<section class="form-panel"><div class="panel-heading"><h2>人工判断</h2><span>在此列内滚动</span></div><div id="form-scroll" class="scroll-region" tabindex="0" role="region" aria-label="标注表单，可独立滚动"><p>先填项目概况，再判断需求与指令缺口。缺少响应记录时，不要推断 Agent 忽略要求；证据不足请选择“无法判断”。</p>
 <details><summary>查看本阶段完整 rubric / 判定标准</summary><pre id="rubric"></pre></details>
 <form id="annotation-form"></form>
+
+<details><summary>高级：查看 / 编辑原始 JSON（无需使用）</summary><button id="show-json">从表单更新 JSON</button><textarea id="json-editor" rows="16" spellcheck="false"></textarea><button id="apply-json">将 JSON 应用到表单</button></details></div>
 <div class="actions"><button id="save-draft">保存草稿</button><button id="submit" class="primary">校验并提交（锁定本阶段）</button><button id="next-stage" hidden>进入下一阶段 / 样本</button><span id="save-state"></span></div>
-<details><summary>高级：查看 / 编辑原始 JSON（无需使用）</summary><button id="show-json">从表单更新 JSON</button><textarea id="json-editor" rows="16" spellcheck="false"></textarea><button id="apply-json">将 JSON 应用到表单</button></details>
 </section></div>
 </section>
 <section id="welcome"><h1>读一条会话，完成一张标注表</h1><p>① 先通读展开的用户 prompt；② 按轮展开 Agent 和工具证据；③ 标注需求演化与初始指令缺口。</p><p>需求变化才添加事件。表单没有预选判断，也没有模型预标注。可以随时保存草稿，提交后可修订；不同标注员使用不同 ID。</p><p>用户轮数、API / 工具调用与 token 成本自动汇总。建议先标 5 条统一口径，再完成 100 条。只需打开自己的 HTML 文件，不需要 Python。</p></section>
@@ -475,13 +501,16 @@ function renderEvents() {
     if (event.kind === "user_prompt" || !groups.length) groups.push([]);
     groups[groups.length - 1].push(event);
   }
+  const promptGroups = groups.filter(group => group.some(event => event.kind === "user_prompt"));
+  const covered = promptGroups.filter(group => group.some(event => ["assistant_response", "tool_use", "tool_result"].includes(event.kind))).length;
+  element("trace-help").textContent = `${promptGroups.length} 条用户消息；其中 ${covered} 段之后有 Agent / 工具记录，${promptGroups.length - covered} 段没有可见响应。每段截止下一条用户消息，分组不是因果对应。`;
   const matches = event => !query || ("t" + event.turn) === query || event.text.toLowerCase().includes(query);
   const matching = groups.filter(group => group.some(event => (!onlyUsers || event.kind === "user_prompt") && matches(event)));
   const pageSize = Math.max(1, matching.length); // Show every user prompt; lazy agent bodies keep rendering light.
   const pages = Math.max(1, Math.ceil(matching.length / pageSize));
   state.page = Math.max(0, Math.min(state.page, pages - 1));
   const userCount = state.view.events.filter(event => event.kind === "user_prompt").length;
-  element("event-page").textContent = query ? `共 ${userCount} 个用户 prompt · 搜索匹配 ${matching.length} 组（含上下文组）` : `全部 ${userCount} 个用户 prompt · 非自动续接消息计 1 轮`;
+  element("event-page").textContent = query ? `共 ${userCount} 个用户 prompt · 搜索匹配 ${matching.length} 组（含上下文组）` : `全部 ${userCount} 条用户消息（不含自动续接）`;
   element("previous-events").hidden = true; element("next-events").hidden = true;
   element("previous-events").disabled = state.page === 0;
   element("next-events").disabled = state.page >= pages - 1;
@@ -502,13 +531,20 @@ function renderEvents() {
     const container = node("section", undefined, "round");
     const prompt = group.find(event => event.kind === "user_prompt");
     const round = state.view.events.filter(event => event.kind === "user_prompt").findIndex(event => event === prompt) + 1;
-    container.append(node("h3", prompt ? "用户第 " + round + " 轮" : "初始上下文"));
+    container.append(node("h3", prompt ? "用户消息 " + round + " · T" + prompt.turn : "首条用户消息之前的上下文"));
     if (prompt) container.append(card(prompt));
     const agent = group.filter(event => event !== prompt);
+    const visibleResponse = agent.some(event => ["assistant_response", "tool_use", "tool_result"].includes(event.kind));
+    if (prompt && !visibleResponse && !onlyUsers) {
+      const next = groups[groups.indexOf(group) + 1]?.find(event => event.kind === "user_prompt");
+      container.append(node("p", next ? `T${prompt.turn} → T${next.turn}：此区间未收录 Agent 回复或工具记录。下一条是用户消息，不能据此判定 Agent 忽略了本条。` : `T${prompt.turn} → 会话记录结束：未收录后续 Agent 回复或工具记录，处理结果未知。`, "missing-response"));
+    }
     if (!onlyUsers && agent.length) {
       const detail = node("details", undefined, "agent-fold");
       detail.open = Boolean(query && agent.some(matches));
-      detail.append(node("summary", `展开 Agent / 工具 · ${agent.length} 条记录 · ${agent.filter(event => event.kind === "tool_use").length} 次工具调用`));
+      const replies = agent.filter(event => event.kind === "assistant_response").length;
+      const tools = agent.filter(event => ["tool_use", "tool_result"].includes(event.kind)).length;
+      detail.append(node("summary", `展开此后记录 · ${replies} 条 Agent 回复 · ${tools} 条工具记录`));
       // Build full bodies only when opened, preserving raw text without truncation.
       let rendered = false;
       const populate = () => {if (detail.open && !rendered) {detail.append(...agent.map(card)); rendered = true;}};
@@ -549,7 +585,7 @@ async function openCase(caseId, stage) {
     element("workspace").hidden = false; element("welcome").hidden = true;
     element("case-title").textContent = "Session " + caseId;
     element("stage-help").textContent = view.simple ?
-      `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 个用户轮次 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
+      `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
       `只评价 T${view.target_instruction_turn} 这条指令的响应。可见其结束前的历史；未来消息与 commit 在服务器端被隐藏。提交后不可回改。` :
       "现在可以查看完整会话。要求可识别不等于实现成功；用户真正改变目标不等于最初错误；提交后本阶段锁定。";
     element("rubric").textContent = view.rubric;
@@ -564,6 +600,7 @@ async function openCase(caseId, stage) {
     element("submit").textContent = view.simple ? "提交标注" : "校验并提交（锁定本阶段）";
     element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? (window.offlineAPI ? "已恢复浏览器草稿" : "已恢复服务器草稿") : "尚未保存";
     renderEvents(); renderForm(); renderQueue();
+    element("evidence-scroll").scrollTop = 0; element("form-scroll").scrollTop = 0;
     message("已载入 " + stageNames[stage] + " · " + view.rubric_version);
   } catch (error) {message(error.message, true);}
 }

@@ -194,13 +194,16 @@ function renderEvents() {
     if (event.kind === "user_prompt" || !groups.length) groups.push([]);
     groups[groups.length - 1].push(event);
   }
+  const promptGroups = groups.filter(group => group.some(event => event.kind === "user_prompt"));
+  const covered = promptGroups.filter(group => group.some(event => ["assistant_response", "tool_use", "tool_result"].includes(event.kind))).length;
+  element("trace-help").textContent = `${promptGroups.length} 条用户消息；其中 ${covered} 段之后有 Agent / 工具记录，${promptGroups.length - covered} 段没有可见响应。每段截止下一条用户消息，分组不是因果对应。`;
   const matches = event => !query || ("t" + event.turn) === query || event.text.toLowerCase().includes(query);
   const matching = groups.filter(group => group.some(event => (!onlyUsers || event.kind === "user_prompt") && matches(event)));
   const pageSize = Math.max(1, matching.length); // Show every user prompt; lazy agent bodies keep rendering light.
   const pages = Math.max(1, Math.ceil(matching.length / pageSize));
   state.page = Math.max(0, Math.min(state.page, pages - 1));
   const userCount = state.view.events.filter(event => event.kind === "user_prompt").length;
-  element("event-page").textContent = query ? `共 ${userCount} 个用户 prompt · 搜索匹配 ${matching.length} 组（含上下文组）` : `全部 ${userCount} 个用户 prompt · 非自动续接消息计 1 轮`;
+  element("event-page").textContent = query ? `共 ${userCount} 个用户 prompt · 搜索匹配 ${matching.length} 组（含上下文组）` : `全部 ${userCount} 条用户消息（不含自动续接）`;
   element("previous-events").hidden = true; element("next-events").hidden = true;
   element("previous-events").disabled = state.page === 0;
   element("next-events").disabled = state.page >= pages - 1;
@@ -221,13 +224,20 @@ function renderEvents() {
     const container = node("section", undefined, "round");
     const prompt = group.find(event => event.kind === "user_prompt");
     const round = state.view.events.filter(event => event.kind === "user_prompt").findIndex(event => event === prompt) + 1;
-    container.append(node("h3", prompt ? "用户第 " + round + " 轮" : "初始上下文"));
+    container.append(node("h3", prompt ? "用户消息 " + round + " · T" + prompt.turn : "首条用户消息之前的上下文"));
     if (prompt) container.append(card(prompt));
     const agent = group.filter(event => event !== prompt);
+    const visibleResponse = agent.some(event => ["assistant_response", "tool_use", "tool_result"].includes(event.kind));
+    if (prompt && !visibleResponse && !onlyUsers) {
+      const next = groups[groups.indexOf(group) + 1]?.find(event => event.kind === "user_prompt");
+      container.append(node("p", next ? `T${prompt.turn} → T${next.turn}：此区间未收录 Agent 回复或工具记录。下一条是用户消息，不能据此判定 Agent 忽略了本条。` : `T${prompt.turn} → 会话记录结束：未收录后续 Agent 回复或工具记录，处理结果未知。`, "missing-response"));
+    }
     if (!onlyUsers && agent.length) {
       const detail = node("details", undefined, "agent-fold");
       detail.open = Boolean(query && agent.some(matches));
-      detail.append(node("summary", `展开 Agent / 工具 · ${agent.length} 条记录 · ${agent.filter(event => event.kind === "tool_use").length} 次工具调用`));
+      const replies = agent.filter(event => event.kind === "assistant_response").length;
+      const tools = agent.filter(event => ["tool_use", "tool_result"].includes(event.kind)).length;
+      detail.append(node("summary", `展开此后记录 · ${replies} 条 Agent 回复 · ${tools} 条工具记录`));
       // Build full bodies only when opened, preserving raw text without truncation.
       let rendered = false;
       const populate = () => {if (detail.open && !rendered) {detail.append(...agent.map(card)); rendered = true;}};
@@ -268,7 +278,7 @@ async function openCase(caseId, stage) {
     element("workspace").hidden = false; element("welcome").hidden = true;
     element("case-title").textContent = "Session " + caseId;
     element("stage-help").textContent = view.simple ?
-      `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 个用户轮次 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
+      `逐轮阅读，完成一张表即可。${view.reading_stats ? view.reading_stats.user_rounds + " 条用户消息 · " + view.reading_stats.characters.toLocaleString() + " 字符 · " + view.reading_stats.events + " 条记录。" : ""}全部用户 prompt 已展示；Agent 默认折叠。${view.trace_scope ? "保留原始 session 中 " + view.trace_scope.included_event_count + " 条所选类型事件（共 " + view.trace_scope.source_event_count + " 条源记录）。" : ""}这是数据集记录的会话，不保证项目始终完整。` : stage === "behavior" ?
       `只评价 T${view.target_instruction_turn} 这条指令的响应。可见其结束前的历史；未来消息与 commit 在服务器端被隐藏。提交后不可回改。` :
       "现在可以查看完整会话。要求可识别不等于实现成功；用户真正改变目标不等于最初错误；提交后本阶段锁定。";
     element("rubric").textContent = view.rubric;
@@ -283,6 +293,7 @@ async function openCase(caseId, stage) {
     element("submit").textContent = view.simple ? "提交标注" : "校验并提交（锁定本阶段）";
     element("save-state").textContent = view.status === "complete" ? (view.simple ? "已提交，可修订" : "已提交并锁定") : view.status === "draft" ? (window.offlineAPI ? "已恢复浏览器草稿" : "已恢复服务器草稿") : "尚未保存";
     renderEvents(); renderForm(); renderQueue();
+    element("evidence-scroll").scrollTop = 0; element("form-scroll").scrollTop = 0;
     message("已载入 " + stageNames[stage] + " · " + view.rubric_version);
   } catch (error) {message(error.message, true);}
 }

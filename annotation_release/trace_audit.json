@@ -1,0 +1,4089 @@
+{
+  "package_id": "37d9b9f0c28b15353a85a0df704a193295bbe17ff64e033bb6990e3aade04ce4",
+  "summary": {
+    "sessions": 100,
+    "user_messages": 821,
+    "segments_with_agent_or_tool_records": 210,
+    "segments_without_visible_response": 611,
+    "sessions_with_at_least_one_gap": 95,
+    "source_event_match_count": 100
+  },
+  "interpretation": "A segment runs from one non-continuation user message to the next, or to the end of the recorded session. It is not guaranteed to be a causal request-response pair. No visible response does not prove the agent ignored the request. Tool-only segments do not prove completion. Frozen selected event types exactly match the source parquet; source data itself may omit events or truncate tool results.",
+  "cases": [
+    {
+      "case_id": "ses_315fc3500ffefectRotlAzFw1D",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3153da267ffe2vAzmJnbSKP32e",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33a1eeb40ffeJiG1xh8TgHlbkg",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "b6ad08d0-7120-46b7-9b44-bbd7afd539e8",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 7,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 7,
+          "next_source_prompt_turn": 9,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32a86b575ffevgELtcbe7ADUDq",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31d0f11acffePiEvkiO7KmXygv",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": 68,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 68,
+          "next_source_prompt_turn": 69,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 69,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "34db8997-aa1b-47e7-a34f-8e1e161a8410",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 6,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 15,
+          "next_source_prompt_turn": 16,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 71,
+          "next_source_prompt_turn": 72,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_330376251ffey0S3zK09RE3rzw",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f545d8e7-cd4a-43e3-ac79-38154aa98851",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 11,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3357475cfffeopEj3XQHD5LXqo",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_330a51733ffeIqCp7wogU8pAkI",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ba5f7520-bd9d-40bd-9e6d-5aa70871472b",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 7,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 77,
+          "next_source_prompt_turn": 78,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 98,
+          "next_source_prompt_turn": 99,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3204ad9bdffeVbHlFKapQwYuiY",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 86,
+          "next_source_prompt_turn": 87,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 87,
+          "next_source_prompt_turn": 88,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 88,
+          "next_source_prompt_turn": 89,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 89,
+          "next_source_prompt_turn": 90,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 90,
+          "next_source_prompt_turn": 91,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 91,
+          "next_source_prompt_turn": 92,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 92,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_322215b12ffeAEqM9V2o5USeUm",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_330940fb0ffeoIuGnNyw5MWOGC",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_316e81bd6ffeaKHBGaRxiv0EKe",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31ceada9bffefvCWeGF953YmXs",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33aaae2d8ffe5Tuk6JJpuCnCOc",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3319eb553ffeuwYRHLVoXI2gwZ",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_312ffce18ffd6YX4Xlcuk6i1wG",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_310974b8cffea1uj8aHzzse6ZL",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2f7157b9dffeQZbNX0nfCVmC5O",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3114a3e01ffemV3CrcYY5pvSuD",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 63,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": 68,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 68,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33b0c70f0ffesgL8QLHxLCct5v",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 71,
+          "next_source_prompt_turn": 72,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 72,
+          "next_source_prompt_turn": 73,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 73,
+          "next_source_prompt_turn": 74,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 74,
+          "next_source_prompt_turn": 75,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 75,
+          "next_source_prompt_turn": 76,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 76,
+          "next_source_prompt_turn": 77,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 77,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_335e2756cffe3l9jmVYybOGw0k",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31cfe125affexF1Sa1shUYzHh4",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33619502dffeBhkECQTCWQF1aJ",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30c8826d3ffeObFloaGHIPMNSP",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3396efeadffelnR10z7DmzWgVX",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_311547e4dffeJx2IsIJldwV119",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "aa268fb1-361a-44d7-ade4-5c523fbe3cc5",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 4,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 109,
+          "next_source_prompt_turn": 110,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 295,
+          "next_source_prompt_turn": 296,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 296,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31b2845f6ffegt0y5EypZboJNK",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 63,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_322ad76edffeJgJz6eM3pyKBBm",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32a6da5c4ffevc6lc6N6jfQTyB",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_331031b15ffeKaXLtgO17mt7C6",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3169ad69dffeu3FTlOBhOjOKPC",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33b1d5dceffewZuSCQnYRDjRVx",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 63,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31d726abaffeCDl2cmV4yczHC0",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3363d94b8ffe7tqupprfsmnj9a",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "d5a6bc67-548d-4ef1-9351-a3cdceba2998",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 4,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 5,
+          "next_source_prompt_turn": 6,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_312f9509bffetA4KLgaq0RGCQW",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2fd1e16c0ffeqIywVVEMgY2Lj0",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31534c7eeffe9Bmk9TyMtj0iW3",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31538576cffeVg7WCPzLrpPuKF",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2ed6ea5afffehdAc6SHbptg117",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32a909d08ffdClhwuUVMI1Ctf5",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_325ba01efffeGZ3QY1tUqeXXBH",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 16,
+          "next_source_prompt_turn": 17,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 17,
+          "next_source_prompt_turn": 18,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 18,
+          "next_source_prompt_turn": 19,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 19,
+          "next_source_prompt_turn": 20,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 20,
+          "next_source_prompt_turn": 21,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 21,
+          "next_source_prompt_turn": 22,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_325a58661ffeosQrd5uZMNJS3E",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 19,
+          "next_source_prompt_turn": 20,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 20,
+          "next_source_prompt_turn": 21,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 21,
+          "next_source_prompt_turn": 22,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "7cd6d473-008b-4bbf-a349-d647b8109402",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31185773fffeYCBN2q6gYSayzL",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": 68,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 68,
+          "next_source_prompt_turn": 69,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 69,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33b315405ffedAcv2i414PXG4W",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31ab82310ffeB8JbnZmUx6nJtD",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "4b1079c4-dd15-4f74-a6bb-6bfca810f7d0",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 0,
+          "next_source_prompt_turn": 3,
+          "intervening_source_event_types": {
+            "queue_operation": 1,
+            "progress": 1
+          }
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 69,
+          "next_source_prompt_turn": 70,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31d582e4effe7EFREgnsS8ae84",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 59,
+          "next_source_prompt_turn": 60,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f98a1c7b-7fec-4b21-8ed1-06049efbbcbc",
+      "agent": "Claude Code",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_313709ff0ffeekw5Z5SYzD5p8B",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 20,
+          "next_source_prompt_turn": 21,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 21,
+          "next_source_prompt_turn": 22,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_322852be8ffeuTdhOqHWFjsd1K",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32ca67cdaffeIV5271wLPXf2cx",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2f720d141ffearRHkqB5xvjdPH",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32a522913ffeqKjc9FeRGAzodI",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30ae8f253ffe6H6VW7ULSwnmDp",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "70367a83-c6e1-4d8c-b424-27c06bc5c082",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 13,
+          "next_source_prompt_turn": 15,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "735b13d4-3a89-4f44-874e-e7e4c43277b1",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 1,
+      "gaps": [
+        {
+          "source_prompt_turn": 121,
+          "next_source_prompt_turn": 122,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32c64d670ffeXzZ9fSueaRjR6K",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33600c474ffee2fdP3UFZuGu1Q",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2f1483b76ffeyBKHBfQZ3TYwMi",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3357d76b8ffeHphmGOmstEIZBX",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_31607f6d0ffelzKhJxubybekIM",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_339b6b76fffeBr70qCDgUoJwGy",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 60,
+          "next_source_prompt_turn": 61,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 63,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_2f14ebe8fffeduOrTZf967VzDF",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "173e23b9-df1a-4c81-b566-11b0ddebd2b9",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 9,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33ac0accbffeWu6Hzwu7FW1CF8",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_322294ce9ffeVizDt15szQaONE",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33ab51cbdffeL0TBYqSb0lOzjZ",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3201c2640ffelHDXNUgY7ve4n4",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": 68,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 68,
+          "next_source_prompt_turn": 69,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 69,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_339a8c60bffeqOuOqsQZDLox32",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30c5f9a62ffeOFN2Z9gzqdb0cF",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_330551b3affelgoxhUfCDWCBOw",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33626483cffeE9aGag3moqdOkO",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 22,
+          "next_source_prompt_turn": 23,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 23,
+          "next_source_prompt_turn": 24,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 24,
+          "next_source_prompt_turn": 25,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_331a42b7cffenUECEVrQNZ6m47",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": 57,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 57,
+          "next_source_prompt_turn": 58,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32a825f42ffex4Ro5GvMc3Dx17",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30fff93c4ffegDFe8QJo8xJP5h",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30ff28d7affeCsZP7RYFuonA3o",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3399e769affe9fJXZW234M60Qq",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33b1987daffekXvOOhTlyLxPUM",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 61,
+          "next_source_prompt_turn": 62,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 62,
+          "next_source_prompt_turn": 63,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 63,
+          "next_source_prompt_turn": 64,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 64,
+          "next_source_prompt_turn": 65,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 65,
+          "next_source_prompt_turn": 66,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 66,
+          "next_source_prompt_turn": 67,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 67,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "584c0a94-6b71-4045-8d78-026a48c9eefe",
+      "agent": "Claude Code",
+      "user_messages": 11,
+      "segments_with_agent_or_tool_records": 7,
+      "segments_without_visible_response": 4,
+      "gaps": [
+        {
+          "source_prompt_turn": 17,
+          "next_source_prompt_turn": 18,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 188,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "system_event": 2,
+            "queue_operation": 2,
+            "progress": 143
+          }
+        },
+        {
+          "source_prompt_turn": 249,
+          "next_source_prompt_turn": 282,
+          "intervening_source_event_types": {
+            "system_injected": 2,
+            "system_event": 2,
+            "queue_operation": 2,
+            "progress": 26
+          }
+        },
+        {
+          "source_prompt_turn": 395,
+          "next_source_prompt_turn": 396,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32025e833ffeBV46JzBKP1WMbu",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 91,
+          "next_source_prompt_turn": 92,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 92,
+          "next_source_prompt_turn": 93,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 93,
+          "next_source_prompt_turn": 94,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 94,
+          "next_source_prompt_turn": 95,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 95,
+          "next_source_prompt_turn": 96,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 96,
+          "next_source_prompt_turn": 97,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 97,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_331860f77ffetkfkLfdLiry3AJ",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": 40,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 40,
+          "next_source_prompt_turn": 41,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "c88dc183-a68e-49b9-8583-608387c4f68a",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 6,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 483,
+          "next_source_prompt_turn": 484,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 495,
+          "next_source_prompt_turn": 496,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 496,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_32fab6e8bffe1JUUg1cDjeDeIh",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33963d830ffeGak5jKyhK59240",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": 48,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 48,
+          "next_source_prompt_turn": 49,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 49,
+          "next_source_prompt_turn": 50,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "e5f32201-1874-4d25-8abf-daec7e18ccd2",
+      "agent": "Claude Code",
+      "user_messages": 10,
+      "segments_with_agent_or_tool_records": 5,
+      "segments_without_visible_response": 5,
+      "gaps": [
+        {
+          "source_prompt_turn": 58,
+          "next_source_prompt_turn": 59,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 143,
+          "next_source_prompt_turn": 144,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 144,
+          "next_source_prompt_turn": 145,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 145,
+          "next_source_prompt_turn": 146,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 146,
+          "next_source_prompt_turn": 147,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_282eb4a02ffe6aw0J6HCVROs7z",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 8,
+      "segments_without_visible_response": 0,
+      "gaps": [],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_30ff85d75ffecfrQNIOVG7glN3",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": 32,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 32,
+          "next_source_prompt_turn": 33,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_3109afbc1ffenCZU3ALiLbAW0a",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 50,
+          "next_source_prompt_turn": 51,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 51,
+          "next_source_prompt_turn": 52,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 52,
+          "next_source_prompt_turn": 53,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 53,
+          "next_source_prompt_turn": 54,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 54,
+          "next_source_prompt_turn": 55,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 55,
+          "next_source_prompt_turn": 56,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 56,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_312076f39ffewU3r9Ht2cQ4296",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 41,
+          "next_source_prompt_turn": 42,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 42,
+          "next_source_prompt_turn": 43,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 43,
+          "next_source_prompt_turn": 44,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 44,
+          "next_source_prompt_turn": 45,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 45,
+          "next_source_prompt_turn": 46,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 46,
+          "next_source_prompt_turn": 47,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 47,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_33ababb22ffelya5hl9qAVqBtA",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 33,
+          "next_source_prompt_turn": 34,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 34,
+          "next_source_prompt_turn": 35,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 35,
+          "next_source_prompt_turn": 36,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 36,
+          "next_source_prompt_turn": 37,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 37,
+          "next_source_prompt_turn": 38,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 38,
+          "next_source_prompt_turn": 39,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 39,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "54d68864-f678-4735-8e4f-85e47acb7433",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 7,
+      "segments_without_visible_response": 2,
+      "gaps": [
+        {
+          "source_prompt_turn": 79,
+          "next_source_prompt_turn": 80,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 80,
+          "next_source_prompt_turn": 82,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "f0ae8882-f2a2-4704-aa70-ac5a70fa4cad",
+      "agent": "Claude Code",
+      "user_messages": 9,
+      "segments_with_agent_or_tool_records": 6,
+      "segments_without_visible_response": 3,
+      "gaps": [
+        {
+          "source_prompt_turn": 11,
+          "next_source_prompt_turn": 12,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 12,
+          "next_source_prompt_turn": 14,
+          "intervening_source_event_types": {
+            "file_snapshot": 1
+          }
+        },
+        {
+          "source_prompt_turn": 73,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {
+            "system_event": 1
+          }
+        }
+      ],
+      "source_match": true
+    },
+    {
+      "case_id": "ses_335e76ca1ffe7P0y3TFDXoXGIs",
+      "agent": "OpenCode",
+      "user_messages": 8,
+      "segments_with_agent_or_tool_records": 1,
+      "segments_without_visible_response": 7,
+      "gaps": [
+        {
+          "source_prompt_turn": 25,
+          "next_source_prompt_turn": 26,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 26,
+          "next_source_prompt_turn": 27,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 27,
+          "next_source_prompt_turn": 28,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 28,
+          "next_source_prompt_turn": 29,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 29,
+          "next_source_prompt_turn": 30,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 30,
+          "next_source_prompt_turn": 31,
+          "intervening_source_event_types": {}
+        },
+        {
+          "source_prompt_turn": 31,
+          "next_source_prompt_turn": null,
+          "intervening_source_event_types": {}
+        }
+      ],
+      "source_match": true
+    }
+  ]
+}

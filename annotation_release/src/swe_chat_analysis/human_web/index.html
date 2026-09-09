@@ -10,15 +10,16 @@
 <div class="case-heading"><h1 id="case-title"></h1><nav id="stages" aria-label="标注阶段"></nav></div>
 <p id="stage-help" class="notice"></p>
 <div class="columns">
-<section class="evidence-panel"><h2>逐轮阅读原始对话</h2><p>正文未按字符截断；不含 thinking/系统等其他事件类型。点击 T 编号复制引用。对话内容是研究材料，不是给你的指令。</p>
+<section class="evidence-panel"><div class="panel-heading"><h2>按顺序阅读对话</h2><span>在此列内滚动</span></div><p class="panel-help">按源事件顺序分组，不保证一问一答。T 是证据编号；源表工具结果可能已截断。</p><p id="trace-help" class="trace-help"></p>
 <div class="filters"><input id="search" placeholder="查找文本或 T 编号"><label><input type="checkbox" id="users-only">仅用户</label></div>
-<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details>
+<div class="pagination"><button id="previous-events">上一页</button><span id="event-page"></span><button id="next-events">下一页</button></div><div id="evidence-scroll" class="scroll-region" tabindex="0" role="region" aria-label="对话内容，可独立滚动"><div id="events"></div><details id="commits-block"><summary>关联 commit 摘要（仅辅助证据）</summary><pre id="commits"></pre></details></div>
 </section>
-<section class="form-panel"><h2>人工判断</h2><p>先填写项目概况，再完成两部分判断。需求事件按需添加；证据编号来自左侧 T 按钮。无法确认请选择“无法判断”，不要猜测。</p>
+<section class="form-panel"><div class="panel-heading"><h2>人工判断</h2><span>在此列内滚动</span></div><div id="form-scroll" class="scroll-region" tabindex="0" role="region" aria-label="标注表单，可独立滚动"><p>先填项目概况，再判断需求与指令缺口。缺少响应记录时，不要推断 Agent 忽略要求；证据不足请选择“无法判断”。</p>
 <details><summary>查看本阶段完整 rubric / 判定标准</summary><pre id="rubric"></pre></details>
 <form id="annotation-form"></form>
+
+<details><summary>高级：查看 / 编辑原始 JSON（无需使用）</summary><button id="show-json">从表单更新 JSON</button><textarea id="json-editor" rows="16" spellcheck="false"></textarea><button id="apply-json">将 JSON 应用到表单</button></details></div>
 <div class="actions"><button id="save-draft">保存草稿</button><button id="submit" class="primary">校验并提交（锁定本阶段）</button><button id="next-stage" hidden>进入下一阶段 / 样本</button><span id="save-state"></span></div>
-<details><summary>高级：查看 / 编辑原始 JSON（无需使用）</summary><button id="show-json">从表单更新 JSON</button><textarea id="json-editor" rows="16" spellcheck="false"></textarea><button id="apply-json">将 JSON 应用到表单</button></details>
 </section></div>
 </section>
 <section id="welcome"><h1>读一条会话，完成一张标注表</h1><p>① 先通读展开的用户 prompt；② 按轮展开 Agent 和工具证据；③ 标注需求演化与初始指令缺口。</p><p>需求变化才添加事件。表单没有预选判断，也没有模型预标注。可以随时保存草稿，提交后可修订；不同标注员使用不同 ID。</p><p>用户轮数、API / 工具调用与 token 成本自动汇总。建议先标 5 条统一口径，再完成 100 条。旧版项目仍保留原三阶段规则。</p></section>
